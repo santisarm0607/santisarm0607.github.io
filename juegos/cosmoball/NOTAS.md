@@ -7,6 +7,7 @@ Todo se dibuja con Canvas y todos los sonidos se crean con Web Audio, así que n
 ## Archivos
 | Archivo | Qué hace |
 |---|---|
+| `index.html` (en la raíz) | Solo lleva al juego (`html/index.html`). Sirve para que la dirección corta `https://santisarm0607.github.io/cosmoball/` también abra el juego (GitHub Pages está activado desde `main`, carpeta raíz). |
 | `html/index.html` | El canvas del juego (960×540), el logo SVG del agujero negro y todas las pantallas de menú. Busca los otros archivos con `../css/` y `../js/`. |
 | `css/estilos.css` | La identidad visual (colores, letras, botones, tarjetas, logo). Adapta el juego al celular. La clase `.oculta` esconde cosas. |
 | `js/juego.js` | Toda la lógica: física, robot, poderes, cancha circular, puntaje, marcador, medallas, naves, sonido y bucle. |
@@ -128,6 +129,7 @@ La pausa sale encima del juego. `mostrarPantalla(id)` esconde todas las pantalla
   - Ganchos 🌐 en `juego.js`.
   - Los fuegos artificiales pasaron a la función `lanzarFuegos()`.
   - En línea, la pantalla final dice "¡Ganaste!" solo al que ganó.
+- **GitHub Pages** (29 oct 2026): el juego también se publica solo en `https://santisarm0607.github.io/cosmoball/`. Archivo nuevo `index.html` en la raíz, que lleva a `html/index.html`.
 - **👤 Pilotos guardados como botones** (29 oct 2026):
   - "Iniciar sesión" pasa a llamarse **👤 Pilotos**.
   - Botones con los pilotos guardados en Prepara tu nave (`#chips1`, `#chips2`) y en En línea (`#chipsLinea`).
