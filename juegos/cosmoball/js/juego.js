@@ -580,7 +580,7 @@ function terminarPartida(ganador) {
   } else {
     titulo = "¡Ganó " + ganador.nombre + "!";
     texto = ganador.nombre + " venció a " + perdedor.nombre + " " + marcador +
-            ". El peloteo más largo fue de " + mejorRacha + " golpes.";
+            ". El peloteo más largo fue de " + mejorRacha + (mejorRacha === 1 ? " golpe." : " golpes.");
     // 🌐 En línea cada uno ve la partida desde su lado
     if (enLinea.activo) {
       gano = ganador === enLinea.yo;
