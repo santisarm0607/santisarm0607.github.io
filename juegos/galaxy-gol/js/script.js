@@ -343,6 +343,7 @@ const dom = {
   botonPausa: $('#boton-pausa'),
   botonSonido: $('#boton-sonido'),
   botonPantalla: $('#boton-pantalla'),
+  botonPantallaMenu: $('#boton-pantalla-menu'),   // el mismo, pero en los menús (versión 3.7)
   iconoSonido: $('#icono-sonido'),
   botonContinuar: $('#boton-continuar'),
   resumenPausa: $('#resumen-pausa'),
@@ -649,9 +650,12 @@ async function alternarPantallaCompleta() {
 
 function pintarBotonPantalla() {
   const activa = Boolean(elementoEnPantallaCompleta());
-  dom.botonPantalla.classList.toggle('activa', activa);
-  dom.botonPantalla.setAttribute('aria-pressed', String(activa));
-  dom.botonPantalla.title = activa ? 'Salir de pantalla completa' : 'Pantalla completa';
+  // Los dos botones (el de la partida y el de los menús) muestran lo mismo
+  for (const boton of [dom.botonPantalla, dom.botonPantallaMenu]) {
+    boton.classList.toggle('activa', activa);
+    boton.setAttribute('aria-pressed', String(activa));
+    boton.title = activa ? 'Salir de pantalla completa' : 'Pantalla completa';
+  }
 }
 
 function pintarBotonSonido() {
@@ -760,6 +764,7 @@ dom.botonPantalla.addEventListener('click', async (evento) => {
   await alternarPantallaCompleta();
   if (evento.detail > 0 && !juego.pausado) dom.canvas.focus();
 });
+dom.botonPantallaMenu.addEventListener('click', () => alternarPantallaCompleta());
 for (const tipo of ['fullscreenchange', 'webkitfullscreenchange']) {
   document.addEventListener(tipo, () => {
     pintarBotonPantalla();
@@ -4576,6 +4581,7 @@ function iniciar() {
   sonido.cargarArchivos();
   pintarBotonSonido();
   dom.botonPantalla.hidden = !pantallaCompletaDisponible();
+  dom.botonPantallaMenu.hidden = !pantallaCompletaDisponible();
   pintarBotonPantalla();
   pintarLogros();
   if ('ResizeObserver' in window) new ResizeObserver(ajustarCanvas).observe(dom.zona);

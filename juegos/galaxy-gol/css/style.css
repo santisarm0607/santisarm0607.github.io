@@ -365,6 +365,20 @@ button {
   border-color: var(--foco);
 }
 
+/* Botón de pantalla completa de los menús (versión 3.7):
+   flota en la esquina de arriba a la derecha en todas las pantallas */
+.boton-pantalla-menu {
+  position: fixed;
+  top: calc(12px + env(safe-area-inset-top, 0px));
+  right: calc(12px + env(safe-area-inset-right, 0px));
+  z-index: 20;
+}
+
+/* En la partida se esconde: ahí ya está el botón de la barra de arriba */
+body:has(#pantalla-partida:not([hidden])) .boton-pantalla-menu {
+  display: none;
+}
+
 /* 5. PANTALLAS Y PANELES ================================================== */
 .pantalla {
   height: 100%;

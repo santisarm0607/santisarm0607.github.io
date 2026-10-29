@@ -491,6 +491,20 @@
     </section>
   </main>
 
+  <!-- Pantalla completa en los menús (versión 3.7). Se ve en TODAS las pantallas
+       menos en la partida, que ya tiene su botón en la barra de arriba.
+       Se esconde si el navegador no la permite (como en iPhone). -->
+  <button type="button" id="boton-pantalla-menu" class="boton-icono boton-pantalla boton-pantalla-menu" aria-label="Pantalla completa" aria-pressed="false" title="Pantalla completa">
+  <!-- Icono pixelado: cuatro esquinas hacia afuera (agrandar) -->
+  <svg class="icono-agrandar" viewBox="0 0 10 10" width="26" height="26" aria-hidden="true" focusable="false">
+    <path d="M0 0h4v1H1v3H0zM6 0h4v4H9V1H6zM0 6h1v3h3v1H0zM9 6h1v4H6V9h3z"></path>
+  </svg>
+  <!-- Icono pixelado: cuatro esquinas hacia adentro (achicar) -->
+  <svg class="icono-achicar" viewBox="0 0 10 10" width="26" height="26" aria-hidden="true" focusable="false">
+    <path d="M3 0h1v4H0V3h3zM6 0h1v3h3v1H6zM0 6h4v4H3V7H0zM6 6h4v1H7v3H6z"></path>
+  </svg>
+  </button>
+
   <!-- Avisos para lectores de pantalla (no se ven en pantalla) -->
   <div id="aviso-gol" class="visualmente-oculto" aria-live="assertive" aria-atomic="true"></div>
   <div id="aviso" class="visualmente-oculto" aria-live="polite" aria-atomic="true"></div>

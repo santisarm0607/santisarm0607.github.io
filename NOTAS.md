@@ -261,6 +261,8 @@ Accesibilidad:
 
 ## 7. Historial de cambios
 
+- **2026-10-28** — Galaxy Gol pasa a la **versión 3.7**: tiene botón de pantalla completa desde el inicio y en todos los menús (copiado de su repositorio).
+
 - **2026-10-28** — **Galaxy Gol en el portafolio.**
   - `futbol.html` dejó de ser temporal: ahora tiene el juego, que va en `juegos/galaxy-gol/` (copia del repositorio `galaxy-gol`, versión 3.6).
   - El planeta verde ahora dice "Fútbol 4 contra 4 · contra Zorp, 2 jugadores o en línea".
