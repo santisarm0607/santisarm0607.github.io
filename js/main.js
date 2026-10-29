@@ -185,8 +185,7 @@ const ELEMENTOS_QUE_APARECEN = [
   '.habilidades__titulo', '.habilidad',
   '.contacto-rapido .contenedor',
   '.portafolio-intro .contenedor', '.filtros', '.proyecto',
-  '.contacto-hero .contenedor', '.form-tarjeta', '.contacto-dato',
-  '.juego__tarjeta'
+  '.contacto-hero .contenedor', '.form-tarjeta', '.contacto-dato'
 ];
 
 function iniciarAparecer() {

@@ -2052,46 +2052,6 @@ body::after {
   margin-top: 12px;
 }
 
-.juego__info {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 20px;
-  max-width: 1100px;
-  margin: 36px auto 0;
-  text-align: left;
-}
-
-.juego__tarjeta {
-  background-color: var(--espacio-panel);
-  border: 1px solid var(--espacio-borde);
-  border-radius: var(--radio-borde);
-  padding: 22px;
-}
-
-.juego__subtitulo {
-  color: var(--espacio-lavanda);
-  font-weight: 700;
-  font-size: 1.1rem;
-  margin-bottom: 10px;
-}
-
-.juego__lista {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  color: var(--espacio-texto-suave);
-  font-size: 0.92rem;
-}
-
-.juego__lista b {
-  color: var(--espacio-texto);
-}
-
-.juego__lista--pasos {
-  list-style: decimal;
-  padding-left: 20px;
-}
-
 .juego__botones {
   display: flex;
   flex-wrap: wrap;
@@ -2134,7 +2094,4 @@ body::after {
     display: flex;
   }
 
-  .juego__info {
-    grid-template-columns: 1fr; /* las tarjetas una debajo de la otra */
-  }
 }

@@ -14,9 +14,9 @@ Bootstrap se usa solo en Contacto. **Tema espacial** (fondo azul noche con estre
 | `blog.html` | Portafolio: 7 proyectos en tarjetas, con filtros y visor |
 | `contacto.html` | Formulario (maqueta) + tarjetas de Correo y Ubicación |
 | `juegos.html` | **Arcade**: una nave y un planeta por cada juego. Al hacer clic, la nave viaja al planeta y entra al juego |
-| `futbol.html` | **Galaxy Gol** (fútbol). Igual que `cosmoball.html`: menú, juego en ventana, instrucciones y portada para celular |
+| `futbol.html` | **Galaxy Gol** (fútbol). Igual que `cosmoball.html`: menú, juego en ventana, "Volver a la nave" y portada para celular |
 | `juegos/galaxy-gol/` | El juego Galaxy Gol (`index.html`, `css/`, `js/`, `img/`). Es una **copia** del repositorio `github.com/santisarm0607/galaxy-gol`, sin las guías PDF ni `una-sola-pagina/`, para que la página pese menos |
-| `cosmoball.html` | **COSMOBALL** (ping-pong). Tiene el menú del portafolio, el juego en una ventana (`iframe`), las instrucciones y botones. En celular, en vez de la ventana, muestra una portada con el botón "Jugar" que abre el juego solo |
+| `cosmoball.html` | **COSMOBALL** (ping-pong). Tiene el menú del portafolio, el juego en una ventana (`iframe`) y el botón "Volver a la nave". Las instrucciones están dentro del juego. En celular, en vez de la ventana, muestra una portada con el botón "Jugar" que abre el juego solo |
 | `juegos/cosmoball/` | El juego COSMOBALL completo (`html/`, `css/`, `js/`, su propio `NOTAS.md`). Es una **copia** del repositorio `github.com/santisarm0607/cosmoball`: si cambias el juego, cámbialo en los dos lados |
 | `css/styles.css` | **Único archivo de estilos**, lo usan todas las páginas |
 | `js/main.js` | **Único archivo de JavaScript**, lo usan todas las páginas |
@@ -260,6 +260,12 @@ Accesibilidad:
 - Si es para entregar, pásalo por el validador W3C.
 
 ## 7. Historial de cambios
+
+- **2026-10-28** — Páginas de los juegos (`cosmoball.html` y `futbol.html`) más limpias.
+  - Debajo del juego solo queda el botón **"Volver a la nave"**.
+  - Se quitaron las tarjetas de instrucciones, el texto de ayuda y los botones "Abrir solo el juego" y "Ver el código en GitHub".
+  - Las instrucciones siguen dentro de cada juego: "Cómo jugar" en COSMOBALL y "Controles" en Galaxy Gol.
+  - Se borraron sus estilos en `styles.css` y `.juego__tarjeta` de `main.js`.
 
 - **2026-10-28** — Galaxy Gol pasa a la **versión 3.7**: tiene botón de pantalla completa desde el inicio y en todos los menús (copiado de su repositorio).
 
