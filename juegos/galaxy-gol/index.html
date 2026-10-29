@@ -42,6 +42,7 @@
             <li><button type="button" class="boton" data-ir="pantalla-perfil">Tu perfil</button></li>
             <li><button type="button" class="boton" data-ir="pantalla-controles">Controles</button></li>
             <li><button type="button" class="boton" data-ir="pantalla-logros">Logros</button></li>
+            <li><button type="button" class="boton" data-ir="pantalla-records">Récords</button></li>
             <li><button type="button" class="boton" data-ir="pantalla-creditos">Créditos</button></li>
           </ul>
         </nav>
@@ -174,6 +175,24 @@
         <!-- La lista la llena js/script.js con lo que está guardado en el navegador -->
         <ul id="lista-logros" class="lista-logros"></ul>
         <button type="button" class="boton boton-secundario" data-ir="pantalla-inicio" data-volver>Volver</button>
+      </div>
+    </section>
+
+    <!-- 1b2. RÉCORDS (versión 3.8): historial de partidos guardado en el navegador -->
+    <section id="pantalla-records" class="pantalla pantalla-menu" aria-labelledby="titulo-records" hidden>
+      <div class="panel">
+        <h2 id="titulo-records" class="titulo-pantalla" tabindex="-1">Récords</h2>
+        <p class="nota">Se guardan en este navegador. <span id="resumen-records"></span></p>
+        <p id="sin-partidos" class="nota">Todavía no hay partidos. ¡Juega uno para empezar tu historial!</p>
+        <!-- Las listas las llena js/script.js (pintarRecords) -->
+        <h3 class="subtitulo-records">Mejores puntajes</h3>
+        <ol id="lista-mejores" class="lista-records"></ol>
+        <h3 class="subtitulo-records">Últimos partidos</h3>
+        <ul id="lista-historial" class="lista-records"></ul>
+        <div class="botones-records">
+          <button type="button" id="boton-reiniciar-records" class="boton boton-secundario">Reiniciar estadísticas</button>
+          <button type="button" class="boton boton-secundario" data-ir="pantalla-inicio" data-volver>Volver</button>
+        </div>
       </div>
     </section>
 
@@ -479,6 +498,7 @@
         <img id="imagen-final" class="imagen-final" src="img/zorp.svg" alt="" width="170" height="190">
         <h2 id="titulo-final" class="titulo-pantalla" tabindex="-1">¡Fin del partido!</h2>
         <p id="texto-final" class="texto-final"></p>
+        <p id="puntaje-final" class="puntaje-final" hidden></p>
         <div id="logros-final" class="logros-final" hidden>
           <h3>Logros nuevos</h3>
           <ul id="lista-logros-final"></ul>

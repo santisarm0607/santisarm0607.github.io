@@ -177,7 +177,7 @@ Accesibilidad:
 
 **Para el Segundo Previo (sección de juegos):**
 - ~~Meter los dos juegos~~ ✓ COSMOBALL y Galaxy Gol (los dos con modo en línea).
-- Galaxy Gol: falta **velocidad progresiva** y **historial de partidos + récords** con botón de reiniciar (los pide el parcial).
+- ~~Galaxy Gol: velocidad progresiva e historial~~ ✓ (versión 3.8).
 - Botón de Modo Oscuro/Claro.
 - Récords con LocalStorage (historial + High Scores + botón reiniciar).
 - Publicar en GitHub Pages.
@@ -269,6 +269,10 @@ Accesibilidad:
 - Si es para entregar, pásalo por el validador W3C.
 
 ## 7. Historial de cambios
+
+- **2026-10-29** — Galaxy Gol pasa a la **versión 3.8** (copiado de su repositorio):
+  - **velocidad progresiva** por tiempo
+  - **historial de partidos** en LocalStorage, con pantalla Récords y botón Reiniciar estadísticas
 
 - **2026-10-29** — **Botón de modo claro / oscuro** (lo pide el Segundo Previo).
   - `js/tema.js` es nuevo y va en el `<head>` de las 6 páginas.

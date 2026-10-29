@@ -1,6 +1,6 @@
 'use strict';
 /* ==========================================================================
-   GALAXY GOL · js/script.js · versión 3.6
+   GALAXY GOL · js/script.js · versión 3.8
    Fútbol arcade 2D de alienígenas. Autor: David Santiago Sarmiento Salguero.
 
    Índice:
@@ -51,6 +51,11 @@ const CONTROL_MAX = 480;                         // más rápido que esto, el ba
 const FRICCION = 1.05;
 const VEL_MAX_BALON = 1100;
 const GOLES_PARA_GANAR = 5;
+// Velocidad progresiva (versión 3.8): cada 30 segundos de juego el balón va
+// un 4 % más rápido, hasta +24 %. Se suma a lo que ya sube con cada gol
+// ("aumentoPorGol" de cada nivel). El reloj solo corre con el balón en juego.
+// El tutorial no se acelera.
+const ACELERACION = { cada: 30, aumento: 0.04, maximo: 0.24 };
 const SEGUNDOS_MITAD = 8;
 const PASO = 1 / 120;                            // la física avanza en pasos fijos
 const ROLES = ['arquero', 'defensa', 'volante', 'delantero'];
@@ -355,6 +360,12 @@ const dom = {
   listaLogrosFinal: $('#lista-logros-final'),
   listaLogros: $('#lista-logros'),
   contadorLogros: $('#contador-logros'),
+  listaMejores: $('#lista-mejores'),               // pantalla Récords (versión 3.8)
+  listaHistorial: $('#lista-historial'),
+  resumenRecords: $('#resumen-records'),
+  sinPartidos: $('#sin-partidos'),
+  botonReiniciarRecords: $('#boton-reiniciar-records'),
+  puntajeFinal: $('#puntaje-final'),
   tutorial: $('#tutorial'),
   tutorialPaso: $('#tutorial-paso'),
   tutorialTexto: $('#tutorial-texto'),
@@ -444,6 +455,7 @@ function distanciaASegmento(p, a, b) {
 const CLAVE_LOGROS = 'galaxyGol.logros';
 const CLAVE_SILENCIO = 'galaxyGol.silencio';
 const CLAVE_PERFIL = 'galaxyGol.perfil';
+const CLAVE_HISTORIAL = 'galaxyGol.historial';   // versión 3.8: partidos jugados (JSON)
 
 const almacen = {
   leer(clave, porDefecto) {
@@ -668,6 +680,7 @@ const TITULOS = {
   'pantalla-inicio': 'Galaxy Gol',
   'pantalla-controles': 'Controles · Galaxy Gol',
   'pantalla-logros': 'Logros · Galaxy Gol',
+  'pantalla-records': 'Récords · Galaxy Gol',
   'pantalla-creditos': 'Créditos · Galaxy Gol',
   'pantalla-jugadores': '¿Cuántos jugadores? · Galaxy Gol',
   'pantalla-nivel': 'Elige el nivel · Galaxy Gol',
@@ -718,6 +731,7 @@ document.addEventListener('click', (evento) => {
 
   if (datos.ir) {
     if (datos.ir === 'pantalla-logros') pintarLogros();
+    if (datos.ir === 'pantalla-records') pintarRecords();
     if (datos.ir === 'pantalla-perfil') abrirPerfil(pantallaVisible());
     if (datos.salirSala !== undefined) cerrarRed();
     sonido.tocar('menu');
@@ -1275,6 +1289,8 @@ function nuevaPartida() {
   juego.particulas = [];
   juego.primerSaque = true;
   juego.reloj = 0;
+  juego.ritmoAvisado = 0;          // velocidad progresiva: último aumento anunciado
+  juego.historialGuardado = false; // para guardar el partido una sola vez
   juego.capsula = null;
   juego.proximaCapsula = PODER.capsula.primera;
   juego.ultimoPoder = '';
@@ -1408,6 +1424,14 @@ function actualizar(dt) {
 
 function actualizarJuego(dt) {
   juego.reloj += dt;
+  // Velocidad progresiva: avisa cada vez que el balón sube de velocidad
+  const ritmo = nivelRitmo();
+  if (ritmo > juego.ritmoAvisado) {
+    juego.ritmoAvisado = ritmo;
+    const porcentaje = Math.round((multiplicador() - 1) * 100);
+    ponerMensaje('¡El balón va más rápido!', true, 1.6);
+    anunciar(`El balón va más rápido: ${porcentaje} % más que al empezar.`);
+  }
   juego.tiempoDesdeSaque += dt;
   actualizarPoderes(dt);
   for (const eq of juego.equipos) actualizarEquipo(eq, dt);
@@ -1574,9 +1598,18 @@ function chocarConCrateres(a) {
 /* 12. BALÓN: POSESIÓN, PASES, TIROS Y DERRAPES ============================ */
 const esManejado = (a) => juego.equipos[a.equipo].humano && juego.equipos[a.equipo].controlado === a.numero;
 
-// El balón va un poco más rápido después de cada gol, según el nivel
+// Velocidad progresiva: cuántos aumentos por tiempo lleva la partida (0 a 6)
+function nivelRitmo() {
+  if (juego.tutorial) return 0;
+  const tope = Math.round(ACELERACION.maximo / ACELERACION.aumento);
+  return Math.min(Math.floor(juego.reloj / ACELERACION.cada), tope);
+}
+
+// El balón va un poco más rápido después de cada gol (según el nivel)
+// y cada 30 segundos de juego (velocidad progresiva, versión 3.8)
 function multiplicador() {
-  return 1 + (juego.marcador[0] + juego.marcador[1]) * juego.ajuste.aumentoPorGol;
+  return 1 + (juego.marcador[0] + juego.marcador[1]) * juego.ajuste.aumentoPorGol
+           + nivelRitmo() * ACELERACION.aumento;
 }
 
 function moverBalon(dt) {
@@ -2927,6 +2960,8 @@ function terminarPartida() {
 // Pantalla final. "conSonido" es falso en el invitado (el sonido le llega por internet).
 function pintarFinal(ganador, conSonido = true) {
   juego.estado = 'final';
+  const partido = guardarEnHistorial(ganador);   // historial y récords (versión 3.8)
+  pintarPuntajeFinal(partido);
   const [a, b] = juego.marcador;
   const unJugador = juego.modo === '1j';
   dom.botonOtraVez.hidden = false;
@@ -2962,6 +2997,112 @@ function pintarFinal(ganador, conSonido = true) {
   dom.notificaciones.replaceChildren();
   mostrarFinal();
 }
+
+// ---- Historial de partidos y récords (versión 3.8) ----
+// Cada partido terminado se guarda en localStorage (clave galaxyGol.historial)
+// como JSON. Puntaje = 100 por gol a favor − 50 por gol en contra + bono por ganar.
+// El tutorial no se guarda. En línea cada aparato guarda su propio partido.
+const BONO_GANAR = { facil: 300, normal: 600, dificil: 1000, '2j': 500, red: 500 };
+const MAX_HISTORIAL = 50;
+const NOMBRE_MODO = { '1j': 'contra Zorp', '2j': '2 jugadores', red: 'en línea' };
+
+function leerHistorial() {
+  const lista = almacen.leer(CLAVE_HISTORIAL, []);
+  if (!Array.isArray(lista)) return [];
+  return lista.filter((p) => p && typeof p.puntaje === 'number' && Array.isArray(p.marcador));
+}
+
+function guardarEnHistorial(ganador) {
+  if (juego.tutorial || juego.historialGuardado) return null;
+  juego.historialGuardado = true;
+  // De quién es el partido: 1 jugador = tú; en línea = tu equipo; 2 jugadores = el que ganó
+  const mio = juego.modo === 'red' ? red.miEquipo() : juego.modo === '2j' ? ganador : 0;
+  const rival = 1 - mio;
+  const favor = juego.marcador[mio];
+  const contra = juego.marcador[rival];
+  const gano = ganador === mio;
+  const claveBono = juego.modo === '1j' ? juego.nivel : juego.modo;
+  const partido = {
+    fecha: Date.now(),
+    modo: juego.modo,
+    nivel: juego.modo === '1j' ? juego.nivel : null,
+    jugador: juego.modo === '2j' ? `Jugador ${mio + 1}` : nombreJugador(mio),
+    rival: juego.modo === '1j' ? 'Zorp' : juego.modo === '2j' ? `Jugador ${rival + 1}` : nombreJugador(rival),
+    marcador: [favor, contra],
+    gano,
+    puntaje: Math.max(0, favor * 100 - contra * 50 + (gano ? BONO_GANAR[claveBono] || 0 : 0)),
+    segundos: Math.round(juego.reloj)
+  };
+  const anteriores = leerHistorial();
+  partido.record = anteriores.every((p) => partido.puntaje > p.puntaje) && partido.puntaje > 0;
+  almacen.guardar(CLAVE_HISTORIAL, [partido, ...anteriores].slice(0, MAX_HISTORIAL));
+  return partido;
+}
+
+function pintarPuntajeFinal(partido) {
+  if (!dom.puntajeFinal) return;
+  dom.puntajeFinal.hidden = !partido;
+  if (!partido) return;
+  dom.puntajeFinal.textContent = `${partido.jugador}: ${partido.puntaje} puntos` +
+    (partido.record ? ' · ¡Nuevo récord!' : '');
+}
+
+// Texto de un partido para las listas (nombres como texto, nunca como HTML)
+function textoPartido(p) {
+  const fecha = new Date(p.fecha).toLocaleDateString('es-CO', { day: 'numeric', month: 'short' });
+  const nivel = p.nivel && NIVELES[p.nivel] ? ` (${NIVELES[p.nivel].nombre.toLowerCase()})` : '';
+  return `${p.jugador} ${p.marcador[0]} - ${p.marcador[1]} ${p.rival} · ${NOMBRE_MODO[p.modo] || ''}${nivel} · ${fecha}`;
+}
+
+function filaRecord(p, izquierda) {
+  const item = document.createElement('li');
+  item.className = p.gano ? 'record ganado' : 'record';
+  const marca = document.createElement('span');
+  marca.className = 'record-marca';
+  marca.textContent = izquierda;
+  const texto = document.createElement('span');
+  texto.className = 'record-texto';
+  texto.textContent = textoPartido(p);
+  const puntos = document.createElement('span');
+  puntos.className = 'record-puntos';
+  puntos.textContent = `${p.puntaje} pts`;
+  item.append(marca, texto, puntos);
+  return item;
+}
+
+// Pinta la pantalla "Récords": mejores puntajes, últimos partidos y resumen
+function pintarRecords() {
+  const lista = leerHistorial();
+  const mejores = [...lista].sort((a, b) => b.puntaje - a.puntaje).slice(0, 5);
+  dom.listaMejores.replaceChildren(...mejores.map((p, i) => filaRecord(p, `${i + 1}.`)));
+  dom.listaHistorial.replaceChildren(...lista.slice(0, 10).map((p) => filaRecord(p, p.gano ? 'Ganó' : 'Perdió')));
+  const ganados = lista.filter((p) => p.gano).length;
+  dom.resumenRecords.textContent = lista.length
+    ? `Partidos: ${lista.length} · Ganados: ${ganados} · Mejor puntaje: ${mejores[0].puntaje}`
+    : '';
+  dom.sinPartidos.hidden = lista.length > 0;
+  dom.listaMejores.hidden = lista.length === 0;
+  dom.listaHistorial.hidden = lista.length === 0;
+}
+
+// Reiniciar estadísticas: hay que tocar dos veces para no borrar por error
+let confirmarReinicio = 0;
+dom.botonReiniciarRecords.addEventListener('click', () => {
+  if (!confirmarReinicio) {
+    dom.botonReiniciarRecords.textContent = '¿Seguro? Toca otra vez para borrar';
+    confirmarReinicio = window.setTimeout(() => {
+      confirmarReinicio = 0;
+      dom.botonReiniciarRecords.textContent = 'Reiniciar estadísticas';
+    }, 3000);
+    return;
+  }
+  window.clearTimeout(confirmarReinicio);
+  confirmarReinicio = 0;
+  almacen.guardar(CLAVE_HISTORIAL, []);
+  dom.botonReiniciarRecords.textContent = 'Reiniciar estadísticas';
+  pintarRecords();
+  anunciar('Estadísticas reiniciadas.', false, true);
+});
 
 function mostrarFinal() {
   teclas.clear();

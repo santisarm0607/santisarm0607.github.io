@@ -21,6 +21,8 @@ Juego web de fútbol 4 contra 4 estilo Atari: juega contra Zorp y su equipo, con
 
 P, Espacio o Esc pausan; M silencia. Siempre manejas al alienígena de tu equipo más cercano al balón.
 
+El balón va cada vez más rápido: después de cada gol y cada 30 segundos de juego. Cada partido se guarda en tu navegador (LocalStorage): en **Récords** ves tus mejores puntajes, tus últimos partidos y puedes reiniciar las estadísticas.
+
 ## Archivos
 
 | Carpeta o archivo | Qué tiene |

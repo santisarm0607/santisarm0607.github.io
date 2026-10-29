@@ -2120,3 +2120,75 @@ kbd.tecla-defensa {
     transition-duration: 0.01ms !important;
   }
 }
+
+
+/* ==========================================================================
+   RÉCORDS (versión 3.8): historial de partidos y mejores puntajes
+   ========================================================================== */
+.subtitulo-records {
+  align-self: flex-start;
+  font-family: var(--fuente-titulo);
+  font-size: 1.6rem;
+  color: var(--franja-1);
+}
+
+.lista-records {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.record {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  background: var(--espacio-2);
+  border: 2px solid var(--panel-borde);
+  border-radius: var(--radio);
+}
+
+.record.ganado {
+  border-color: var(--cometa-oscuro);
+}
+
+.record-marca {
+  font-weight: 700;
+  color: var(--texto-suave);
+}
+
+.record.ganado .record-marca {
+  color: var(--cometa);
+}
+
+.record-texto {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  font-size: 0.95rem;
+}
+
+.record-puntos {
+  font-family: var(--fuente-titulo);
+  font-size: 1.5rem;
+  color: var(--franja-1);
+  white-space: nowrap;
+}
+
+.botones-records {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+}
+
+.puntaje-final {
+  margin: 0;
+  font-weight: 700;
+  color: var(--franja-1);
+  text-align: center;
+}

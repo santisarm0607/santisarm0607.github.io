@@ -1,4 +1,4 @@
-# Galaxy Gol · notas del proyecto (versión 3.7)
+# Galaxy Gol · notas del proyecto (versión 3.8)
 
 Juego web arcade de fútbol 2D estilo Atari. Tu equipo juega 4 contra 4 contra el equipo de Zorp (rosado), contra un amigo en el mismo dispositivo o **en línea, cada uno en su dispositivo**. Cada jugador tiene un perfil: nombre, nombre del equipo, color y capitán. Gana el primero que llega a 5 goles.
 
@@ -16,7 +16,7 @@ Autor: David Santiago Sarmiento Salguero (SantiSarm) · Ingeniería Web · Ingen
 
 | Archivo o carpeta | Qué tiene |
 | --- | --- |
-| `index.html` | Todas las pantallas: inicio, perfil, controles, logros, créditos, jugadores, nivel, sala en línea, partida (con el panel del tutorial), pausa y final. |
+| `index.html` | Todas las pantallas: inicio, perfil, controles, logros, récords, créditos, jugadores, nivel, sala en línea, partida (con el panel del tutorial), pausa y final. |
 | `css/style.css` | Colores en `:root`, pantallas, controles táctiles, vertical/horizontal y "reducir movimiento". |
 | `js/script.js` | Toda la lógica, dividida en 21 secciones con comentarios. |
 | `img/` | Pixel art en SVG: logo, Zorp, capitán Cometa, iconos, candado, medalla, cápsulas y celular. |
@@ -95,6 +95,21 @@ Pausa: P, Espacio o Esc. Silencio: M. Con 1 jugador también sirven las teclas d
   - *Lluvia de asteroides*: 6 asteroides caen sobre los rivales (los tumban 1 s). Dejan cráteres que no se pueden pisar ni atravesar con el balón; se cierran solos en 10 s.
   - *Aficionado en nave*: es hincha del equipo que la llamó. Le roba el balón al rival, vuela alto 2 s (nadie lo alcanza) y después baja: hay que tocarlo para recuperar el balón. A los 8 s lo suelta solo.
   - *Alienígena de baba*: cruza la cancha rival dejando charcos. Sobre la baba casi no hay agarre y quien lleva el balón puede perderlo. Los charcos duran 9 s.
+- **Velocidad progresiva** (versión 3.8), en `multiplicador()` (sección 12) con la constante `ACELERACION` (sección 1):
+  - El balón sale más rápido en pases, tiros y despejes después de cada gol (`aumentoPorGol` de cada nivel).
+  - Además, va un 4 % más rápido cada 30 segundos de juego, hasta +24 % (`nivelRitmo()`).
+  - El reloj (`juego.reloj`) solo corre con el balón en juego.
+  - Cada aumento muestra "¡El balón va más rápido!" y lo anuncia para lectores de pantalla.
+  - El tutorial no se acelera.
+- **Historial y récords** (versión 3.8, sección 16):
+  - Al terminar cada partido, `guardarEnHistorial()` guarda en `localStorage` (clave `galaxyGol.historial`, en JSON, máximo 50) estos datos:
+    - fecha, modo, nivel, jugador y rival
+    - marcador, si ganó, puntaje y segundos jugados
+  - **Puntaje**: 100 por gol a favor − 50 por gol en contra + bono por ganar (fácil 300, normal 600, difícil 1000, 2 jugadores 500, en línea 500).
+  - En 2 jugadores se guarda el partido del que ganó. En línea, cada aparato guarda el suyo. El tutorial no se guarda.
+  - La pantalla final muestra el puntaje y, si es el mejor, "¡Nuevo récord!".
+  - **Pantalla Récords** (botón en el inicio): resumen, los 5 mejores puntajes y los últimos 10 partidos.
+  - El botón **Reiniciar estadísticas** borra el historial; hay que tocarlo dos veces para no borrar por error.
 - **Balón nuevo**: si el balón no cruza la mitad en 8 segundos. El reloj se detiene mientras la nave tiene el balón.
 - **Niveles**: tutorial (paso a paso), fácil, normal y difícil. La dificultad sale de la velocidad del balón y de cómo juega Zorp (velocidad, reacción, puntería, cuánto derrapa, cuánto se distrae y si busca cápsulas).
 
@@ -138,6 +153,9 @@ Pausa: P, Espacio o Esc. Silencio: M. Con 1 jugador también sirven las teclas d
 - **Versión 3.3** (22 de octubre de 2026): el jugador 1 usa F (pasar), G (tirar) y H (derrapar), en fila y en el mismo orden que la guía. La guía de botones pasa a la esquina inferior derecha (con 2 jugadores, la del jugador 2 va a la izquierda).
 - **Versión 3.4** (22 de octubre de 2026): pasar y tirar se juntan en un solo botón, **Patear** (F, Ñ o el botón del celular): un toque pasa y mantener carga un tiro con fuerza, con barrita de carga. Derrapar pasa a la G. En celular quedan 2 botones: Patear y Derrapar.
 - **Versión 3.5** (23 de octubre de 2026): carpetas separadas por tipo de código: `css/style.css` y `js/script.js` (antes estaban al lado de `index.html`). No cambia nada del juego.
+- **Versión 3.8** (29 de octubre de 2026): **velocidad progresiva** por tiempo y **historial de partidos con récords** (pantalla Récords, puntaje en la pantalla final y botón Reiniciar estadísticas).
+  - Cambios en `index.html` (botón Récords, pantalla `#pantalla-records` y `#puntaje-final`), `css/style.css` (sección Récords al final) y `js/script.js` (`ACELERACION`, `nivelRitmo`, `multiplicador`, `guardarEnHistorial`, `pintarRecords`).
+  - No cambian los sonidos ni las animaciones. Cero atributos `style`.
 - **Versión 3.7** (28 de octubre de 2026): el botón de **pantalla completa** se ve desde el inicio y en todos los menús.
   - Es un botón nuevo, `#boton-pantalla-menu`, en la esquina de arriba a la derecha.
   - En la partida se sigue usando el de la barra de arriba.
