@@ -883,6 +883,51 @@ function iniciarVentanaJuego() {
 
 
 /* ---------------------------------------------------------
+   19. BOTÓN MODO CLARO / OSCURO (todas las páginas)
+   - Oscuro = el tema espacial. Claro = mis colores de antes (blanco y azul).
+   - Lo elegido se guarda en localStorage ("santisarm.tema") y js/tema.js
+     lo pone al entrar a cualquier página.
+   - El CSS cambia solo: en styles.css (parte 1) el bloque
+     html[data-tema="claro"] cambia los colores --espacio-.
+   --------------------------------------------------------- */
+const ICONO_LUNA = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 14.5A9 9 0 0 1 9.5 3a7.5 7.5 0 1 0 11.5 11.5z"/></svg>';
+const ICONO_SOL = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="5"/><path d="M11 1h2v4h-2zM11 19h2v4h-2zM1 11h4v2H1zM19 11h4v2h-4zM3.5 5l1.5-1.5 2.8 2.8-1.5 1.5zM16.2 17.7l1.5-1.5 2.8 2.8-1.5 1.5zM3.5 19l2.8-2.8 1.5 1.5L5 20.5zM16.2 6.3 19 3.5 20.5 5l-2.8 2.8z"/></svg>';
+
+function iniciarTema() {
+  const nav = document.querySelector('nav[aria-label="Menú principal"]');
+  if (!nav) return;
+
+  const boton = document.createElement('button');
+  boton.type = 'button';
+  boton.className = 'tema-boton';
+  nav.appendChild(boton);
+
+  function temaActual() {
+    return document.documentElement.getAttribute('data-tema') === 'claro' ? 'claro' : 'oscuro';
+  }
+
+  // El botón muestra el modo AL QUE vas a cambiar: en oscuro sale el sol, en claro la luna
+  function pintar() {
+    const claro = temaActual() === 'claro';
+    boton.innerHTML = claro ? ICONO_LUNA : ICONO_SOL;
+    boton.setAttribute('aria-label', claro ? 'Cambiar a modo oscuro' : 'Cambiar a modo claro');
+    boton.title = boton.getAttribute('aria-label');
+    boton.setAttribute('aria-pressed', claro ? 'true' : 'false');
+  }
+
+  boton.addEventListener('click', function () {
+    const nuevo = temaActual() === 'claro' ? 'oscuro' : 'claro';
+    document.documentElement.setAttribute('data-tema', nuevo);
+    try { localStorage.setItem('santisarm.tema', nuevo); } catch (e) { /* no se guarda, pero cambia igual */ }
+    pintar();
+    mostrarAviso(nuevo === 'claro' ? '☀️ Modo claro' : '🌙 Modo oscuro');
+  });
+
+  pintar();
+}
+
+
+/* ---------------------------------------------------------
    17. ENCENDER TODO
    Si algún día quiero apagar un efecto, solo pongo // delante de su línea.
    --------------------------------------------------------- */
@@ -901,3 +946,4 @@ iniciarFormulario();
 iniciarEstrellasFugaces();
 iniciarArcade();
 iniciarVentanaJuego();
+iniciarTema();

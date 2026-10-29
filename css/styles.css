@@ -29,8 +29,34 @@
   --espacio-lavanda: #9DB8FF;       /* títulos y etiquetas: mi azul, pero visible en lo oscuro */
   --espacio-celeste-claro: #8FDBFF; /* categorías y colaboraciones */
   --espacio-brillo: rgba(41, 182, 246, 0.35);  /* resplandor celeste */
+  --espacio-header: rgba(11, 16, 38, 0.78);    /* header de vidrio oscuro */
+  --espacio-titulo: #FFFFFF;        /* mi nombre en el inicio */
+  --espacio-acento-texto: #29B6F6;  /* celeste para textos (sobre oscuro sí se lee) */
+  --espacio-placeholder: #8C98BF;   /* texto de ejemplo en los campos del formulario */
 
   color-scheme: dark; /* así las barras de scroll y los menús del navegador también salen oscuros */
+}
+
+/* --- MODO CLARO (botón ☀️/🌙 del header) ---
+   Cuando el <html> tiene data-tema="claro", los colores --espacio- cambian a
+   los de mi diseño original: fondo blanco, header y footer azules.
+   Como la parte 10 usa estas variables, toda la página cambia sola.
+   Revisados con WCAG: todos los textos dan más de 4.5:1. */
+html[data-tema="claro"] {
+  --espacio-fondo: #FFFFFF;
+  --espacio-negro: #3153A1;         /* footer azul, como antes */
+  --espacio-panel: #F1F9FE;         /* tarjetas azul muy claro */
+  --espacio-borde: rgba(49, 83, 161, 0.18);
+  --espacio-texto: #222222;
+  --espacio-texto-suave: #5A6472;   /* 6.1:1 sobre blanco */
+  --espacio-lavanda: #3153A1;       /* títulos en mi azul (7.3:1) */
+  --espacio-celeste-claro: #3153A1;
+  --espacio-brillo: rgba(41, 182, 246, 0.25);
+  --espacio-header: #3153A1;        /* header azul sólido, como antes */
+  --espacio-titulo: #3153A1;
+  --espacio-acento-texto: #3153A1;  /* el celeste no se lee sobre blanco: se usa el azul */
+  --espacio-placeholder: #6B7480;   /* 4.8:1 sobre blanco */
+  color-scheme: light;
 }
 
 /* ---------------------------------------------------------
@@ -1198,7 +1224,7 @@ body::after {
 
 /* --- Header y footer --- */
 .header {
-  background-color: rgba(11, 16, 38, 0.78); /* azul noche un poco transparente */
+  background-color: var(--espacio-header); /* oscuro: azul noche transparente · claro: azul */
   backdrop-filter: blur(10px);              /* lo de atrás se ve borroso, como vidrio */
   -webkit-backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--espacio-borde);
@@ -1269,12 +1295,12 @@ body::after {
 }
 
 .hero__titulo {
-  color: var(--color-blanco);
+  color: var(--espacio-titulo);
   text-shadow: 0 0 24px rgba(41, 182, 246, 0.35); /* brillito alrededor de mi nombre */
 }
 
 .hero__subtitulo {
-  color: var(--color-acento); /* sobre fondo oscuro el celeste sí cumple WCAG (8.2:1) */
+  color: var(--espacio-acento-texto); /* oscuro: celeste (8.2:1) · claro: azul */
 }
 
 .hero__bio {
@@ -1392,7 +1418,7 @@ body::after {
 
 .filtro[aria-pressed="true"] .filtro__numero {
   background-color: var(--espacio-fondo);
-  color: var(--color-acento);
+  color: var(--espacio-acento-texto);
 }
 
 .proyecto {
@@ -1495,7 +1521,7 @@ body::after {
 }
 
 .form-control::placeholder {
-  color: #8C98BF; /* gris azulado, 6.6:1 sobre el campo */
+  color: var(--espacio-placeholder); /* 6.6:1 en oscuro, 4.8:1 en claro */
 }
 
 /* La flechita del select: Bootstrap la trae oscura, aquí la hago clara */
@@ -1526,6 +1552,11 @@ body::after {
   background-color: var(--color-acento);
   border-color: var(--color-acento);
   color: var(--color-texto);
+}
+
+.boton-copiar--oscuro {
+  border-color: var(--color-blanco); /* en la franja azul siempre blanco, en los dos modos */
+  color: var(--color-blanco);
 }
 
 /* --- Botón volver arriba = cohete 🚀 --- */
@@ -1578,6 +1609,96 @@ body::after {
 
   .hero__foto::after {
     transform: rotate(-40deg) translateX(132px); /* la lunita queda quieta sobre la órbita */
+  }
+}
+
+/* --- Botón del modo claro / oscuro (lo crea js/main.js, parte 19) --- */
+.tema-boton {
+  display: inline-grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  margin-left: 22px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.55);
+  background-color: transparent;
+  color: var(--color-blanco);   /* el header es oscuro o azul en los dos modos: el blanco siempre se lee */
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.3s ease;
+}
+
+.tema-boton:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+  transform: rotate(20deg);
+}
+
+.tema-boton:focus-visible {
+  outline: 3px solid var(--color-acento);
+  outline-offset: 3px;
+}
+
+.tema-boton svg {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+}
+
+nav[aria-label="Menú principal"] {
+  display: flex;
+  align-items: center;
+}
+
+/* --- Cosas que cambian en el modo claro y no son solo colores --- */
+html[data-tema="claro"] body::before,
+html[data-tema="claro"] body::after,
+html[data-tema="claro"] .estrella-fugaz {
+  display: none; /* de día no hay estrellas */
+}
+
+html[data-tema="claro"] .header {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border-bottom-color: transparent;
+}
+
+html[data-tema="claro"] .hero__titulo {
+  text-shadow: none;
+}
+
+html[data-tema="claro"] .hero,
+html[data-tema="claro"] .portafolio-intro,
+html[data-tema="claro"] .contacto-hero {
+  background-color: var(--color-azul-claro); /* la franja azul clarito de arriba, como en el diseño original */
+}
+
+html[data-tema="claro"] .proyecto,
+html[data-tema="claro"] .form-tarjeta,
+html[data-tema="claro"] .contacto-dato {
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+}
+
+html[data-tema="claro"] .proyecto {
+  background-color: var(--color-blanco);
+}
+
+html[data-tema="claro"] .habilidad {
+  background-color: var(--color-azul-claro); /* píldoras como en el diseño original */
+  color: var(--color-azul);
+  border-color: var(--color-azul);
+}
+
+html[data-tema="claro"] .habilidad:hover {
+  background-color: var(--color-azul);
+  border-color: var(--color-azul);
+  color: var(--color-blanco);
+}
+
+@media (max-width: 768px) {
+  .tema-boton {
+    position: absolute; /* en celular va arriba a la derecha del header */
+    top: 12px;
+    right: 16px;
+    margin-left: 0;
   }
 }
 
@@ -1693,7 +1814,7 @@ body::after {
 
 .planeta:hover .planeta__nombre,
 .planeta:focus-visible .planeta__nombre {
-  color: var(--color-acento); /* celeste sobre el fondo oscuro: 8.2:1 */
+  color: var(--espacio-acento-texto); /* oscuro: celeste (8.2:1) · claro: azul */
 }
 
 .planeta__info {

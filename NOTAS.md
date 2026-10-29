@@ -19,7 +19,8 @@ Bootstrap se usa solo en Contacto. **Tema espacial** (fondo azul noche con estre
 | `cosmoball.html` | **COSMOBALL** (ping-pong). Tiene el menú del portafolio, el juego en una ventana (`iframe`) y el botón "Volver a la nave". Las instrucciones están dentro del juego. En celular, en vez de la ventana, muestra una portada con el botón "Jugar" que abre el juego solo |
 | `juegos/cosmoball/` | El juego COSMOBALL completo (`html/`, `css/`, `js/`, su propio `NOTAS.md`). Es una **copia** del repositorio `github.com/santisarm0607/cosmoball`: si cambias el juego, cámbialo en los dos lados |
 | `css/styles.css` | **Único archivo de estilos**, lo usan todas las páginas |
-| `js/main.js` | **Único archivo de JavaScript**, lo usan todas las páginas |
+| `js/main.js` | **El JavaScript de la página**, lo usan todas las páginas |
+| `js/tema.js` | Pone el **modo claro u oscuro** guardado, antes de que se dibuje la página (va en el `<head>`) |
 | `img/` | Logo, avatar y `proyecto1…7`. Todo en `.webp`, máx. 800 px de ancho |
 | `Manual_Tecnico_...pdf` | Informe del examen (no es parte de la página) |
 
@@ -91,6 +92,13 @@ Cómo se conectan:
 
 > Sobre el fondo oscuro el celeste `--color-acento` **sí** cumple WCAG (8.2:1), por eso ahora se usa en "Ingeniero Multimedia".
 
+**Modo claro:**
+- El bloque `html[data-tema="claro"]` (justo debajo del `:root`) le da otro valor a cada variable `--espacio-`: blanco, azul `#3153A1` y gris de texto.
+- Como la parte 10 usa esas variables, todo cambia solo.
+- Lo que no es solo color (esconder las estrellas, las píldoras de Habilidades, la franja azul clarito de arriba) está al final de la parte 10.
+- En el modo claro todos los textos también dan más de 4.5:1.
+- Los juegos se quedan con sus propios colores, porque tienen su diseño.
+
 - **Fuente:** Poppins (400–800). **Bordes:** `--radio-borde: 14px`. **Ancho máximo:** 1200 px (`.contenedor`).
 - **Tamaños:** nombre 2.6rem · títulos de página 2.2rem · Habilidades 1.8rem · título de proyecto 1.2rem.
 - **Nombres de clases:** estilo BEM en español → `bloque__parte--variante` (ej: `nav__enlace--activo`, `boton--primario`).
@@ -153,6 +161,7 @@ Está dividido en partes numeradas con comentarios.
 | 13 | Formulario | contacto | Contador de caracteres. Al enviar ya no recarga la página: muestra "¡Gracias, Nombre!" con confeti y un botón que abre el correo con el mensaje ya escrito (`mailto:`) |
 | 14 | Estrellas fugaces | todas | Cada 4 a 9 segundos cruza una estrella fugaz (solo si la pestaña se está viendo) |
 | 18 | Ventana del juego | cosmoball | Cuando el juego termina de cargar, le pasa el foco para que el teclado funcione sin hacer clic |
+| 19 | Modo claro / oscuro | todas | Botón ☀️/🌙 al lado del menú. Guarda la elección en `localStorage` (`santisarm.tema`). Cambia el atributo `data-tema` del `<html>` y el CSS hace el resto |
 | 16 | Arcade | juegos | Al pasar el mouse (o Tab) por un planeta, la nave gira para mirarlo. Al hacer clic: la nave gira, despega, vuela al planeta haciéndose pequeña, la pantalla se llena del color del planeta (`data-color`) y entra al juego. El planeta "Próximamente" solo se sacude y avisa |
 
 Herramientas que usan los efectos:
@@ -260,6 +269,11 @@ Accesibilidad:
 - Si es para entregar, pásalo por el validador W3C.
 
 ## 7. Historial de cambios
+
+- **2026-10-29** — **Botón de modo claro / oscuro** (lo pide el Segundo Previo).
+  - `js/tema.js` es nuevo y va en el `<head>` de las 6 páginas.
+  - `main.js`: parte 19 nueva.
+  - `styles.css`: bloque `html[data-tema="claro"]` en la parte 1, variables nuevas (`--espacio-header`, `--espacio-titulo`, `--espacio-acento-texto`, `--espacio-placeholder`) y el estilo `.tema-boton`.
 
 - **2026-10-28** — Páginas de los juegos (`cosmoball.html` y `futbol.html`) más limpias.
   - Debajo del juego solo queda el botón **"Volver a la nave"**.
