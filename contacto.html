@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contacto | Santiago Sarmiento</title>
+    <meta name="description" content="Formulario de contacto de Santiago Sarmiento, Ingeniero Multimedia.">
+    <!-- Bootstrap 5 - rejilla responsiva de 12 columnas (requisito del examen) -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="js/main.js" defer></script> <!-- efectos con JavaScript (ver js/main.js) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header class="header">
+        <div class="contenedor header__contenedor">
+            <a href="index.html" class="header__logo" aria-label="Ir al inicio - Santisarm">
+                <img src="img/logo-santisarm-horizontal.webp" alt="Logo de Santisarm" width="180" height="52" class="header__logo-img">
+            </a>
+            <nav aria-label="Menú principal">
+                <ul class="nav__lista">
+                    <li><a href="index.html" class="nav__enlace">Inicio</a></li>
+                    <li><a href="blog.html" class="nav__enlace">Portafolio</a></li>
+                    <li><a href="juegos.html" class="nav__enlace">Juegos</a></li>
+                    <li><a href="contacto.html" class="nav__enlace nav__enlace--activo" aria-current="page">Contacto</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="contacto-hero" aria-labelledby="titulo-contacto">
+            <div class="contenedor">
+                <p id="titulo-contacto" class="contacto-hero__titulo">Hablemos de tu proyecto</p>
+                <p class="contacto-hero__texto">
+                    Completa el formulario y con gusto te responderé. Esta es una vista de demostración
+                    del formulario (maqueta), aún sin conexión a un servicio de envío real.
+                </p>
+            </div>
+        </section>
+
+        <section class="contacto-form-seccion">
+            <div class="contenedor">
+
+                <!-- Formulario con rejilla Bootstrap de 12 columnas (col-12 en móvil, col-md-6 en escritorio) -->
+                <form class="form-tarjeta row g-3" aria-describedby="aviso-formulario">
+
+                    <div class="col-12 col-md-6">
+                        <label for="nombre" class="form-etiqueta">Nombre completo</label>
+                        <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Escribe tu nombre" required>
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                        <label for="email" class="form-etiqueta">Correo electrónico</label>
+                        <input type="email" class="form-control" id="email" name="email" placeholder="tucorreo@ejemplo.com" required>
+                    </div>
+
+                    <div class="col-12">
+                        <label for="asunto" class="form-etiqueta">Asunto / Servicio de interés</label>
+                        <select class="form-select" id="asunto" name="asunto" required>
+                            <option value="" selected disabled>Selecciona una opción</option>
+                            <option value="branding">Branding</option>
+                            <option value="uiux">UI/UX</option>
+                            <option value="animacion">Animación</option>
+                            <option value="diseno-grafico">Diseño Gráfico</option>
+                            <option value="desarrollo-web">Desarrollo Web</option>
+                            <option value="otro">Otro</option>
+                        </select>
+                    </div>
+
+                    <div class="col-12">
+                        <label for="mensaje" class="form-etiqueta">Mensaje</label>
+                        <textarea class="form-control" id="mensaje" name="mensaje" rows="5" placeholder="Cuéntame sobre tu proyecto..." required></textarea>
+                    </div>
+
+                    <div class="col-12 text-center">
+                        <button type="submit" class="boton boton--primario">Enviar mensaje</button>
+                        <p id="aviso-formulario" class="form-aviso">
+                            Este formulario es una maqueta de demostración y actualmente no envía datos a ningún servidor.
+                        </p>
+                    </div>
+
+                </form>
+
+                <div class="contacto-datos">
+                    <div class="contacto-dato">
+                        <p class="contacto-dato__titulo">Correo</p>
+                        <p class="contacto-dato__valor">santisarm.06salguero@gmail.com</p>
+                    </div>
+                    <div class="contacto-dato">
+                        <p class="contacto-dato__titulo">Ubicación</p>
+                        <p class="contacto-dato__valor">Cúcuta, Colombia</p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="contenedor footer__contenedor"></div>
+    </footer>
+
+</body>
+</html>

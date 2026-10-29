@@ -1,0 +1,444 @@
+/* ====== Identidad COSMOBALL ======
+   Paleta: azul cian, morado, rosa y naranja sobre azul oscuro.
+   Letras: Fredoka (redondeada) para títulos y botones, Rubik para textos. */
+:root {
+  --espacio: #050a24;    /* azul oscuro del espacio */
+  --texto: #e6ecff;
+  --neon: #38e8ff;       /* azul cian */
+  --morado: #9b5cff;
+  --magenta: #ff3cac;    /* rosa */
+  --naranja: #ff9a3c;
+  --titulo: "Fredoka", "Rubik", system-ui, sans-serif;
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+html, body { height: 100%; margin: 0; }
+body {
+  background:
+    radial-gradient(ellipse at 20% 10%, #2a1466 0%, transparent 55%),
+    radial-gradient(ellipse at 85% 90%, #0d2a6c 0%, transparent 50%),
+    radial-gradient(ellipse at 90% 8%, rgba(255, 154, 60, .14) 0%, transparent 40%),
+    var(--espacio);
+  color: var(--texto);
+  font-family: "Rubik", system-ui, sans-serif;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 14px; padding: 12px; box-sizing: border-box;
+  user-select: none;
+}
+h1 {
+  font-family: var(--titulo); font-weight: 700;
+  margin: 0; font-size: clamp(1.4rem, 4.5vw, 2.6rem); text-align: center;
+  letter-spacing: .04em;
+  background: linear-gradient(100deg, var(--neon), var(--morado) 35%, var(--magenta) 65%, var(--naranja));
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  filter: drop-shadow(0 0 8px rgba(56, 232, 255, .4));
+}
+
+/* ====== Zona de juego ====== */
+/* La cancha crece hasta llenar la ventana (los 110px son el título y los márgenes) */
+#marco {
+  position: relative;
+  width: min(100%, calc((100vh - 110px) * 16 / 9));
+  width: min(100%, calc((100dvh - 110px) * 16 / 9));
+}
+canvas {
+  display: block; width: 100%; height: auto;
+  border-radius: 10px;
+  border: 2px solid rgba(56, 232, 255, .55);
+  box-shadow: 0 0 24px rgba(56, 232, 255, .35), 0 0 60px rgba(155, 92, 255, .25), 0 0 90px rgba(255, 154, 60, .08);
+  touch-action: none;
+}
+
+/* ====== Pantallas encima del juego ====== */
+.pantalla {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
+  gap: 8px; padding: 16px;
+  overflow-y: auto;
+  background: rgba(6, 10, 36, .72);
+  border-radius: 10px;
+  color: #fff; text-align: center;
+}
+.pantalla > :first-child { margin-top: auto; }
+.pantalla > :last-child { margin-bottom: auto; }
+.oculta { display: none !important; }
+.nota { opacity: .75; font-size: clamp(.8rem, 1.9vw, 1rem) !important; }
+.pantalla h2 {
+  font-family: var(--titulo); font-weight: 700;
+  font-size: clamp(1.2rem, 4.5vw, 2.5rem); margin: 0 0 6px;
+  text-shadow: 0 0 12px var(--neon);
+}
+.pantalla p { margin: 0 0 8px; font-size: clamp(.95rem, 2.2vw, 1.2rem); max-width: 40ch; }
+.pantalla label, .etiqueta { font-weight: 600; font-size: clamp(.85rem, 2vw, 1.05rem); color: #bfc4ff; }
+
+/* Tarjetas de cada jugador */
+.tarjetas { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+.tarjeta {
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  padding: 10px 14px; min-width: 190px;
+  border: 1px solid rgba(155, 92, 255, .5); border-radius: 18px;
+  background: linear-gradient(160deg, rgba(155, 92, 255, .12), rgba(56, 232, 255, .04));
+}
+.teclas { font-weight: 400; opacity: .7; font-size: .85em; }
+.caja { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+
+.nombre {
+  font: inherit; font-size: clamp(.95rem, 2.2vw, 1.1rem);
+  padding: 6px 12px; width: 170px; box-sizing: border-box;
+  border: 2px solid var(--neon); border-radius: 10px;
+  background: rgba(56, 232, 255, .08); color: #fff; text-align: center;
+  box-shadow: 0 0 12px rgba(56, 232, 255, .3);
+}
+.nombre::placeholder { color: rgba(255,255,255,.5); }
+.nombre:focus { outline: none; border-color: var(--magenta); box-shadow: 0 0 16px rgba(255, 60, 172, .5); }
+
+/* Botones de color */
+.colores { display: flex; gap: 9px; flex-wrap: wrap; justify-content: center; margin-bottom: 6px; }
+.color {
+  width: clamp(22px, 3.6vw, 32px); height: clamp(22px, 3.6vw, 32px);
+  border-radius: 50%; border: 2px solid rgba(255,255,255,.3);
+  cursor: pointer; transition: transform .12s;
+}
+.color:hover { transform: scale(1.12); }
+.color.elegido { border-color: #fff; transform: scale(1.2); box-shadow: 0 0 14px currentColor, 0 0 0 3px rgba(255,255,255,.25); }
+
+/* Botones */
+.botones { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+.boton {
+  font-family: var(--titulo); font-weight: 700;
+  font-size: clamp(.85rem, 2.2vw, 1.1rem);
+  padding: 11px 24px; border: 2px solid rgba(255, 255, 255, .28); border-radius: 30px; cursor: pointer;
+  background: linear-gradient(120deg, var(--morado), var(--magenta) 55%, var(--naranja));
+  letter-spacing: .03em;
+  color: #fff;
+  box-shadow: 0 0 18px rgba(255, 60, 172, .55);
+  transition: transform .1s, box-shadow .1s;
+}
+.boton:hover { box-shadow: 0 0 28px rgba(255, 60, 172, .85); }
+.boton:active { transform: scale(.96); }
+.boton.grande { font-size: clamp(1.1rem, 3vw, 1.5rem); padding: 13px 44px; margin-top: 6px; }
+.boton.secundario { background: transparent; border-color: var(--neon); color: var(--neon); box-shadow: 0 0 14px rgba(56, 232, 255, .4); }
+.boton:focus-visible, .color:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+
+@media (prefers-reduced-motion: reduce) { .boton, .color { transition: none; } }
+
+/* Botones de dificultad */
+.niveles { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+.dificultad {
+  font-family: "Rubik", sans-serif; font-weight: 600;
+  font-size: clamp(.8rem, 2vw, 1rem);
+  padding: 6px 16px; border-radius: 20px; cursor: pointer;
+  background: transparent; color: #bfc4ff;
+  border: 2px solid rgba(191, 196, 255, .4);
+}
+.dificultad:hover { border-color: var(--neon); color: #fff; }
+.dificultad.elegido { background: var(--neon); border-color: var(--neon); color: #060a24; box-shadow: 0 0 14px rgba(56, 232, 255, .6); }
+.dificultad:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+
+/* =====================================================================
+   CELULAR
+   ===================================================================== */
+html, body { overscroll-behavior: none; }
+body {
+  padding-left: max(12px, env(safe-area-inset-left, 0px));
+  padding-right: max(12px, env(safe-area-inset-right, 0px));
+}
+button { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+
+/* Botones flotantes: pausa y pantalla completa */
+.flotante {
+  position: absolute; top: 8px; left: 50%; transform: translateX(-50%);
+  z-index: 5;
+  width: 44px; height: 44px; border-radius: 50%;
+  border: 2px solid rgba(56, 232, 255, .6);
+  background: rgba(6, 10, 36, .6); color: #fff;
+  font-size: 1.2rem; line-height: 1; cursor: pointer;
+}
+.flotante.derecha { left: auto; right: 8px; transform: none; }
+
+@media (pointer: coarse) {
+  .teclas { display: none; }
+}
+
+/* Aviso para girar el celular (solo en celular vertical) */
+#avisoGirar {
+  display: none;
+  position: fixed; inset: 0; z-index: 20;
+  flex-direction: column; align-items: center; justify-content: center; gap: 14px;
+  background: rgba(5, 10, 36, .96); color: #fff; text-align: center; padding: 24px;
+  font-size: 1.15rem;
+}
+.icono-girar { font-size: 4rem; animation: girar 2s ease-in-out infinite; }
+@keyframes girar { 0%, 30% { transform: rotate(0); } 60%, 100% { transform: rotate(90deg); } }
+@media (pointer: coarse) and (orientation: portrait) {
+  body:not(.sin-aviso-girar) #avisoGirar { display: flex; }
+  /* Si juegan en vertical, las pantallas de menú ocupan todo el celular */
+  .pantalla { position: fixed; inset: 0; z-index: 10; border-radius: 0; background: #060a24; }
+}
+
+/* Celular horizontal: el juego ocupa toda la pantalla */
+@media (orientation: landscape) and (max-height: 520px) {
+  h1 { display: none; }
+  body { padding-top: 0; padding-bottom: 0; gap: 0; }
+  #marco { width: min(100%, calc(100vh * 16 / 9)); width: min(100%, calc(100dvh * 16 / 9)); }
+  canvas { border-radius: 0; border: none; box-shadow: none; }
+  .pantalla { border-radius: 0; gap: 4px; padding: 8px; }
+  .pantalla h2 { font-size: 1.1rem; margin: 0; }
+  .pantalla p { font-size: .85rem; margin: 0; }
+  .tarjeta { padding: 5px 10px; gap: 4px; min-width: 0; }
+  .nombre { width: 140px; padding: 4px 10px; font-size: .9rem; }
+  .color { width: 24px; height: 24px; }
+  .pantalla label, .etiqueta { font-size: .8rem; }
+  .boton { padding: 7px 16px; font-size: .85rem; }
+  .boton.grande { padding: 10px 24px; font-size: 1rem; margin-top: 0; }
+  .dificultad { padding: 4px 12px; font-size: .8rem; }
+  .flotante { width: 38px; height: 38px; font-size: 1rem; }
+}
+
+/* =====================================================================
+   BOTONES ▲ ▼ PARA CELULAR
+   ===================================================================== */
+#controles { display: none; }
+.grupo {
+  --color: #38e8ff;
+  position: fixed; z-index: 6;
+  display: flex; flex-direction: column; gap: 10px;
+}
+#grupo1 { left: max(8px, env(safe-area-inset-left, 0px)); }
+#grupo2 { right: max(8px, env(safe-area-inset-right, 0px)); display: none; }
+body.modo2 #grupo2 { display: flex; }
+
+.control {
+  width: 68px; height: 68px; border-radius: 18px;
+  border: 2px solid var(--color);
+  background: rgba(6, 10, 36, .55);
+  color: var(--color); font-size: 1.7rem; line-height: 1;
+  box-shadow: 0 0 12px color-mix(in srgb, var(--color) 40%, transparent);
+  touch-action: none; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none;
+  cursor: pointer;
+}
+.control.activo { background: var(--color); color: #060a24; transform: scale(.95); }
+
+@media (pointer: coarse) {
+  body.en-juego #controles { display: block; }
+
+  /* Celular horizontal: botones altos a los lados y el juego en el centro */
+  @media (orientation: landscape) {
+    .grupo { top: 50%; transform: translateY(-50%); }
+    .control { height: 40vh; height: 40dvh; width: 64px; }
+    body.en-juego #marco { width: min(100% - 150px, calc(100vh * 16 / 9)); width: min(100% - 150px, calc(100dvh * 16 / 9)); }
+  }
+  /* Celular vertical: botones abajo, uno en cada esquina */
+  @media (orientation: portrait) {
+    .grupo { bottom: calc(24px + env(safe-area-inset-bottom, 0px)); }
+    .control { width: 78px; height: 78px; }
+    body.en-juego { justify-content: flex-start; padding-top: 30px; }
+  }
+}
+
+/* Pantalla de título: agujero negro + nombre + eslogan */
+.logo-agujero { display: block; width: clamp(150px, 26vw, 250px); height: auto; overflow: visible; }
+.disco-gira { transform-box: fill-box; transform-origin: center; animation: girarDisco 7s linear infinite; }
+@keyframes girarDisco { to { transform: rotate(360deg); } }
+.logo {
+  font-family: var(--titulo); font-weight: 700;
+  font-size: clamp(2.4rem, 10vw, 5.4rem); line-height: 1; letter-spacing: .05em;
+  padding: 0 .1em;
+  background: linear-gradient(100deg, var(--neon) 0%, var(--morado) 35%, var(--magenta) 65%, var(--naranja) 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  filter: drop-shadow(0 0 10px rgba(56, 232, 255, .45)) drop-shadow(0 0 26px rgba(255, 60, 172, .35));
+  transform: skewX(-7deg);
+  animation: flotar 3s ease-in-out infinite;
+}
+@keyframes flotar { 0%, 100% { transform: skewX(-7deg) translateY(0); } 50% { transform: skewX(-7deg) translateY(-8px); } }
+.eslogan {
+  font-family: var(--titulo) !important; font-weight: 500;
+  font-size: clamp(.9rem, 2.3vw, 1.2rem) !important; letter-spacing: .08em;
+  color: #cfe9ff; max-width: none !important; text-wrap: balance;
+}
+@media (prefers-reduced-motion: reduce) { .logo, .disco-gira { animation: none; } }
+
+/* ===== Pantalla de título: la marca arriba y el menú en columna, como un menú arcade ===== */
+#pantallaTitulo { gap: clamp(18px, 4vh, 40px); }
+.titulo-marca { display: flex; flex-direction: column; align-items: center; }
+#pantallaTitulo .logo-agujero { width: clamp(120px, min(24vw, 24vh), 240px); margin-bottom: clamp(4px, 1vh, 12px); }
+#pantallaTitulo .logo { font-size: clamp(2.2rem, min(9vw, 9vh), 5.2rem); }
+#pantallaTitulo .eslogan { margin: clamp(8px, 1.6vh, 16px) 0 0; }
+.menu-principal {
+  display: flex; flex-direction: column; align-items: stretch;
+  gap: clamp(8px, 1.3vh, 12px); width: min(340px, 100%);
+}
+.menu-principal .boton {
+  width: 100%; margin: 0; text-transform: uppercase; letter-spacing: .08em;
+  font-size: clamp(.82rem, min(1.8vw, 2vh), 1.05rem); padding: clamp(8px, 1.4vh, 13px) 20px;
+}
+.menu-principal .boton.grande {
+  font-size: clamp(1rem, min(2.4vw, 2.8vh), 1.4rem); padding: clamp(10px, 1.9vh, 17px) 20px;
+  margin-bottom: clamp(4px, 1vh, 10px);
+}
+.menu-principal .boton.secundario { background: rgba(56, 232, 255, .06); }
+.menu-principal .boton.secundario:hover { background: rgba(56, 232, 255, .14); color: #fff; }
+.menu-principal .nota { margin: 4px 0 0; text-align: center; max-width: none; }
+
+/* Celular acostado: la marca a la izquierda y el menú a la derecha */
+@media (orientation: landscape) and (max-height: 520px) {
+  #pantallaTitulo { flex-direction: row; justify-content: center; align-items: center; gap: 6vw; }
+  #pantallaTitulo > * { margin-top: 0 !important; margin-bottom: 0 !important; }
+  #pantallaTitulo .logo-agujero { width: 130px; margin-bottom: 4px; }
+  #pantallaTitulo .logo { font-size: 2.4rem; }
+  #pantallaTitulo .eslogan { margin-top: 6px; font-size: .75rem !important; max-width: 24ch !important; }
+  .menu-principal { width: 220px; gap: 6px; }
+  .menu-principal .boton { padding: 7px 12px; font-size: .78rem; }
+  .menu-principal .boton.grande { padding: 9px 12px; font-size: .95rem; margin-bottom: 2px; }
+}
+@media (orientation: landscape) and (max-height: 520px) {
+  .logo { font-size: 2.6rem; }
+  .logo-agujero { width: 110px; }
+  .eslogan { font-size: .8rem !important; }
+}
+
+body.en-titulo h1 { visibility: hidden; }
+
+/* ===== Marcador de mejores puntajes ===== */
+.tabla-marcador {
+  list-style: none; margin: 0; padding: 0;
+  width: min(100%, 560px);
+  display: flex; flex-direction: column; gap: 4px;
+}
+.tabla-marcador li {
+  display: grid; grid-template-columns: 2.2em 1fr auto; grid-template-areas: "puesto nombre puntos" "puesto detalle puntos";
+  align-items: center; column-gap: 10px;
+  padding: 5px 12px; border-radius: 10px;
+  background: rgba(56, 232, 255, .07); border: 1px solid rgba(56, 232, 255, .2);
+  text-align: left;
+}
+.tabla-marcador li:first-child { background: rgba(255, 154, 60, .14); border-color: rgba(255, 154, 60, .5); }
+.puesto { grid-area: puesto; font-size: 1.2rem; text-align: center; }
+.nombreM { grid-area: nombre; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.detalleM { grid-area: detalle; font-size: .78rem; opacity: .7; }
+.puntosM { grid-area: puntos; font-family: var(--titulo); font-weight: 700; color: #ff9a3c; }
+.puntaje-fin { color: #ff9a3c; font-weight: 600; min-height: 1.2em; }
+@media (orientation: landscape) and (max-height: 520px) {
+  .tabla-marcador li { padding: 2px 10px; }
+  .detalleM { font-size: .7rem; }
+}
+
+/* ===== Botones flotantes: pausa a la izquierda, sonido y pantalla completa a la derecha ===== */
+.flotante.izquierda { left: 8px; transform: none; }
+.flotante.sonido { left: auto; right: 60px; transform: none; }
+.flotante.sonido.sola { right: 8px; }
+@media (orientation: landscape) and (max-height: 520px) { .flotante.sonido { right: 52px; } }
+
+/* ===== Iniciar sesión ===== */
+.lista-pilotos { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; max-width: 560px; }
+.piloto {
+  display: inline-flex; align-items: center; gap: 8px;
+  font: 600 .95rem "Rubik", sans-serif; color: #fff; cursor: pointer;
+  padding: 6px 14px; border-radius: 20px;
+  background: rgba(56, 232, 255, .08); border: 1px solid rgba(56, 232, 255, .35);
+}
+.piloto:hover { border-color: #fff; }
+.piloto .punto { width: 12px; height: 12px; border-radius: 50%; box-shadow: 0 0 8px currentColor; }
+#sesionActiva { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+
+/* ===== Cómo jugar ===== */
+.regla { line-height: 1.5; }
+.lista-ayuda {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 6px 14px;
+  width: min(100%, 720px); text-align: left;
+}
+.fila-ayuda { display: flex; align-items: center; gap: 8px; }
+.fila-ayuda canvas { width: 46px; height: 46px; flex: none; }
+.fila-ayuda div { display: flex; flex-direction: column; font-size: .85rem; line-height: 1.25; }
+.fila-ayuda b { font-size: .95rem; }
+
+/* ===== Pestañas del marcador ===== */
+.pestanas { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
+.pestana {
+  font: 600 .85rem "Rubik", sans-serif; cursor: pointer;
+  padding: 4px 12px; border-radius: 16px;
+  background: transparent; color: #bfc4ff; border: 1px solid rgba(191, 196, 255, .4);
+}
+.pestana.elegido { background: #ff9a3c; border-color: #ff9a3c; color: #060a24; }
+.tabla-marcador li.yo { outline: 2px solid var(--neon); }
+@media (orientation: landscape) and (max-height: 520px) {
+  .nota { font-size: .75rem !important; }
+  .regla { font-size: .85rem !important; }
+}
+
+/* ===== Menú de pausa ===== */
+#pantallaPausa { z-index: 7; background: rgba(6, 10, 36, .82); }
+.botones.columna { flex-direction: column; align-items: stretch; }
+
+/* ===== Créditos ===== */
+.logo.pequeno { font-size: clamp(1.8rem, 6vw, 3.4rem); }
+.credito { font-size: clamp(1rem, 2.6vw, 1.4rem) !important; line-height: 1.5; }
+.autor { font-family: var(--titulo); font-weight: 700; font-size: 1.4em; color: #ff9a3c; text-shadow: 0 0 12px rgba(255, 154, 60, .6); }
+
+/* ===== Botón de borrar ===== */
+.boton.peligro { background: transparent; border-color: #ff5f7a; color: #ff5f7a; box-shadow: 0 0 12px rgba(255, 95, 122, .35); font-size: .85rem; padding: 7px 16px; }
+#pantallaFin { background: rgba(6, 10, 36, .55); }
+
+/* ===== Medallas ===== */
+.selector-piloto {
+  font: 600 1rem "Rubik", sans-serif; color: #fff;
+  background: rgba(56, 232, 255, .1); border: 2px solid var(--neon); border-radius: 10px;
+  padding: 5px 12px;
+}
+.selector-piloto option { color: #000; }
+.lista-logros {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 6px 10px;
+  width: min(100%, 760px); text-align: left;
+}
+.logro {
+  display: flex; align-items: center; gap: 10px;
+  padding: 6px 10px; border-radius: 12px;
+  background: rgba(255, 255, 255, .04); border: 1px solid rgba(255, 255, 255, .1);
+  opacity: .55;
+}
+.logro.ganado { opacity: 1; background: rgba(255, 154, 60, .1); border-color: rgba(255, 154, 60, .5); }
+.icono-logro { font-size: 1.6rem; width: 1.6em; text-align: center; flex: none; }
+.logro div { display: flex; flex-direction: column; font-size: .8rem; line-height: 1.25; }
+.logro b { font-size: .92rem; }
+.logros-fin { color: #7dff6a; font-weight: 600; min-height: 1em; margin: 0; }
+@media (orientation: landscape) and (max-height: 520px) {
+  .logro { padding: 3px 8px; }
+  .icono-logro { font-size: 1.2rem; }
+}
+
+/* ===== Formas de nave (desbloqueables) ===== */
+.formas { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; }
+.forma {
+  position: relative; padding: 2px; width: 50px; height: 50px; border-radius: 10px; cursor: pointer;
+  background: rgba(255, 255, 255, .05); border: 2px solid rgba(255, 255, 255, .2);
+}
+.forma canvas { width: 42px; height: 42px; display: block; margin: auto; }
+.forma.elegido { border-color: var(--naranja); background: rgba(255, 154, 60, .14); box-shadow: 0 0 12px rgba(255, 154, 60, .6); }
+.forma.bloqueada { opacity: .4; }
+.forma.bloqueada::after { content: "🔒"; position: absolute; right: -4px; bottom: -6px; font-size: .8rem; }
+.nota-forma { font-size: .75rem; color: #ff9a3c; min-height: 1em; }
+@media (orientation: landscape) and (max-height: 520px) {
+  .forma { width: 38px; height: 38px; }
+  .forma canvas { width: 32px; height: 32px; }
+}
+
+/* ===================================================================
+   🌐 MULTIJUGADOR EN LÍNEA
+   =================================================================== */
+.boton.en-linea {               /* el botón "En línea" de la pantalla de modos */
+  background: linear-gradient(135deg, #1576c2, #7a3df0);   /* azul → morado: la letra blanca se lee bien (4.6:1) */
+  box-shadow: 0 0 18px rgba(56, 232, 255, .5);
+}
+.codigo { width: 11ch; text-align: center; letter-spacing: .15em; font-family: var(--titulo); font-size: 1.2rem; }
+.codigo-grande {                /* el código de la sala, bien grande para dictarlo */
+  font-family: var(--titulo); font-weight: 700;
+  font-size: clamp(2rem, 7vw, 3.4rem) !important; letter-spacing: .08em;
+  margin: 0 !important; max-width: none !important;
+  background: linear-gradient(90deg, var(--neon), var(--morado), var(--magenta), var(--naranja));
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.estado-linea { color: #bfc4ff; min-height: 1.4em; text-align: center; }
+.estado-linea.conectado { color: #7dff6a; font-weight: 600; }
+#pantallaEnLinea .caja { gap: 10px; }
+#pantallaEnLinea .nota-forma { color: #ff9a3c; min-height: 1.2em; text-align: center; }

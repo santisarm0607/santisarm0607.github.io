@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Santiago Sarmiento | Ingeniero Multimedia</title>
+    <meta name="description" content="Portafolio profesional de Santiago Sarmiento, estudiante de Ingeniería Multimedia especializado en diseño gráfico, animación, UI/UX y desarrollo web.">
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="js/main.js" defer></script> <!-- efectos con JavaScript (ver js/main.js) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header class="header">
+        <div class="contenedor header__contenedor">
+            <a href="index.html" class="header__logo" aria-label="Ir al inicio - Santisarm">
+                <img src="img/logo-santisarm-horizontal.webp" alt="Logo de Santisarm" width="180" height="52" class="header__logo-img">
+            </a>
+            <nav aria-label="Menú principal">
+                <ul class="nav__lista">
+                    <li><a href="index.html" class="nav__enlace nav__enlace--activo" aria-current="page">Inicio</a></li>
+                    <li><a href="blog.html" class="nav__enlace">Portafolio</a></li>
+                    <li><a href="juegos.html" class="nav__enlace">Juegos</a></li>
+                    <li><a href="contacto.html" class="nav__enlace">Contacto</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero" aria-labelledby="titulo-principal">
+            <div class="contenedor hero__contenedor">
+                <div class="hero__foto">
+                    <img src="img/avatar.webp" alt="Ilustración de avatar de Santiago Sarmiento, rostro sonriente de estilo caricatura" width="220" height="220">
+                </div>
+                <div class="hero__texto">
+                    <h1 id="titulo-principal" class="hero__titulo">Santiago Sarmiento</h1>
+                    <p class="hero__subtitulo">Ingeniero Multimedia</p>
+                    <p class="hero__bio">
+                        Estudiante de Ingeniería Multimedia en sexto semestre en la Universidad Simón Bolívar
+                        sede Cúcuta, con experiencia en diseño gráfico, animación, UI/UX y desarrollo web.
+                        Trabajo con Illustrator, After Effects, Figma y HTML/CSS para crear piezas de branding
+                        digital. Mi meta es fundar un estudio multimedia enfocado en contenido animado con
+                        impacto social.
+                    </p>
+                    <div class="hero__botones">
+                        <a href="blog.html" class="boton boton--primario">Ver Portafolio</a>
+                        <a href="contacto.html" class="boton boton--secundario">Contáctame</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="habilidades" aria-labelledby="titulo-habilidades">
+            <div class="contenedor">
+                <p id="titulo-habilidades" class="habilidades__titulo">Habilidades</p>
+                <ul class="habilidades__lista">
+                    <li class="habilidad">Illustrator</li>
+                    <li class="habilidad">After Effects</li>
+                    <li class="habilidad">3D Max</li>
+                    <li class="habilidad">HTML/CSS</li>
+                    <li class="habilidad">UI/UX</li>
+                    <li class="habilidad">Animación</li>
+                    <li class="habilidad">Diseño Gráfico</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="contacto-rapido" aria-labelledby="titulo-contacto-rapido">
+            <div class="contenedor">
+                <p id="titulo-contacto-rapido" class="contacto-rapido__titulo">¿Tienes un proyecto en mente?</p>
+                <p class="contacto-rapido__subtitulo">CONTÁCTAME</p>
+                <p class="contacto-rapido__correo">
+                    <a href="mailto:santisarm.06salguero@gmail.com">santisarm.06salguero@gmail.com</a>
+                </p>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="contenedor footer__contenedor"></div>
+    </footer>
+
+</body>
+</html>

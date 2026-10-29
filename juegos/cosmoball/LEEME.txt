@@ -1,0 +1,134 @@
+COSMOBALL
+=========
+«Un universo. Dos pilotos. Ninguna regla normal.»
+Ping pong en el espacio. Proyecto de clase de SantiSarm, hecho con HTML,
+CSS y JavaScript. (Antes se llamaba "Galaxy Pong".)
+
+IDENTIDAD VISUAL
+----------------
+- Símbolo: un agujero negro que se traga la pelota (logo animado de la
+  pantalla de título y agujero negro en el fondo de la cancha).
+- Colores: azul cian, morado, rosa y naranja sobre azul oscuro.
+  Están al principio de css/estilos.css (--neon, --morado, --magenta,
+  --naranja, --espacio).
+- Letras: Fredoka (redondeada) para títulos y botones; Rubik para textos.
+
+ARCHIVOS
+--------
+proyecto-ping-pong/
+├── html/
+│   └── index.html  -> Las pantallas del juego (título, menús, marcador...)
+├── NOTAS.md        -> Resumen de cómo está hecho el juego (para otra IA o persona)
+├── css/
+│   └── estilos.css -> Colores, botones y diseño (computador y celular)
+└── js/
+    ├── juego.js    -> Toda la lógica: física, robot, poderes, marcador,
+    │                  sonidos y música
+    └── enlinea.js  -> Multijugador en línea (salas con código)
+
+CÓMO ABRIRLO
+------------
+1. Descomprime el .zip (clic derecho -> "Extraer todo").
+2. En Visual Studio Code: Archivo -> Abrir carpeta -> "proyecto-ping-pong".
+3. Para jugar: abre la carpeta "html" y haz doble clic en index.html, o usa
+   la extensión "Live Server" (clic derecho en html/index.html ->
+   "Open with Live Server").
+4. Para jugar en el celular: con Live Server abierto y el celular en el mismo
+   WiFi, abre en el celular  http://IP-DEL-COMPUTADOR:5500/html/index.html
+   (la IP sale escribiendo "ipconfig" en la terminal de Windows).
+IMPORTANTE: no muevas los archivos de sus carpetas. index.html busca los
+otros archivos con "../css/estilos.css" y "../js/juego.js".
+
+CÓMO SE JUEGA
+-------------
+- Gana el primero que meta 3, 5 o 7 goles (se elige antes de jugar).
+- Contrarreloj (⏱ 1 min): gana quien meta más goles en 60 segundos. Si hay
+  empate, sigue con "gol de oro": el próximo gol gana. Los goles valen 100.
+- Cada poder tiene su propio sonido.
+- Modos: 1 jugador (contra el robot alienígena), 2 jugadores, EN LÍNEA o
+  práctica (contra una pared que siempre devuelve la pelota, sin goles ni
+  marcador).
+- Dificultad: Fácil, Normal o Difícil.
+- Controles:
+    1 jugador: mouse o flechas ↑ ↓
+    2 jugadores: Jugador 1 = W / S, Jugador 2 = flechas ↑ ↓
+    Celular: botones ▲ ▼ o arrastrar el dedo
+    Espacio o el botón ⏸ = menú de pausa (reanudar, reiniciar, salir)
+
+JUGAR EN LÍNEA (cada uno en su celular o computador)
+----------------------------------------------------
+1. Los dos: Play -> "🌐 En línea" y escriben su nombre.
+2. Uno toca "Crear sala". Le sale un código, por ejemplo COSMO-4821.
+3. El otro escribe los 4 números (4821) y toca "Unirme".
+4. El que creó la sala elige los goles y toca "Empezar partida".
+- Cada uno mueve su nave con el mouse, W / S, las flechas o el dedo.
+- Necesita internet. Funciona con la página publicada (GitHub Pages).
+  En la vista de prueba de Claude no funciona.
+- Para probarlo en un solo computador: con Live Server abre dos pestañas
+  con  html/index.html?red=local  y conéctalas con el código.
+
+PODERES
+-------
+Hay hasta 3 poderes en la cancha (salen cada 4-5 segundos). El poder es
+para QUIEN TOCÓ LA PELOTA DE ÚLTIMO cuando la pelota lo toca.
+  ❄  Hielo           Congela la nave del rival un momento.
+  🛡  Escudo          Barrera de rocas que te salva de un gol.
+  👽 Encogedor       La nave del rival queda a la mitad por 6 segundos.
+  ☄  Lluvia          Caen asteroides que desvían la pelota.
+  🔄 Cambio de lado  Los jugadores cambian de lado (no sale en la cancha redonda).
+  🕳  Agujero negro   Atrapa la pelota y la lanza a un lado al azar.
+  ⭕ Cancha circular La cancha se vuelve un agujero negro redondo.
+  🌀 Remolino        Solo en la cancha redonda: por 10 segundos el agujero
+                     negro hace que la pelota se curve en espiral.
+  ▭  Cancha normal   Solo en la cancha redonda, después del primer remolino.
+
+PUNTAJE Y MARCADOR
+------------------
+- Goles: 500 puntos repartidos entre los goles (a 5 goles = 100 por gol),
+  + 2 por golpe + bono por ganar
+  (Fácil +300, Normal +600, Difícil +1000, 2 jugadores +500).
+- "Iniciar sesión" guarda tu nombre y color de piloto (sin contraseña).
+- El marcador muestra el mejor puntaje, partidas jugadas, ganadas y goles
+  de cada piloto, separado por dificultad.
+- Los puntajes se guardan en el aparato donde se juega. En la página
+  publicada en Claude el marcador es compartido entre todos.
+- Solo el ADMINISTRADOR puede borrar el marcador:
+    En Claude: solo el dueño de la página ve "Borrar marcador"
+    (tocar dos veces).
+    En el computador o celular: "Borrar marcador" pide la clave de
+    administrador (CLAVE_ADMIN en js/juego.js, cámbiala por una tuya).
+
+MEDALLAS (LOGROS)
+-----------------
+Cada piloto gana medallas con logros especiales: primera victoria, ganarle
+al robot en cada dificultad, ganar sin recibir goles, remontadas, peloteos
+largos, golpear a máxima velocidad, usar 8 poderes, goles en la cancha
+circular, ganar a 7 goles y jugar 10 partidas. Se ven en "🏅 Medallas".
+
+NAVES DESBLOQUEABLES
+--------------------
+Con las medallas se desbloquean formas de nave (son de adorno, no cambian
+el tamaño para golpear): Clásica (0), Alada (1), Cohete (3), Platillo (6)
+y Estrella (10 medallas). Se eligen al preparar la partida.
+
+CONSEJOS
+--------
+La primera vez que juegas salen consejos cortos (cómo moverte, cómo usar
+los poderes...). En "Cómo jugar" puedes hacer que salgan otra vez.
+
+DETALLES TÉCNICOS
+-----------------
+- El juego se actualiza siempre 60 veces por segundo (paso fijo), así va a
+  la misma velocidad en pantallas de 60, 120 o 144 Hz.
+- Si cambias de pestaña o minimizas, el juego se pausa solo.
+
+PARA CAMBIAR COSAS (al principio de js/juego.js)
+-------------------------------------------------
+LOGROS               lista de medallas (nombre, ícono y texto)
+DIFICULTADES         velocidad de la pelota y del robot en cada nivel
+SENSIBILIDAD         qué tan rápido responde la nave
+TIPOS_PODER          "peso" = qué tan seguido sale cada poder
+MAX_PODERES          cuántos poderes puede haber a la vez (ahora 3)
+REGENERA_PODER       espera para que salga otro poder (300 = 5 segundos)
+CLAVE_ADMIN          clave para borrar el marcador en el computador o celular
+Créditos: en html/index.html, en la sección CRÉDITOS (autor: SantiSarm).

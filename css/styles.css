@@ -1,0 +1,2140 @@
+/* =========================================================
+   PORTAFOLIO WEB - SANTIAGO SARMIENTO
+   Aquí va todo el CSS del sitio (las 3 páginas usan este mismo archivo)
+   ========================================================= */
+
+/* ---------------------------------------------------------
+   1. COLORES Y VARIABLES
+   Dejo todo aquí arriba para no andar buscando colores en
+   todo el archivo, si quiero cambiar algo lo hago solo aquí
+   --------------------------------------------------------- */
+:root {
+  --color-azul: #3153A1;        /* el azul de mi logo, lo uso en casi todo */
+  --color-azul-claro: #F1F9FE;  /* fondo suave para las secciones */
+  --color-blanco: #FFFFFF;
+  --color-acento: #29B6F6;      /* color que le puse de contraste, para botones */
+  --color-texto: #222222;
+  --color-texto-claro: #5A6472; /* gris para textos secundarios, bios, etc */
+  --fuente-principal: 'Poppins', Arial, sans-serif;
+  --radio-borde: 14px;          /* qué tan redondeadas quiero las tarjetas y botones */
+
+  /* --- Colores del TEMA ESPACIAL (se usan en la parte 10) ---
+     Todos revisados con WCAG: los textos dan más de 4.5:1 sobre su fondo */
+  --espacio-fondo: #0B1026;         /* azul noche, el fondo de toda la página */
+  --espacio-negro: #070B1C;         /* más oscuro todavía, para el footer */
+  --espacio-panel: #121A3D;         /* tarjetas, formulario, visor */
+  --espacio-borde: rgba(157, 184, 255, 0.18);  /* bordecito suave de los paneles */
+  --espacio-texto: #E8EEFF;         /* texto principal (casi blanco, un poco azul) */
+  --espacio-texto-suave: #A9B6D9;   /* bios y descripciones (9.3:1) */
+  --espacio-lavanda: #9DB8FF;       /* títulos y etiquetas: mi azul, pero visible en lo oscuro */
+  --espacio-celeste-claro: #8FDBFF; /* categorías y colaboraciones */
+  --espacio-brillo: rgba(41, 182, 246, 0.35);  /* resplandor celeste */
+
+  color-scheme: dark; /* así las barras de scroll y los menús del navegador también salen oscuros */
+}
+
+/* ---------------------------------------------------------
+   2. RESET BÁSICO
+   Esto es lo típico para que todos los navegadores empiecen igual
+   --------------------------------------------------------- */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box; /* para que padding y border no dañen el ancho de las cajas */
+}
+
+html {
+  scroll-behavior: smooth; /* que se vea bonito el scroll cuando doy clic en un link interno */
+}
+
+body {
+  font-family: var(--fuente-principal);
+  color: var(--color-texto);
+  background-color: var(--color-blanco);
+  line-height: 1.6; /* para que el texto no se vea tan pegado */
+  overflow-x: hidden; /* evita que salga scroll horizontal por accidente */
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+ul {
+  list-style: none;
+}
+
+.contenedor {
+  width: 100%;
+  max-width: 1200px; /* que el contenido no se estire demasiado en pantallas grandes */
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* ---------------------------------------------------------
+   3. HEADER Y MENÚ
+   Va igual en las 3 páginas
+   --------------------------------------------------------- */
+.header {
+  background-color: var(--color-azul);
+  padding: 14px 0;
+  position: sticky;
+  top: 0;
+  z-index: 100; /* para que el menú se quede pegado arriba cuando hago scroll */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.header__contenedor {
+  display: flex; /* con flex pongo el logo y el menú en la misma fila */
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap; /* si no cabe todo, que el menú baje a otra línea */
+  gap: 12px;
+}
+
+.header__logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.header__logo-img {
+  height: 72px; /* lo agrandé bastante desde los 50px que tenía */
+  width: auto;
+}
+
+.nav__lista {
+  display: flex; /* los links del menú en fila */
+  gap: 28px; /* espacio entre cada link */
+  flex-wrap: wrap;
+  padding: 0; /* Bootstrap (solo en contacto.html) le metía 32px a la izquierda y corría el menú */
+  margin: 0;  /* y 16px abajo, que lo subía; así el menú queda igual en las 3 páginas */
+}
+
+.nav__enlace {
+  color: var(--color-blanco);
+  font-weight: 500;
+  font-size: 1rem;
+  padding: 6px 4px;
+  border-bottom: 2px solid transparent; /* invisible al inicio, aparece con el hover */
+  transition: border-color 0.25s ease, color 0.25s ease;
+}
+
+.nav__enlace:hover,
+.nav__enlace--activo {
+  border-bottom: 2px solid var(--color-acento); /* el subrayado sí puede ser celeste, es decorativo, no necesita cumplir WCAG */
+  color: var(--color-blanco); /* antes era acento (celeste) en el texto, pero fallaba WCAG (3.16:1) sobre el header azul */
+}
+
+/* ---------------------------------------------------------
+   4. FOOTER
+   También va igual en las 3 páginas
+   --------------------------------------------------------- */
+.footer {
+  background-color: var(--color-azul);
+  color: var(--color-blanco);
+  padding: 16px 0; /* lo bajé porque ya no tiene texto ni links adentro */
+  text-align: center;
+}
+
+.footer__contenedor {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.footer__redes {
+  display: flex;
+  gap: 18px;
+}
+
+.footer__redes a {
+  color: var(--color-blanco);
+  font-weight: 500;
+  transition: color 0.25s ease;
+}
+
+.footer__redes a:hover {
+  color: var(--color-blanco); /* antes era acento (celeste), pero fallaba WCAG (3.16:1) sobre el footer azul */
+  text-decoration: underline; /* así se sigue notando el hover sin depender solo del color */
+}
+
+.footer__copy {
+  font-size: 0.85rem;
+  opacity: 0.85;
+}
+
+/* ===========================================================
+   5. PÁGINA DE INICIO / PERFIL (index.html)
+   =========================================================== */
+
+/* --- Sección de bienvenida con mi foto y bio --- */
+.hero {
+  background-color: var(--color-azul-claro);
+  padding: 70px 0;
+}
+
+.hero__contenedor {
+  display: flex; /* pongo foto y texto uno al lado del otro */
+  align-items: center;
+  justify-content: center;
+  gap: 50px;
+  flex-wrap: wrap; /* en el celular se ponen uno debajo del otro */
+  text-align: left;
+}
+
+.hero__foto {
+  flex: 0 0 220px; /* ancho fijo para que no se achique la columna de la foto */
+}
+
+.hero__foto img {
+  width: 220px;      /* tamaño de mi foto de perfil, la puedo agrandar o achicar aquí */
+  height: 220px;
+  object-fit: cover;
+  border-radius: 50%; /* la deja circular, si la quiero cuadrada solo pongo 0 */
+  border: 6px solid var(--color-blanco);
+  box-shadow: 0 8px 24px rgba(49, 83, 161, 0.25);
+}
+
+.hero__texto {
+  flex: 1 1 420px;
+  max-width: 560px;
+}
+
+.hero__titulo {
+  font-size: 2.6rem; /* tamaño de mi nombre (el único h1 de todo el sitio) */
+  color: var(--color-azul);
+  margin-bottom: 6px;
+  font-weight: 800;
+}
+
+.hero__subtitulo {
+  font-size: 1.25rem; /* "Ingeniero Multimedia" debajo del nombre */
+  color: var(--color-azul); /* antes era acento (celeste), pero fallaba WCAG (2.16:1) sobre este fondo claro */
+  font-weight: 600;
+  margin-bottom: 18px;
+}
+
+.hero__bio {
+  color: var(--color-texto-claro);
+  font-size: 1rem;
+  margin-bottom: 22px;
+}
+
+.hero__botones {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+/* --- Botones que reutilizo en todo el sitio --- */
+.boton {
+  display: inline-block;
+  padding: 12px 28px;
+  border-radius: var(--radio-borde);
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease; /* efecto al pasar el mouse */
+  cursor: pointer;
+  border: 2px solid transparent;
+}
+
+.boton:hover {
+  transform: translateY(-3px); /* como que se levanta un poquito */
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
+}
+
+.boton--primario {
+  background-color: var(--color-acento); /* el botón que más quiero que se note */
+  color: var(--color-texto); /* antes era blanco, pero fallaba WCAG (2.30:1) sobre este celeste; con texto oscuro da 6.91:1 */
+}
+
+.boton--secundario {
+  background-color: transparent;
+  color: var(--color-azul);
+  border-color: var(--color-azul); /* este va solo con contorno, más discreto */
+}
+
+/* --- Mis habilidades en forma de etiquetas --- */
+.habilidades {
+  padding: 60px 0;
+}
+
+.habilidades__titulo {
+  text-align: center;
+  color: var(--color-azul);
+  font-size: 1.8rem;
+  margin-bottom: 30px;
+}
+
+.habilidades__lista {
+  display: flex; /* así las etiquetas se acomodan solas y bajan de línea si no caben */
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 14px;
+}
+
+.habilidad {
+  background-color: var(--color-azul-claro);
+  color: var(--color-azul);
+  padding: 10px 22px;
+  border-radius: 30px; /* bien redondeada, tipo píldora */
+  font-weight: 600;
+  font-size: 0.95rem;
+  border: 2px solid var(--color-azul);
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+.habilidad:hover {
+  background-color: var(--color-azul); /* se invierte el color al pasar el mouse */
+  color: var(--color-blanco);
+}
+
+/* --- Franja de contacto rápido al final del inicio --- */
+.contacto-rapido {
+  background-color: var(--color-azul);
+  color: var(--color-blanco);
+  padding: 50px 0;
+  text-align: center;
+}
+
+.contacto-rapido__titulo {
+  font-size: 1.6rem;
+  margin-bottom: 12px;
+}
+
+.contacto-rapido__subtitulo {
+  font-size: 1rem;
+  color: var(--color-blanco);
+  opacity: 0.85;
+  margin-bottom: 18px; /* espacio entre "CONTÁCTAME" y el correo */
+}
+
+.contacto-rapido__correo {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--color-blanco); /* antes era acento (celeste), pero fallaba WCAG (3.16:1) sobre este fondo azul */
+}
+
+/* ===========================================================
+   6. PÁGINA DE PORTAFOLIO (blog.html)
+   =========================================================== */
+
+.portafolio-intro {
+  background-color: var(--color-azul-claro);
+  padding: 60px 0 40px;
+  text-align: center;
+}
+
+.portafolio-intro__titulo {
+  color: var(--color-azul);
+  font-size: 2.2rem; /* este es el h2 principal de esta página, no h1 */
+  margin-bottom: 10px;
+}
+
+.portafolio-intro__texto {
+  color: var(--color-texto-claro);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* --- Acá es donde uso flexbox para acomodar mis proyectos --- */
+.proyectos {
+  padding: 50px 0 70px;
+}
+
+.proyectos__lista {
+  display: flex; /* flexbox controlando cómo se acomodan y envuelven las tarjetas */
+  flex-wrap: wrap; /* para que no se desborden, bajan a otra fila si no caben */
+  justify-content: center;
+  gap: 32px; /* separación entre cada tarjeta de proyecto */
+}
+
+.proyecto {
+  background-color: var(--color-blanco);
+  border-radius: var(--radio-borde);
+  overflow: hidden;
+  flex: 1 1 320px;   /* ancho que quiero que tenga cada tarjeta por defecto */
+  max-width: 360px;  /* para que no se estiren demasiado */
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  display: flex;
+  flex-direction: column; /* imagen arriba, texto abajo, dentro de cada tarjeta */
+}
+
+.proyecto:hover {
+  transform: translateY(-6px); /* la tarjeta se eleva un poco al pasar el mouse */
+  box-shadow: 0 12px 28px rgba(49, 83, 161, 0.2);
+}
+
+.proyecto__imagen {
+  width: 100%;
+  height: 210px; /* alto fijo para que todas las imágenes se vean parejas */
+  object-fit: cover; /* así no se deforma la imagen */
+}
+
+.proyecto__contenido {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1; /* para que el contenido se estire parejo entre tarjetas */
+}
+
+.proyecto__categoria {
+  display: inline-block;
+  align-self: flex-start;
+  background-color: var(--color-azul-claro);
+  color: var(--color-azul);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 4px 12px;
+  border-radius: 20px;
+  letter-spacing: 0.5px;
+}
+
+.proyecto__titulo {
+  color: var(--color-azul);
+  font-size: 1.2rem; /* título de cada proyecto (h3) */
+  font-weight: 700;
+}
+
+.proyecto__descripcion {
+  color: var(--color-texto-claro);
+  font-size: 0.92rem;
+  flex: 1;
+}
+
+.proyecto__colaboracion {
+  font-size: 0.8rem;
+  color: var(--color-azul); /* antes era acento (celeste), pero fallaba WCAG (2.3:1) sobre la tarjeta blanca */
+  font-style: italic;
+  font-weight: 600;
+}
+
+/* ===========================================================
+   7. PÁGINA DE CONTACTO (contacto.html)
+   =========================================================== */
+
+.contacto-hero {
+  background-color: var(--color-azul-claro);
+  padding: 60px 0 40px;
+  text-align: center;
+}
+
+.contacto-hero__titulo {
+  color: var(--color-azul);
+  font-size: 2.2rem; /* h2 principal de esta página también */
+  margin-bottom: 10px;
+}
+
+.contacto-hero__texto {
+  color: var(--color-texto-claro);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.contacto-form-seccion {
+  padding: 50px 0 70px;
+}
+
+/* --- El formulario usa la rejilla de Bootstrap (row/col) directo en el HTML --- */
+.form-tarjeta {
+  background-color: var(--color-blanco);
+  border-radius: var(--radio-borde);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+  padding: 40px;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.form-etiqueta {
+  font-weight: 600; /* que se note bien cada label */
+  color: var(--color-azul);
+  margin-bottom: 6px;
+  display: inline-block;
+}
+
+/* Le cambio un poco el estilo a los inputs de Bootstrap para que combinen con mis colores */
+.form-control,
+.form-select {
+  border: 2px solid var(--color-azul-claro);
+  border-radius: 10px;
+  padding: 10px 14px;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--color-azul); /* se marca de azul cuando doy clic en el campo */
+  box-shadow: 0 0 0 3px rgba(49, 83, 161, 0.15);
+}
+
+.form-aviso {
+  font-size: 0.85rem;
+  color: var(--color-texto-claro);
+  margin-top: 16px;
+  text-align: center;
+}
+
+/* --- Tarjetitas con mis datos de contacto, debajo del formulario --- */
+.contacto-datos {
+  display: flex; /* las acomodo en fila con flex */
+  gap: 24px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 40px;
+}
+
+.contacto-dato {
+  background-color: var(--color-azul-claro);
+  border-radius: var(--radio-borde);
+  padding: 24px;
+  text-align: center;
+  flex: 1 1 200px;
+  max-width: 240px;
+}
+
+.contacto-dato__titulo {
+  color: var(--color-azul);
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.contacto-dato__valor {
+  color: var(--color-texto-claro);
+  font-size: 0.9rem;
+  word-break: break-word;
+}
+
+/* ===========================================================
+   8. RESPONSIVE - AJUSTES PARA CELULAR
+   Todo lo de aquí abajo solo aplica en pantallas chicas
+   =========================================================== */
+
+@media (max-width: 768px) {
+
+  .header__contenedor {
+    justify-content: center;
+    text-align: center;
+  }
+
+  .nav__lista {
+    justify-content: center;
+    gap: 18px; /* en celular achico un poco el espacio del menú */
+  }
+
+  .hero__contenedor {
+    text-align: center;
+    justify-content: center;
+  }
+
+  .hero__titulo {
+    font-size: 2rem; /* en celular el nombre se ve más chico para que quepa bien */
+  }
+
+  .hero__botones {
+    justify-content: center;
+  }
+
+  .form-tarjeta {
+    padding: 26px; /* menos espacio interno en el formulario para que no se vea apretado */
+  }
+}
+
+/* ===========================================================
+   9. EFECTOS CON JAVASCRIPT (js/main.js)
+   Casi todas estas clases las pone el JavaScript.
+   Si el JS no carga, nada de esto se ve y la página queda como antes.
+   =========================================================== */
+
+[hidden] {
+  display: none !important; /* para que "hidden" esconda aunque la caja tenga display: flex */
+}
+
+/* Texto que solo leen los lectores de pantalla (personas ciegas) */
+.solo-lectores {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+
+/* Borde celeste cuando se navega con el teclado (Tab) */
+.hero__foto img[role="button"]:focus-visible,
+.filtro:focus-visible,
+.arriba:focus-visible,
+.boton-copiar:focus-visible,
+.visor button:focus-visible {
+  outline: 3px solid var(--color-acento);
+  outline-offset: 3px;
+}
+
+.proyecto__imagen[role="button"]:focus-visible {
+  outline: 3px solid var(--color-acento);
+  outline-offset: -4px; /* hacia adentro, porque la tarjeta recorta lo que sale */
+}
+
+/* --- Aparecer al hacer scroll --- */
+.aparecer:not(.aparecer--visible) {
+  opacity: 0; /* escondido hasta que llega a la pantalla */
+}
+
+.aparecer--visible {
+  animation: aparecer 0.6s ease backwards;
+  animation-delay: var(--retraso, 0s); /* el JS le da a cada uno un retraso distinto */
+}
+
+@keyframes aparecer {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* --- Header que se achica al bajar --- */
+.header {
+  transition: padding 0.25s ease;
+}
+
+.header__logo-img {
+  transition: height 0.25s ease;
+}
+
+.header--compacto {
+  padding: 6px 0;
+}
+
+.header--compacto .header__logo-img {
+  height: 50px; /* normal es 72px */
+}
+
+/* --- Texto que se escribe solo (debajo de mi nombre) --- */
+.cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1.1em;
+  margin-left: 3px;
+  background-color: currentColor;
+  vertical-align: -0.15em;
+  animation: parpadeo 1s steps(1) infinite;
+}
+
+@keyframes parpadeo {
+  50% { opacity: 0; }
+}
+
+/* --- Avatar con sorpresa --- */
+.hero__foto img[role="button"] {
+  cursor: pointer;
+  transition: transform 0.25s ease;
+}
+
+.hero__foto img[role="button"]:hover {
+  transform: scale(1.04) rotate(-3deg);
+}
+
+.avatar--salto {
+  animation: avatar-salto 0.5s ease;
+}
+
+@keyframes avatar-salto {
+  0%, 100% { transform: translateY(0); }
+  30%      { transform: translateY(-22px) scale(1.05); }
+  55%      { transform: translateY(0) scale(1.03, 0.97); }
+  75%      { transform: translateY(-6px); }
+}
+
+.avatar--giro {
+  animation: avatar-giro 0.9s cubic-bezier(0.5, -0.3, 0.4, 1.3);
+}
+
+@keyframes avatar-giro {
+  from { transform: rotate(0); }
+  to   { transform: rotate(360deg); }
+}
+
+/* --- Habilidades que rebotan --- */
+.habilidad {
+  cursor: pointer;
+  user-select: none;
+}
+
+.habilidad--rebote {
+  animation: rebote 0.45s ease;
+}
+
+@keyframes rebote {
+  0%   { transform: scale(1); }
+  35%  { transform: scale(1.18) rotate(-3deg); }
+  65%  { transform: scale(0.94) rotate(2deg); }
+  100% { transform: scale(1); }
+}
+
+/* --- Botón "Copiar" al lado de mi correo --- */
+.boton-copiar {
+  font-family: inherit;
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-left: 10px;
+  padding: 3px 12px;
+  border-radius: 20px;
+  border: 2px solid var(--color-azul);
+  background-color: transparent;
+  color: var(--color-azul);
+  cursor: pointer;
+  vertical-align: middle;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.boton-copiar:hover {
+  background-color: var(--color-azul);
+  color: var(--color-blanco);
+}
+
+.boton-copiar--oscuro {
+  border-color: var(--color-blanco); /* versión para la franja azul del inicio */
+  color: var(--color-blanco);
+}
+
+.boton-copiar--oscuro:hover {
+  background-color: var(--color-blanco);
+  color: var(--color-azul);
+}
+
+.contacto-dato__valor .boton-copiar {
+  display: block;
+  margin: 10px auto 0; /* en la tarjeta de contacto va debajo del correo */
+}
+
+/* --- Botón "Volver arriba" --- */
+.arriba {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: none;
+  background-color: var(--color-azul);
+  color: var(--color-blanco);
+  font-family: inherit;
+  font-size: 1.3rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(49, 83, 161, 0.35);
+  z-index: 90;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(20px);
+  transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s, background-color 0.25s ease;
+}
+
+.arriba--visible {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+}
+
+.arriba:hover {
+  background-color: var(--color-acento);
+  color: var(--color-texto);
+}
+
+/* --- Aviso flotante (mensajito abajo) --- */
+.aviso-flotante {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  transform: translate(-50%, 30px);
+  max-width: calc(100% - 32px);
+  background-color: var(--color-azul);
+  color: var(--color-blanco);
+  padding: 12px 22px;
+  border-radius: 30px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-align: center;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  z-index: 1000;
+}
+
+.aviso-flotante--visible {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+/* --- Lienzo del confeti (encima de todo, pero no bloquea los clics) --- */
+.confeti {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 2000;
+}
+
+/* --- Filtros del portafolio --- */
+.filtros {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 36px;
+}
+
+.filtro {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 8px 18px;
+  border-radius: 30px; /* tipo píldora, como las habilidades */
+  border: 2px solid var(--color-azul);
+  background-color: var(--color-blanco);
+  color: var(--color-azul);
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.filtro:hover {
+  transform: translateY(-2px);
+}
+
+.filtro[aria-pressed="true"] {
+  background-color: var(--color-azul); /* el filtro elegido queda azul */
+  color: var(--color-blanco);
+}
+
+.filtro__numero {
+  font-size: 0.72rem;
+  background-color: var(--color-azul-claro);
+  color: var(--color-azul);
+  border-radius: 20px;
+  padding: 1px 8px;
+}
+
+.filtro[aria-pressed="true"] .filtro__numero {
+  background-color: var(--color-acento);
+  color: var(--color-texto);
+}
+
+/* --- Etiqueta "Ver completa" sobre la imagen de cada proyecto --- */
+.proyecto {
+  position: relative; /* para poder ubicar la etiqueta encima */
+}
+
+.proyecto__imagen[role="button"] {
+  cursor: zoom-in;
+}
+
+.proyecto__lupa {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background-color: rgba(34, 34, 34, 0.78);
+  color: var(--color-blanco);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 20px;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.proyecto:hover .proyecto__lupa,
+.proyecto:focus-within .proyecto__lupa {
+  opacity: 1;
+  transform: none;
+}
+
+@media (hover: none) {
+  .proyecto__lupa {
+    opacity: 1; /* en celular no hay hover, así que siempre se ve */
+    transform: none;
+  }
+}
+
+/* --- Visor de imágenes en grande --- */
+.visor {
+  border: none;
+  padding: 0;
+  background: transparent;
+  width: 100%;
+  max-width: min(1000px, calc(100% - 32px));
+  max-height: calc(100% - 32px);
+  margin: auto;
+  overflow: visible;
+}
+
+.visor[open] {
+  animation: visor-entra 0.3s ease;
+}
+
+.visor::backdrop {
+  background-color: rgba(20, 30, 60, 0.85); /* fondo oscuro azulado detrás */
+}
+
+.visor__figura {
+  display: flex;
+  background-color: var(--color-blanco);
+  border-radius: var(--radio-borde);
+  overflow: hidden;
+  max-height: calc(100vh - 32px);
+}
+
+.visor__imagen {
+  flex: 1 1 60%;
+  min-width: 0;
+  max-height: calc(100vh - 32px);
+  object-fit: contain; /* aquí se ve la imagen completa, sin recorte */
+  background-color: var(--color-azul-claro);
+}
+
+.visor__imagen--entra {
+  animation: visor-entra 0.35s ease;
+}
+
+@keyframes visor-entra {
+  from { opacity: 0; transform: scale(0.96); }
+  to   { opacity: 1; transform: none; }
+}
+
+.visor__info {
+  flex: 0 0 300px;
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow-y: auto;
+}
+
+.visor__titulo {
+  color: var(--color-azul);
+  font-size: 1.4rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.visor__descripcion {
+  color: var(--color-texto-claro);
+  font-size: 0.95rem;
+}
+
+.visor__colaboracion:empty {
+  display: none;
+}
+
+.visor__contador {
+  margin-top: auto;
+  font-size: 0.8rem;
+  color: var(--color-texto-claro);
+}
+
+.visor__cerrar,
+.visor__flecha {
+  position: fixed;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: none;
+  background-color: var(--color-blanco);
+  color: var(--color-azul);
+  font-family: inherit;
+  font-size: 1.8rem;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+  z-index: 2;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.visor__cerrar:hover,
+.visor__flecha:hover {
+  background-color: var(--color-acento);
+  color: var(--color-texto);
+}
+
+.visor__cerrar {
+  top: 16px;
+  right: 16px;
+}
+
+.visor__flecha {
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.visor__flecha--izq { left: 16px; }
+.visor__flecha--der { right: 16px; }
+
+/* --- Formulario: contador y mensaje de gracias --- */
+.form-contador {
+  font-size: 0.8rem;
+  color: var(--color-texto-claro);
+  text-align: right;
+  margin: 6px 0 0;
+}
+
+.form-gracias {
+  text-align: center;
+}
+
+.form-gracias__emoji {
+  font-size: 3rem;
+  margin-bottom: 4px;
+  animation: rebote 0.6s ease;
+}
+
+.form-gracias__titulo {
+  color: var(--color-azul);
+  font-size: 1.8rem;
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+
+.form-gracias__texto {
+  color: var(--color-texto-claro);
+  max-width: 460px;
+  margin: 0 auto 24px;
+}
+
+.form-gracias__botones {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 14px;
+}
+
+.form-gracias .boton--primario:hover {
+  color: var(--color-texto); /* Bootstrap le cambiaba el color al pasar el mouse */
+}
+
+.form-gracias .boton--secundario {
+  font-family: inherit;
+  background-color: transparent;
+}
+
+/* --- Ajustes de los efectos en celular --- */
+@media (max-width: 768px) {
+
+  .aviso-flotante {
+    bottom: 84px; /* más arriba para no tapar el botón de volver arriba */
+  }
+
+  .visor {
+    margin: 16px auto auto;          /* pegado arriba... */
+    max-height: calc(100% - 96px);   /* ...y deja una franja abajo para los botones */
+  }
+
+  .visor__figura {
+    flex-direction: column; /* imagen arriba, texto abajo */
+    max-height: calc(100vh - 96px);
+    overflow-y: auto;       /* si el texto es largo, se desliza con el dedo */
+  }
+
+  .visor__imagen {
+    flex: none;
+    width: 100%;
+    max-height: 52vh;
+  }
+
+  .visor__info {
+    flex: none;
+    padding: 20px;
+  }
+
+  /* en celular los 3 botones van abajo, en la franja libre: ‹  ×  › */
+  .visor__flecha,
+  .visor__cerrar {
+    top: auto;
+    bottom: 16px;
+    transform: none;
+  }
+
+  .visor__flecha--izq { left: 20%; }
+  .visor__flecha--der { right: 20%; }
+
+  .visor__cerrar {
+    right: auto;
+    left: calc(50% - 24px); /* centrado (la mitad de sus 48px) */
+  }
+}
+
+/* --- Si la persona pidió "reducir movimiento", se quitan las animaciones --- */
+@media (prefers-reduced-motion: reduce) {
+  .avatar--salto,
+  .avatar--giro,
+  .habilidad--rebote,
+  .visor[open],
+  .visor__imagen--entra,
+  .form-gracias__emoji,
+  .cursor {
+    animation: none;
+  }
+
+  .header,
+  .header__logo-img {
+    transition: none;
+  }
+}
+
+/* ===========================================================
+   10. TEMA ESPACIAL
+   Pinta todo el sitio como una galaxia. Va de último para que
+   gane sobre los colores claros de las partes 3 a 9.
+   Los colores están en :root (parte 1), los que empiezan con --espacio-.
+   >> Si algún día quiero volver al diseño claro, borro esta parte 10
+      y la línea "color-scheme: dark" del :root.
+   =========================================================== */
+
+/* --- El cielo --- */
+body {
+  background-color: var(--espacio-fondo);
+  color: var(--espacio-texto);
+}
+
+/* Dos capas de estrellas pegadas a la pantalla, detrás de todo (z-index -1).
+   Son puntitos hechos con radial-gradient, no imágenes, así no pesan nada. */
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: -1;
+  pointer-events: none; /* no estorban los clics */
+}
+
+/* Capa 1: nebulosas de color + estrellas chiquitas quietas */
+body::before {
+  bottom: 0;
+  background-image:
+    radial-gradient(ellipse 55% 45% at 8% 0%, rgba(49, 83, 161, 0.55), transparent 70%),
+    radial-gradient(ellipse 45% 40% at 95% 45%, rgba(41, 182, 246, 0.14), transparent 70%),
+    radial-gradient(ellipse 50% 40% at 20% 100%, rgba(108, 79, 196, 0.18), transparent 70%),
+    radial-gradient(1px 1px at 25px 35px, rgba(255, 255, 255, 0.8), transparent),
+    radial-gradient(1px 1px at 120px 80px, rgba(255, 255, 255, 0.6), transparent),
+    radial-gradient(1px 1px at 210px 20px, rgba(255, 255, 255, 0.7), transparent),
+    radial-gradient(1px 1px at 270px 150px, rgba(255, 255, 255, 0.5), transparent),
+    radial-gradient(1px 1px at 60px 190px, rgba(255, 255, 255, 0.7), transparent),
+    radial-gradient(1px 1px at 160px 240px, rgba(255, 255, 255, 0.6), transparent),
+    radial-gradient(1px 1px at 240px 270px, rgba(255, 255, 255, 0.8), transparent),
+    radial-gradient(1px 1px at 10px 280px, rgba(255, 255, 255, 0.5), transparent);
+  background-size:
+    100% 100%, 100% 100%, 100% 100%,
+    300px 300px, 300px 300px, 300px 300px, 300px 300px,
+    300px 300px, 300px 300px, 300px 300px, 300px 300px;
+  background-repeat:
+    no-repeat, no-repeat, no-repeat,
+    repeat, repeat, repeat, repeat, repeat, repeat, repeat, repeat;
+}
+
+/* Capa 2: estrellas más grandes que titilan y suben despacito */
+body::after {
+  height: calc(100% + 500px); /* más alta que la pantalla para poder moverse sin que se vea el borde */
+  background-image:
+    radial-gradient(1.5px 1.5px at 50px 80px, #FFFFFF, transparent),
+    radial-gradient(2px 2px at 180px 300px, #CFE9FF, transparent),
+    radial-gradient(1.5px 1.5px at 320px 140px, #FFFFFF, transparent),
+    radial-gradient(2px 2px at 430px 420px, #FFFFFF, transparent),
+    radial-gradient(1.5px 1.5px at 90px 450px, #9DB8FF, transparent),
+    radial-gradient(1.5px 1.5px at 260px 30px, #FFFFFF, transparent),
+    radial-gradient(2px 2px at 470px 220px, #8FDBFF, transparent);
+  background-size: 500px 500px;
+  animation:
+    estrellas-subir 120s linear infinite,
+    estrellas-titilar 4s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+@keyframes estrellas-subir {
+  from { transform: translateY(0); }
+  to   { transform: translateY(-500px); } /* justo un "cuadro" de estrellas, así el ciclo no se nota */
+}
+
+@keyframes estrellas-titilar {
+  from { opacity: 1; }
+  to   { opacity: 0.45; }
+}
+
+/* Estrella fugaz (el JS crea una cada tantos segundos) */
+.estrella-fugaz {
+  position: fixed;
+  z-index: -1;
+  width: 140px;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.95)); /* la cabeza brilla, la cola se apaga */
+  transform-origin: left center;
+  pointer-events: none;
+  animation: estrella-fugaz 1.1s ease-out forwards;
+}
+
+@keyframes estrella-fugaz {
+  0%   { opacity: 0; transform: rotate(var(--angulo, 145deg)) translateX(0); }
+  15%  { opacity: 1; }
+  100% { opacity: 0; transform: rotate(var(--angulo, 145deg)) translateX(520px); }
+}
+
+/* --- Header y footer --- */
+.header {
+  background-color: rgba(11, 16, 38, 0.78); /* azul noche un poco transparente */
+  backdrop-filter: blur(10px);              /* lo de atrás se ve borroso, como vidrio */
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--espacio-borde);
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.35);
+}
+
+.footer {
+  background-color: var(--espacio-negro);
+  border-top: 1px solid var(--espacio-borde);
+}
+
+/* --- Botones --- */
+.boton--primario:hover {
+  box-shadow: 0 8px 26px var(--espacio-brillo); /* brilla celeste al pasar el mouse */
+}
+
+.boton--secundario {
+  color: var(--espacio-texto);
+  border-color: var(--espacio-lavanda);
+}
+
+.boton--secundario:hover {
+  border-color: var(--color-acento);
+  box-shadow: 0 8px 26px var(--espacio-brillo);
+}
+
+/* --- INICIO: hero con planeta --- */
+.hero {
+  background-color: transparent; /* se ven las estrellas */
+  position: relative;
+  overflow: hidden; /* el planeta se corta en el borde, como si estuviera saliendo */
+}
+
+/* El planeta (saliendo por el borde derecho) */
+.hero::before {
+  content: "";
+  position: absolute;
+  width: 340px;
+  height: 340px;
+  right: -170px; /* la mitad del planeta queda por fuera de la pantalla */
+  top: 40px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 28%, #6E8FE0 0%, var(--color-azul) 35%, #1A2457 65%, #0E1534 100%);
+  box-shadow:
+    0 0 90px rgba(41, 182, 246, 0.25),          /* resplandor de afuera */
+    inset -30px -40px 80px rgba(0, 0, 0, 0.45); /* sombra de adentro (lado oscuro) */
+  opacity: 0.85;
+  pointer-events: none;
+}
+
+/* El anillo del planeta */
+.hero::after {
+  content: "";
+  position: absolute;
+  width: 540px;
+  height: 100px;
+  right: -290px; /* centrado con el planeta */
+  top: 160px;
+  border: 2px solid rgba(157, 184, 255, 0.35);
+  border-radius: 50%;
+  transform: rotate(-18deg);
+  pointer-events: none;
+}
+
+.hero__contenedor {
+  position: relative;
+  z-index: 1; /* el texto y la foto quedan encima del planeta */
+}
+
+.hero__titulo {
+  color: var(--color-blanco);
+  text-shadow: 0 0 24px rgba(41, 182, 246, 0.35); /* brillito alrededor de mi nombre */
+}
+
+.hero__subtitulo {
+  color: var(--color-acento); /* sobre fondo oscuro el celeste sí cumple WCAG (8.2:1) */
+}
+
+.hero__bio {
+  color: var(--espacio-texto-suave);
+}
+
+/* Mi avatar como un planeta con órbita y una lunita dando vueltas */
+.hero__foto {
+  position: relative;
+}
+
+.hero__foto img {
+  /* detrás de mi avatar va un disco claro, como una luna, para que se vea bien en lo oscuro */
+  background: radial-gradient(circle at 35% 30%, #FFFFFF, #DCEBFF 60%, #B8CFFF);
+  border-color: var(--espacio-panel);
+  box-shadow:
+    0 0 0 2px var(--espacio-borde),
+    0 0 50px rgba(41, 182, 246, 0.35);
+}
+
+.hero__foto::before {
+  content: "";
+  position: absolute;
+  inset: -22px; /* la órbita queda 22px por fuera de la foto */
+  border: 1px dashed rgba(157, 184, 255, 0.4);
+  border-radius: 50%;
+  pointer-events: none;
+  animation: girar 60s linear infinite;
+}
+
+.hero__foto::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 14px;
+  height: 14px;
+  margin: -7px 0 0 -7px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #FFFFFF, var(--espacio-celeste-claro) 60%, var(--color-acento));
+  box-shadow: 0 0 12px var(--color-acento);
+  pointer-events: none;
+  animation: orbita 9s linear infinite;
+}
+
+@keyframes girar {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes orbita {
+  from { transform: rotate(0deg) translateX(132px); }   /* 132px = radio de la foto (110) + 22 */
+  to   { transform: rotate(360deg) translateX(132px); }
+}
+
+/* --- INICIO: habilidades --- */
+.habilidades__titulo {
+  color: var(--espacio-texto);
+}
+
+.habilidad {
+  background-color: rgba(49, 83, 161, 0.28);
+  color: var(--espacio-texto);
+  border-color: rgba(157, 184, 255, 0.4);
+  transition: background-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.habilidad:hover {
+  background-color: var(--color-acento);
+  border-color: var(--color-acento);
+  color: var(--color-texto); /* texto oscuro sobre celeste (6.9:1) */
+  box-shadow: 0 0 18px var(--espacio-brillo);
+}
+
+/* --- INICIO: franja de contacto como una nebulosa --- */
+.contacto-rapido {
+  background:
+    radial-gradient(ellipse at 20% 0%, rgba(41, 182, 246, 0.30), transparent 60%),
+    linear-gradient(135deg, var(--color-azul), #1A2457);
+  border-top: 1px solid var(--espacio-borde);
+}
+
+/* --- PORTAFOLIO --- */
+.portafolio-intro,
+.contacto-hero {
+  background-color: transparent;
+}
+
+.portafolio-intro__titulo,
+.contacto-hero__titulo {
+  color: var(--espacio-texto);
+}
+
+.portafolio-intro__texto,
+.contacto-hero__texto {
+  color: var(--espacio-texto-suave);
+}
+
+.filtro {
+  background-color: var(--espacio-panel);
+  color: var(--espacio-texto);
+  border-color: rgba(157, 184, 255, 0.4);
+}
+
+.filtro[aria-pressed="true"] {
+  background-color: var(--color-acento);
+  border-color: var(--color-acento);
+  color: var(--color-texto);
+  box-shadow: 0 0 18px var(--espacio-brillo);
+}
+
+.filtro__numero {
+  background-color: rgba(157, 184, 255, 0.15);
+  color: var(--espacio-texto);
+}
+
+.filtro[aria-pressed="true"] .filtro__numero {
+  background-color: var(--espacio-fondo);
+  color: var(--color-acento);
+}
+
+.proyecto {
+  background-color: var(--espacio-panel);
+  border: 1px solid var(--espacio-borde);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+}
+
+.proyecto:hover {
+  box-shadow:
+    0 12px 36px rgba(0, 0, 0, 0.45),
+    0 0 0 1px rgba(41, 182, 246, 0.45),  /* borde celeste */
+    0 0 30px rgba(41, 182, 246, 0.2);    /* resplandor */
+}
+
+.proyecto__categoria {
+  background-color: rgba(41, 182, 246, 0.12);
+  color: var(--espacio-celeste-claro);
+}
+
+.proyecto__titulo {
+  color: var(--espacio-lavanda);
+}
+
+.proyecto__descripcion {
+  color: var(--espacio-texto-suave);
+}
+
+.proyecto__colaboracion {
+  color: var(--espacio-celeste-claro);
+}
+
+/* Visor de imágenes */
+.visor::backdrop {
+  background-color: rgba(5, 8, 20, 0.88);
+}
+
+.visor__figura {
+  background-color: var(--espacio-panel);
+  border: 1px solid var(--espacio-borde);
+}
+
+.visor__imagen {
+  background-color: var(--espacio-fondo);
+}
+
+.visor__titulo {
+  color: var(--espacio-lavanda);
+}
+
+.visor__descripcion,
+.visor__contador {
+  color: var(--espacio-texto-suave);
+}
+
+.visor__cerrar,
+.visor__flecha {
+  background-color: var(--espacio-panel);
+  color: var(--espacio-texto);
+  border: 1px solid rgba(157, 184, 255, 0.35);
+}
+
+/* --- CONTACTO --- */
+.form-tarjeta,
+.contacto-dato {
+  background-color: var(--espacio-panel);
+  border: 1px solid var(--espacio-borde);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+}
+
+.form-etiqueta,
+.contacto-dato__titulo {
+  color: var(--espacio-lavanda);
+}
+
+.contacto-dato__valor,
+.form-aviso,
+.form-contador {
+  color: var(--espacio-texto-suave);
+}
+
+/* Campos del formulario (Bootstrap los pone blancos, aquí los oscurezco) */
+.form-control,
+.form-select,
+.form-control:focus,
+.form-select:focus {
+  background-color: var(--espacio-fondo);
+  color: var(--espacio-texto);
+}
+
+.form-control,
+.form-select {
+  border-color: rgba(157, 184, 255, 0.25);
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--color-acento);
+  box-shadow: 0 0 0 3px rgba(41, 182, 246, 0.25);
+}
+
+.form-control::placeholder {
+  color: #8C98BF; /* gris azulado, 6.6:1 sobre el campo */
+}
+
+/* La flechita del select: Bootstrap la trae oscura, aquí la hago clara */
+.form-select {
+  -webkit-appearance: none;
+  appearance: none;        /* quita la flecha del navegador, dejo solo la mía */
+  padding-right: 2.25rem; /* espacio para la flechita */
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 16px 12px;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23A9B6D9' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+}
+
+.form-gracias__titulo {
+  color: var(--espacio-texto);
+}
+
+.form-gracias__texto {
+  color: var(--espacio-texto-suave);
+}
+
+.boton-copiar {
+  border-color: var(--espacio-lavanda);
+  color: var(--espacio-texto);
+}
+
+.boton-copiar:hover {
+  background-color: var(--color-acento);
+  border-color: var(--color-acento);
+  color: var(--color-texto);
+}
+
+/* --- Botón volver arriba = cohete 🚀 --- */
+.arriba {
+  box-shadow: 0 0 22px var(--espacio-brillo);
+  font-size: 1.35rem;
+}
+
+.arriba span {
+  display: inline-block;
+  transform: rotate(-45deg); /* el emoji viene en diagonal, así apunta hacia arriba */
+}
+
+.arriba--despegue span {
+  animation: despegue 0.9s ease-in forwards;
+}
+
+@keyframes despegue {
+  0%   { transform: translateY(0) rotate(-45deg); }
+  20%  { transform: translateY(6px) rotate(-45deg); }  /* toma impulso */
+  100% { transform: translateY(-110vh) rotate(-45deg); }
+}
+
+/* --- Celular --- */
+@media (max-width: 768px) {
+
+  .hero::before {
+    width: 170px;   /* planeta más pequeño para que no tape la foto */
+    height: 170px;
+    right: -100px;
+    top: 24px;
+  }
+
+  .hero::after {
+    width: 280px;
+    height: 54px;
+    right: -155px;
+    top: 82px;
+  }
+}
+
+/* --- Reducir movimiento: el cielo queda quieto --- */
+@media (prefers-reduced-motion: reduce) {
+  body::after,
+  .hero__foto::before,
+  .hero__foto::after,
+  .arriba--despegue span {
+    animation: none;
+  }
+
+  .hero__foto::after {
+    transform: rotate(-40deg) translateX(132px); /* la lunita queda quieta sobre la órbita */
+  }
+}
+
+/* ===========================================================
+   11. PÁGINA DE JUEGOS / ARCADE (juegos.html)
+   La nave en el centro y un planeta por cada juego.
+   El viaje de la nave lo hace js/main.js (parte 16).
+   =========================================================== */
+
+.arcade {
+  padding: 60px 0 70px;
+  text-align: center;
+}
+
+.arcade__titulo {
+  color: var(--espacio-texto);
+  font-size: 2.2rem; /* igual que los títulos de Portafolio y Contacto */
+  margin-bottom: 10px;
+}
+
+.arcade__texto {
+  color: var(--espacio-texto-suave);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+
+.arcade__escena {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 30px;
+}
+
+/* --- Los planetas: 3 columnas, a distintas alturas para que formen un arco --- */
+.planetas {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: start;
+  gap: 24px;
+  width: 100%;
+  max-width: 900px;
+}
+
+.planetas__item {
+  display: flex;
+  justify-content: center;
+  animation: planeta-flotar 6s ease-in-out infinite; /* flotan suavecito */
+}
+
+.planetas__item:nth-child(1) { margin-top: 40px; }
+.planetas__item:nth-child(2) { animation-delay: -2s; }
+.planetas__item:nth-child(3) { margin-top: 90px; animation-delay: -4s; }
+
+@keyframes planeta-flotar {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-12px); }
+}
+
+/* Cada planeta es un enlace (o un botón) con: esfera + nombre + info.
+   Los colores de cada planeta se ponen con variables (--luz, --base, --sombra, --halo) */
+.planeta {
+  --tam: 170px; /* tamaño de la esfera */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 14px;
+  border: none;
+  border-radius: 24px;
+  background: none;
+  font-family: inherit;
+  color: var(--espacio-texto);
+  text-align: center;
+  cursor: pointer;
+}
+
+.planeta:focus-visible {
+  outline: 3px solid var(--color-acento);
+  outline-offset: 4px;
+}
+
+.planeta__esfera {
+  position: relative;
+  display: block;
+  width: var(--tam);
+  height: var(--tam);
+  margin-bottom: 14px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 32% 28%, var(--luz) 0%, var(--base) 45%, var(--sombra) 88%);
+  box-shadow:
+    inset -14px -18px 34px rgba(0, 0, 0, 0.45), /* lado oscuro */
+    0 0 40px var(--halo);                        /* resplandor */
+  transition: transform 0.4s cubic-bezier(0.3, 1.6, 0.5, 1), box-shadow 0.4s ease; /* crece con rebote */
+}
+
+/* Al pasar el mouse (o con Tab), el planeta se agranda y brilla más */
+.planeta:hover .planeta__esfera,
+.planeta:focus-visible .planeta__esfera,
+.planeta--destino .planeta__esfera {
+  transform: scale(1.18);
+  box-shadow:
+    inset -14px -18px 34px rgba(0, 0, 0, 0.45),
+    0 0 75px var(--halo),
+    0 0 0 2px rgba(255, 255, 255, 0.15);
+}
+
+.planeta__nombre {
+  font-size: 1.15rem;
+  font-weight: 700;
+  transition: color 0.3s ease;
+}
+
+.planeta:hover .planeta__nombre,
+.planeta:focus-visible .planeta__nombre {
+  color: var(--color-acento); /* celeste sobre el fondo oscuro: 8.2:1 */
+}
+
+.planeta__info {
+  font-size: 0.85rem;
+  color: var(--espacio-texto-suave);
+}
+
+/* Lunita que gira alrededor de cada planeta */
+.planeta__luna {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 16px;
+  height: 16px;
+  margin: -8px 0 0 -8px;
+  border-radius: 50%;
+  animation: orbita-luna 7s linear infinite;
+}
+
+@keyframes orbita-luna {
+  from { transform: rotate(0deg) translateX(calc(var(--tam) * 0.68)); }
+  to   { transform: rotate(360deg) translateX(calc(var(--tam) * 0.68)); }
+}
+
+/* --- Planeta Galaxy Gol: verde como una cancha --- */
+.planeta--gol {
+  --luz: #C6F7B0;
+  --base: #3FAF4A;
+  --sombra: #0F4A22;
+  --halo: rgba(80, 220, 120, 0.35);
+}
+
+.planeta--gol .planeta__esfera::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.07) 0 10px, transparent 10px 20px); /* franjas del pasto */
+}
+
+.planeta__cancha {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  clip-path: circle(50%); /* las líneas no se salen del planeta */
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.55);
+  stroke-width: 1.6;
+  animation: girar 40s linear infinite; /* el planeta gira despacio (keyframes en la parte 10) */
+}
+
+.planeta__luna--balon {
+  /* balón de fútbol: blanco con manchitas negras */
+  background:
+    radial-gradient(circle at 50% 50%, #222222 0 22%, transparent 24%),
+    radial-gradient(circle at 12% 30%, #222222 0 14%, transparent 16%),
+    radial-gradient(circle at 88% 30%, #222222 0 14%, transparent 16%),
+    radial-gradient(circle at 50% 95%, #222222 0 14%, transparent 16%),
+    #FFFFFF;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.6);
+}
+
+/* --- Planeta COSMOBALL: un agujero negro con su disco de fuego (como el logo del juego) --- */
+.planeta--cosmo {
+  --tam: 150px;
+  --luz: #3a1f6e;     /* casi negro, con un brillo morado */
+  --base: #0d0820;
+  --sombra: #01020a;
+  --halo: rgba(155, 92, 255, 0.45);
+}
+
+.planeta--cosmo .planeta__esfera::before {
+  /* borde del agujero (horizonte de eventos): línea cian y brillo rosado por dentro */
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  box-shadow:
+    inset 0 0 0 2px rgba(56, 232, 255, 0.75),
+    inset 0 0 26px rgba(255, 60, 172, 0.45);
+}
+
+.planeta__disco {
+  /* disco de fuego que rodea al agujero: morado → rosa → naranja */
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 175%;
+  height: 32%;
+  border: 5px solid transparent;
+  border-radius: 50%;
+  background:
+    linear-gradient(transparent, transparent) padding-box,
+    linear-gradient(90deg, #9B5CFF, #FF3CAC, #FF9A3C) border-box;  /* borde con degradado */
+  transform: translate(-50%, -50%) rotate(-14deg);
+  filter: drop-shadow(0 0 8px rgba(255, 60, 172, 0.6));
+}
+
+.planeta__luna--pelota {
+  /* la pelota blanca de COSMOBALL, dando vueltas alrededor del agujero */
+  width: 14px;
+  height: 14px;
+  margin: -7px 0 0 -7px;
+  background: radial-gradient(circle at 35% 35%, #FFFFFF, #CFF8FF 60%, #38E8FF);
+  box-shadow: 0 0 12px rgba(56, 232, 255, 0.9);
+  animation-duration: 5s;
+  animation-direction: reverse;
+}
+
+/* --- Planeta "Próximamente": gris con cráteres y candado --- */
+.planeta--bloqueado {
+  --tam: 120px;
+  --luz: #DCE3F5;
+  --base: #7484A8;
+  --sombra: #2A3456;
+  --halo: rgba(157, 184, 255, 0.18);
+  cursor: help;
+}
+
+.planeta--bloqueado .planeta__esfera {
+  opacity: 0.75;
+}
+
+.planeta__crater {
+  position: absolute;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.18);
+  box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.35);
+}
+
+.planeta__crater--1 { width: 26px; height: 26px; top: 20%; left: 26%; }
+.planeta__crater--2 { width: 16px; height: 16px; top: 62%; left: 60%; }
+.planeta__crater--3 { width: 12px; height: 12px; top: 30%; left: 66%; }
+
+.planeta__candado {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 1.8rem;
+}
+
+.planeta--sacudir .planeta__esfera {
+  animation: sacudir 0.5s ease; /* "no se puede" */
+}
+
+@keyframes sacudir {
+  0%, 100% { transform: translateX(0); }
+  20%      { transform: translateX(-8px); }
+  40%      { transform: translateX(8px); }
+  60%      { transform: translateX(-5px); }
+  80%      { transform: translateX(5px); }
+}
+
+/* --- La nave espacial --- */
+.nave {
+  position: relative;
+  z-index: 2; /* pasa por encima de los planetas cuando viaja */
+  width: 76px;
+  margin-top: 10px;
+}
+
+.nave__giro {
+  transition: transform 0.45s cubic-bezier(0.3, 1.3, 0.5, 1); /* gira para mirar al planeta */
+}
+
+.nave__cuerpo {
+  animation: nave-flotar 3s ease-in-out infinite;
+}
+
+@keyframes nave-flotar {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-10px); }
+}
+
+.nave__dibujo {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+  filter: drop-shadow(0 0 18px rgba(41, 182, 246, 0.45));
+}
+
+.nave__fuego {
+  transform-origin: 50px 108px; /* el fuego crece desde el motor */
+  animation: fuego 0.15s ease-in-out infinite alternate;
+}
+
+@keyframes fuego {
+  from { transform: scaleY(0.85); }
+  to   { transform: scaleY(1.1); }
+}
+
+.nave--turbo .nave__fuego {
+  animation: fuego-turbo 0.07s ease-in-out infinite alternate; /* motor a fondo al despegar */
+}
+
+@keyframes fuego-turbo {
+  from { transform: scaleY(1.4); }
+  to   { transform: scaleY(1.9); }
+}
+
+/* --- Durante el viaje --- */
+.arcade__escena--viajando .planeta {
+  pointer-events: none; /* que no se pueda dar clic a otro planeta a mitad del viaje */
+}
+
+.arcade__escena--viajando .planeta:not(.planeta--destino) {
+  opacity: 0.2;
+  transition: opacity 0.4s ease;
+}
+
+/* destello final: la pantalla se llena del color del planeta (lo crea el JS) */
+.warp {
+  position: fixed;
+  inset: 0;
+  z-index: 3000;
+  pointer-events: none;
+  background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), var(--color, #29B6F6) 0%, var(--espacio-fondo) 65%);
+}
+
+/* --- Página de aterrizaje (futbol.html mientras llega el juego) --- */
+.aterrizaje {
+  min-height: calc(100vh - 132px); /* ocupa toda la pantalla (menos header y footer) para que el footer quede abajo */
+  display: flex;
+  align-items: center;  /* el contenido queda centrado de arriba a abajo */
+  padding: 60px 0;
+  text-align: center;
+  animation: aterrizar 0.8s ease-out;
+}
+
+@keyframes aterrizar {
+  from { opacity: 0; transform: scale(1.06); }
+  to   { opacity: 1; transform: none; }
+}
+
+.aterrizaje__planeta {
+  --tam: 140px;
+  cursor: default;
+  margin: 0 auto 10px;
+}
+
+.aterrizaje__titulo {
+  color: var(--espacio-texto);
+  font-size: 2.2rem;
+  margin-bottom: 10px;
+}
+
+.aterrizaje__texto {
+  color: var(--espacio-texto-suave);
+  max-width: 560px;
+  margin: 0 auto;
+}
+
+.aterrizaje__botones {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 28px;
+}
+
+/* --- Celular --- */
+@media (max-width: 768px) {
+
+  .planetas {
+    grid-template-columns: repeat(2, minmax(0, 1fr)); /* 2 planetas arriba, el tercero abajo */
+    gap: 8px;
+  }
+
+  .planetas__item:nth-child(1),
+  .planetas__item:nth-child(3) {
+    margin-top: 0;
+  }
+
+  .planetas__item:nth-child(3) {
+    grid-column: 1 / -1; /* ocupa las 2 columnas para quedar centrado */
+  }
+
+  .planeta,
+  .planeta--cosmo {
+    --tam: 112px;
+    padding: 8px;
+  }
+
+  .planeta--bloqueado {
+    --tam: 84px;
+  }
+
+  .planeta__info {
+    font-size: 0.78rem;
+  }
+
+  .nave {
+    order: -1;            /* en celular la nave va ARRIBA de los planetas, para que se vea el viaje */
+    width: 54px;
+    margin: 0 0 6px;
+  }
+}
+
+/* --- Reducir movimiento: todo quieto --- */
+@media (prefers-reduced-motion: reduce) {
+  .planetas__item,
+  .planeta__cancha,
+  .nave__cuerpo,
+  .nave__fuego,
+  .aterrizaje {
+    animation: none;
+  }
+
+  .planeta__luna {
+    animation: none;
+    transform: rotate(-35deg) translateX(calc(var(--tam) * 0.68));
+  }
+}
+
+/* --- Página de un juego (cosmoball.html) --- */
+.juego {
+  padding: 50px 0 70px;
+  text-align: center;
+}
+
+.juego__titulo {
+  color: var(--espacio-texto);
+  font-size: 2.2rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+}
+
+.juego__eslogan {
+  color: var(--espacio-texto-suave);
+  margin-bottom: 26px;
+}
+
+.juego__marco {
+  max-width: 1100px;
+  margin: 0 auto;
+  border-radius: var(--radio-borde);
+  overflow: hidden;
+  border: 1px solid var(--espacio-borde);
+  box-shadow: 0 0 40px rgba(155, 92, 255, 0.35), 0 12px 40px rgba(0, 0, 0, 0.5); /* brillo morado de COSMOBALL */
+  background-color: #050A24;
+}
+
+.juego__ventana {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 10; /* un poco más alto que 16:9 para que quepa el título del juego */
+  border: 0;
+}
+
+.juego__pista {
+  color: var(--espacio-texto-suave);
+  font-size: 0.85rem;
+  margin-top: 12px;
+}
+
+.juego__info {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+  max-width: 1100px;
+  margin: 36px auto 0;
+  text-align: left;
+}
+
+.juego__tarjeta {
+  background-color: var(--espacio-panel);
+  border: 1px solid var(--espacio-borde);
+  border-radius: var(--radio-borde);
+  padding: 22px;
+}
+
+.juego__subtitulo {
+  color: var(--espacio-lavanda);
+  font-weight: 700;
+  font-size: 1.1rem;
+  margin-bottom: 10px;
+}
+
+.juego__lista {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  color: var(--espacio-texto-suave);
+  font-size: 0.92rem;
+}
+
+.juego__lista b {
+  color: var(--espacio-texto);
+}
+
+.juego__lista--pasos {
+  list-style: decimal;
+  padding-left: 20px;
+}
+
+.juego__botones {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 32px;
+}
+
+/* portada para celular (en computador no se ve) */
+.juego__portada {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  padding: 30px 20px;
+  background-color: var(--espacio-panel);
+  border: 1px solid var(--espacio-borde);
+  border-radius: var(--radio-borde);
+  box-shadow: 0 0 40px rgba(155, 92, 255, 0.3);
+}
+
+.juego__planeta {
+  --tam: 120px;
+  cursor: default;
+  padding: 20px 0 0;
+}
+
+.juego__jugar {
+  font-size: 1.1rem;
+  padding: 14px 34px;
+}
+
+@media (max-width: 768px) {
+  .juego__marco,
+  .juego__marco + .juego__pista {
+    display: none; /* en celular no va la ventana: va la portada */
+  }
+
+  .juego__portada {
+    display: flex;
+  }
+
+  .juego__info {
+    grid-template-columns: 1fr; /* las tarjetas una debajo de la otra */
+  }
+}

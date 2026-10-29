@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="Galaxy Gol: fútbol arcade 2D de alienígenas. Juega contra Zorp, contra un amigo en el mismo dispositivo o en línea.">
+  <meta name="author" content="David Santiago Sarmiento Salguero">
+  <title>Galaxy Gol</title>
+  <link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+  <!-- Fuentes de Google Fonts: Jersey 10 (pixelada, para títulos) y Atkinson
+       Hyperlegible (textos, hecha para leerse fácil). Sin internet se usan las de respaldo. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jersey+10&amp;family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&amp;display=swap">
+  <!-- Hoja de estilos externa del juego (carpeta css) -->
+  <link rel="stylesheet" href="css/style.css">
+  <!-- PeerJS 1.5.4: conecta dos navegadores para jugar en línea (WebRTC).
+       Si no carga (sin internet), el juego funciona igual sin el modo en línea. -->
+  <script src="https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js"
+          integrity="sha384-nlUQ8ZqCbvStErob+biJNzSgltf6urV3VGqhfIfzhmg9RXmpeRm76ELw0pYnKlTR"
+          crossorigin="anonymous" defer></script>
+  <!-- Lógica del juego (defer: se ejecuta cuando el HTML ya cargó) -->
+  <script src="js/script.js" defer></script>
+</head>
+<body>
+  <!-- ============================================================
+       CONTENEDOR PRINCIPAL: todas las pantallas viven aquí.
+       Solo una pantalla se muestra a la vez (las demás llevan hidden).
+       ============================================================ -->
+  <main id="app" class="app">
+
+    <!-- 1. PANTALLA DE INICIO ===================================== -->
+    <section id="pantalla-inicio" class="pantalla pantalla-inicio" aria-labelledby="titulo-inicio">
+      <div class="inicio-contenido">
+        <h1 id="titulo-inicio" class="logo" tabindex="-1">
+          <img src="img/logo.svg" alt="Galaxy Gol" width="420" height="250">
+        </h1>
+        <p class="lema">Fútbol arcade de alienígenas, 4 contra 4. ¿Le ganas a Zorp?</p>
+        <nav class="menu" aria-label="Menú principal">
+          <ul class="menu-lista">
+            <li><button type="button" class="boton boton-principal" data-ir="pantalla-jugadores">Jugar</button></li>
+            <li><button type="button" class="boton" data-ir="pantalla-perfil">Tu perfil</button></li>
+            <li><button type="button" class="boton" data-ir="pantalla-controles">Controles</button></li>
+            <li><button type="button" class="boton" data-ir="pantalla-logros">Logros</button></li>
+            <li><button type="button" class="boton" data-ir="pantalla-creditos">Créditos</button></li>
+          </ul>
+        </nav>
+      </div>
+      <img class="zorp-asoma" src="img/zorp.svg" alt="Zorp, el alienígena rival, te mira desafiante" width="170" height="190">
+    </section>
+
+    <!-- 1a. CONTROLES ============================================ -->
+    <section id="pantalla-controles" class="pantalla pantalla-menu" aria-labelledby="titulo-controles" hidden>
+      <div class="panel panel-ancho">
+        <h2 id="titulo-controles" class="titulo-pantalla" tabindex="-1">Controles</h2>
+
+        <div class="grupos-controles">
+          <!-- Jugador 1 -->
+          <section class="tarjeta tarjeta-cometa" aria-labelledby="titulo-j1">
+            <h3 id="titulo-j1">Jugador 1 · teclado</h3>
+            <dl class="acciones">
+              <div class="accion">
+                <dt class="cruz-teclas">
+                  <kbd class="tecla-arriba">W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd>
+                </dt>
+                <dd>Mover</dd>
+              </div>
+              <div class="accion">
+                <dt><kbd class="tecla-ataque">F</kbd></dt>
+                <dd><strong>Patear:</strong> un toque pasa; mantenlo apretado y suelta para tirar (más tiempo, más fuerte)</dd>
+              </div>
+              <div class="accion">
+                <dt><kbd class="tecla-defensa">G</kbd></dt>
+                <dd>Derrapar (quitar el balón)</dd>
+              </div>
+            </dl>
+          </section>
+
+          <!-- Jugador 2 -->
+          <section class="tarjeta tarjeta-zorp" aria-labelledby="titulo-j2">
+            <h3 id="titulo-j2">Jugador 2 · teclado</h3>
+            <dl class="acciones">
+              <div class="accion">
+                <dt class="cruz-teclas">
+                  <kbd class="tecla-arriba"><span aria-hidden="true">↑</span><span class="visualmente-oculto">Flecha arriba</span></kbd><kbd><span aria-hidden="true">←</span><span class="visualmente-oculto">Flecha izquierda</span></kbd><kbd><span aria-hidden="true">↓</span><span class="visualmente-oculto">Flecha abajo</span></kbd><kbd><span aria-hidden="true">→</span><span class="visualmente-oculto">Flecha derecha</span></kbd>
+                </dt>
+                <dd>Mover</dd>
+              </div>
+              <div class="accion">
+                <dt><kbd class="tecla-ataque">Ñ</kbd></dt>
+                <dd><strong>Patear:</strong> un toque pasa; mantenlo y suelta para tirar</dd>
+              </div>
+              <div class="accion">
+                <dt><kbd class="tecla-defensa"><span aria-hidden="true">.</span><span class="visualmente-oculto">Punto</span></kbd></dt>
+                <dd>Derrapar (quitar el balón)</dd>
+              </div>
+            </dl>
+            <p class="nota-teclas">En un teclado en inglés, la Ñ es la tecla <kbd>;</kbd>.</p>
+          </section>
+
+          <!-- Teclas generales -->
+          <section class="tarjeta" aria-labelledby="titulo-generales">
+            <h3 id="titulo-generales">Para todos</h3>
+            <dl class="acciones">
+              <div class="accion">
+                <dt><kbd>P</kbd> <span class="o">o</span> <kbd class="tecla-larga">Espacio</kbd></dt>
+                <dd>Pausa</dd>
+              </div>
+              <div class="accion">
+                <dt><kbd>M</kbd></dt>
+                <dd>Silencio</dd>
+              </div>
+              <div class="accion">
+                <dt><kbd class="tecla-larga">Esc</kbd></dt>
+                <dd>Pausa o volver</dd>
+              </div>
+            </dl>
+            <p class="nota-teclas">Jugando solo, sirven los dos bloques: elige el que te quede más cómodo.</p>
+            <p class="nota-teclas">No hay que cambiar de alienígena: siempre manejas al de tu equipo más cercano al balón.</p>
+          </section>
+
+          <!-- Celular -->
+          <section class="tarjeta tarjeta-celular" aria-labelledby="titulo-celular">
+            <h3 id="titulo-celular">En el celular</h3>
+            <figure class="figura-celular">
+              <img src="img/celular.svg" alt="Celular en horizontal: joystick a la izquierda y dos botones a la derecha: Patear y Derrapar" width="300" height="160">
+              <figcaption>Joystick a la izquierda para mover. Botones a la derecha: <strong>Patear</strong> (toca para pasar, mantén para tirar) y <strong>Derrapar</strong>.</figcaption>
+            </figure>
+            <p>Con 2 jugadores, cada uno usa su mitad de la pantalla con sus propios controles.</p>
+          </section>
+
+          <!-- Poderes -->
+          <section class="tarjeta tarjeta-poderes" aria-labelledby="titulo-poderes">
+            <h3 id="titulo-poderes">Poderes</h3>
+            <p>Cada cierto tiempo aparece una cápsula en la cancha. El equipo que la toca lanza el poder contra el rival.</p>
+            <ul class="lista-poderes">
+              <li>
+                <img src="img/capsula-asteroides.svg" alt="" width="50" height="80">
+                <span><strong>Lluvia de asteroides.</strong> Caen sobre los rivales y los tumban. Dejan huecos que hay que rodear; la cancha se regenera sola.</span>
+              </li>
+              <li>
+                <img src="img/capsula-nave.svg" alt="" width="50" height="80">
+                <span><strong>Aficionado en nave.</strong> Una mini nave se roba el balón y huye. Persíguela y tócala para quitárselo.</span>
+              </li>
+              <li>
+                <img src="img/capsula-baba.svg" alt="" width="50" height="80">
+                <span><strong>Alienígena de baba.</strong> Cruza la cancha rival dejando charcos. Quien los pisa se resbala y puede perder el balón.</span>
+              </li>
+            </ul>
+          </section>
+        </div>
+
+        <!-- Reglas rápidas -->
+        <section class="reglas" aria-labelledby="titulo-reglas">
+          <h3 id="titulo-reglas">Cómo se juega</h3>
+          <ul>
+            <li>Toca el balón para quedártelo: va pegado a tu pie. Con Patear, un toque corto pasa a un compañero; si lo mantienes y sueltas, tiras al arco (más tiempo, más fuerte). Para elegir palo, mantén la dirección hacia ese lado.</li>
+            <li>Para quitarle el balón a un rival, ponte delante de él y derrapa. Si fallas, tardas en levantarte.</li>
+            <li>Cada equipo tiene 4 alienígenas: arquero, defensa, volante y delantero. El aro brillante marca al que manejas, que siempre es el de tu equipo más cercano al balón; el arquero (visera amarilla) lo maneja la máquina.</li>
+            <li>Si el balón no cruza la mitad de la cancha en 8 segundos, sale un balón nuevo.</li>
+            <li>Gana el primero que llegue a 5 goles.</li>
+          </ul>
+        </section>
+
+        <button type="button" class="boton boton-secundario" data-ir="pantalla-inicio" data-volver>Volver</button>
+      </div>
+    </section>
+
+    <!-- 1b. LOGROS =============================================== -->
+    <section id="pantalla-logros" class="pantalla pantalla-menu" aria-labelledby="titulo-logros" hidden>
+      <div class="panel">
+        <h2 id="titulo-logros" class="titulo-pantalla" tabindex="-1">Logros</h2>
+        <p class="nota">Se ganan jugando contra Zorp (1 jugador). <span id="contador-logros"></span></p>
+        <!-- La lista la llena js/script.js con lo que está guardado en el navegador -->
+        <ul id="lista-logros" class="lista-logros"></ul>
+        <button type="button" class="boton boton-secundario" data-ir="pantalla-inicio" data-volver>Volver</button>
+      </div>
+    </section>
+
+    <!-- 1c. CRÉDITOS ============================================= -->
+    <section id="pantalla-creditos" class="pantalla pantalla-menu" aria-labelledby="titulo-creditos" hidden>
+      <div class="panel panel-creditos">
+        <h2 id="titulo-creditos" class="titulo-pantalla" tabindex="-1">Créditos</h2>
+        <img class="creditos-logo" src="img/logo.svg" alt="Galaxy Gol" width="420" height="250">
+        <dl class="creditos">
+          <div><dt>Juego</dt><dd>Galaxy Gol</dd></div>
+          <div><dt>Creado por</dt><dd>David Santiago Sarmiento Salguero <span class="firma">(SantiSarm)</span></dd></div>
+          <div><dt>Curso</dt><dd>Ingeniería Web</dd></div>
+          <div><dt>Programa</dt><dd>Ingeniería Multimedia</dd></div>
+          <div><dt>Universidad</dt><dd>Universidad Simón Bolívar</dd></div>
+          <div><dt>Hecho con</dt><dd>HTML5, CSS3, JavaScript y Canvas. Sonidos creados con Web Audio API. Juego en línea con PeerJS (WebRTC).</dd></div>
+        </dl>
+        <button type="button" class="boton boton-secundario" data-ir="pantalla-inicio" data-volver>Volver</button>
+      </div>
+    </section>
+
+    <!-- 1d. TU PERFIL =========================================== -->
+    <section id="pantalla-perfil" class="pantalla pantalla-menu" aria-labelledby="titulo-perfil" hidden>
+      <div class="panel panel-perfil">
+        <h2 id="titulo-perfil" class="titulo-pantalla" tabindex="-1">Tu perfil</h2>
+        <form id="form-perfil" class="form-perfil">
+          <!-- Vista previa: tu capitán con el color escogido -->
+          <div class="perfil-vista-caja">
+            <canvas id="perfil-vista" class="perfil-vista" width="96" height="96" aria-hidden="true"></canvas>
+            <p id="perfil-resumen" class="perfil-resumen"></p>
+          </div>
+
+          <div class="campos-perfil">
+            <div class="campo">
+              <label for="perfil-nombre">Tu nombre</label>
+              <input id="perfil-nombre" name="nombre" type="text" maxlength="12" autocomplete="nickname" spellcheck="false" placeholder="Ej.: SantiSarm" aria-describedby="ayuda-nombre">
+              <p id="ayuda-nombre" class="ayuda">Hasta 12 letras. Sale sobre tu alienígena cuando juegas en línea.</p>
+            </div>
+            <div class="campo">
+              <label for="perfil-equipo">Nombre de tu equipo</label>
+              <input id="perfil-equipo" name="equipo" type="text" maxlength="14" autocomplete="off" spellcheck="false" placeholder="Ej.: Los Cometas" aria-describedby="ayuda-equipo">
+              <p id="ayuda-equipo" class="ayuda">Hasta 14 letras. Sale en el marcador.</p>
+            </div>
+          </div>
+
+          <fieldset class="grupo-opciones">
+            <legend>Color de tu equipo</legend>
+            <div class="colores">
+              <label class="opcion-color"><input class="visualmente-oculto" type="radio" name="perfil-color" value="celeste"><span class="muestra-color color-celeste" aria-hidden="true"></span><span>Celeste</span></label>
+              <label class="opcion-color"><input class="visualmente-oculto" type="radio" name="perfil-color" value="rosado"><span class="muestra-color color-rosado" aria-hidden="true"></span><span>Rosado</span></label>
+              <label class="opcion-color"><input class="visualmente-oculto" type="radio" name="perfil-color" value="naranja"><span class="muestra-color color-naranja" aria-hidden="true"></span><span>Naranja</span></label>
+              <label class="opcion-color"><input class="visualmente-oculto" type="radio" name="perfil-color" value="morado"><span class="muestra-color color-morado" aria-hidden="true"></span><span>Morado</span></label>
+              <label class="opcion-color"><input class="visualmente-oculto" type="radio" name="perfil-color" value="rojo"><span class="muestra-color color-rojo" aria-hidden="true"></span><span>Rojo</span></label>
+            </div>
+            <p class="ayuda">Si tu rival escoge el mismo color, su equipo usa otro.</p>
+          </fieldset>
+
+          <fieldset class="grupo-opciones">
+            <legend>Tu capitán</legend>
+            <div class="capitanes">
+              <label class="opcion-capitan"><input class="visualmente-oculto" type="radio" name="perfil-capitan" value="cometa"><canvas data-capitan="cometa" width="48" height="48" aria-hidden="true"></canvas><span class="capitan-nombre">Cometa</span><span class="capitan-detalle">Dos ojos y dos antenas</span></label>
+              <label class="opcion-capitan"><input class="visualmente-oculto" type="radio" name="perfil-capitan" value="ciclope"><canvas data-capitan="ciclope" width="48" height="48" aria-hidden="true"></canvas><span class="capitan-nombre">Cíclope</span><span class="capitan-detalle">Un solo ojo gigante</span></label>
+              <label class="opcion-capitan"><input class="visualmente-oculto" type="radio" name="perfil-capitan" value="cuernos"><canvas data-capitan="cuernos" width="48" height="48" aria-hidden="true"></canvas><span class="capitan-nombre">Cuernitos</span><span class="capitan-detalle">Cuernos en vez de antenas</span></label>
+              <label class="opcion-capitan"><input class="visualmente-oculto" type="radio" name="perfil-capitan" value="corona"><canvas data-capitan="corona" width="48" height="48" aria-hidden="true"></canvas><span class="capitan-nombre">Corona</span><span class="capitan-detalle">Corona de rey galáctico</span></label>
+            </div>
+            <p class="ayuda">El capitán es tu delantero: el alienígena con el que empiezas cada saque.</p>
+          </fieldset>
+
+          <div class="botones-fila">
+            <button type="submit" class="boton boton-principal">Guardar</button>
+            <button type="button" id="perfil-volver" class="boton boton-secundario" data-ir="pantalla-inicio" data-volver>Volver</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- 2. ¿CUÁNTOS JUGADORES? =================================== -->
+    <section id="pantalla-jugadores" class="pantalla pantalla-menu" aria-labelledby="titulo-jugadores" hidden>
+      <div class="panel">
+        <h2 id="titulo-jugadores" class="titulo-pantalla" tabindex="-1">¿Cuántos jugadores?</h2>
+        <div class="opciones">
+          <button type="button" class="boton opcion opcion-cometa" data-modo="1j">
+            <img src="img/cometa.svg" alt="" width="150" height="170">
+            <span class="opcion-titulo">1 jugador</span>
+            <span class="opcion-detalle">Tú contra Zorp y su equipo</span>
+          </button>
+          <button type="button" class="boton opcion opcion-zorp" data-modo="2j">
+            <img src="img/zorp.svg" alt="" width="170" height="190">
+            <span class="opcion-titulo">2 jugadores</span>
+            <span class="opcion-detalle">Contra un amigo en el mismo dispositivo</span>
+          </button>
+          <button type="button" class="boton opcion opcion-red" data-modo="red">
+            <img src="img/celular.svg" alt="" width="300" height="160">
+            <span class="opcion-titulo">En línea</span>
+            <span class="opcion-detalle">Contra un amigo, cada uno en su dispositivo</span>
+          </button>
+        </div>
+        <button type="button" class="boton boton-secundario" data-ir="pantalla-inicio" data-volver>Volver</button>
+      </div>
+    </section>
+
+    <!-- 2b. NIVEL (solo con 1 jugador) =========================== -->
+    <section id="pantalla-nivel" class="pantalla pantalla-menu" aria-labelledby="titulo-nivel" hidden>
+      <div class="panel">
+        <h2 id="titulo-nivel" class="titulo-pantalla" tabindex="-1">Elige el nivel</h2>
+        <div class="opciones opciones-nivel">
+          <button type="button" class="boton opcion opcion-tutorial" data-nivel="tutorial">
+            <span class="opcion-titulo">Tutorial</span>
+            <span class="opcion-detalle">Aprende a jugar paso a paso.</span>
+          </button>
+          <button type="button" class="boton opcion" data-nivel="facil">
+            <span class="opcion-titulo">Fácil</span>
+            <span class="opcion-detalle">Balón más lento. Zorp se distrae seguido.</span>
+          </button>
+          <button type="button" class="boton opcion opcion-normal" data-nivel="normal">
+            <span class="opcion-titulo">Normal</span>
+            <span class="opcion-detalle">Zorp juega en serio y derrapa a menudo.</span>
+          </button>
+          <button type="button" class="boton opcion opcion-dificil" data-nivel="dificil">
+            <span class="opcion-titulo">Difícil</span>
+            <span class="opcion-detalle">Balón veloz. Zorp casi nunca falla.</span>
+          </button>
+        </div>
+        <button type="button" class="boton boton-secundario" data-ir="pantalla-jugadores" data-volver>Volver</button>
+      </div>
+    </section>
+
+    <!-- 2c. JUGAR EN LÍNEA (sala) ================================ -->
+    <section id="pantalla-red" class="pantalla pantalla-menu" aria-labelledby="titulo-red" hidden>
+      <div class="panel panel-sala">
+        <h2 id="titulo-red" class="titulo-pantalla" tabindex="-1">Jugar en línea</h2>
+
+        <!-- Tu tarjeta y la del rival -->
+        <div class="sala-jugadores">
+          <section class="sala-tarjeta" aria-labelledby="sala-tu-titulo">
+            <h3 id="sala-tu-titulo" class="sala-rol">Tú</h3>
+            <canvas id="sala-tu-retrato" class="sala-retrato" width="72" height="72" aria-hidden="true"></canvas>
+            <p id="sala-tu-nombre" class="sala-nombre"></p>
+            <p id="sala-tu-equipo" class="sala-equipo"></p>
+          </section>
+          <span class="sala-vs" aria-hidden="true">VS</span>
+          <section id="sala-rival" class="sala-tarjeta esperando" aria-labelledby="sala-rival-titulo">
+            <h3 id="sala-rival-titulo" class="sala-rol">Rival</h3>
+            <canvas id="sala-rival-retrato" class="sala-retrato" width="72" height="72" aria-hidden="true"></canvas>
+            <p id="sala-rival-nombre" class="sala-nombre"></p>
+            <p id="sala-rival-equipo" class="sala-equipo"></p>
+          </section>
+        </div>
+
+        <!-- Qué está pasando (lo leen también los lectores de pantalla) -->
+        <p id="red-estado" class="sala-estado" role="status" aria-live="polite"></p>
+
+        <!-- Código de la sala (solo quien la crea) -->
+        <div id="red-codigo" class="sala-codigo" hidden>
+          <p class="sala-codigo-titulo">Código de tu sala</p>
+          <p id="codigo-grande" class="codigo-grande"></p>
+        </div>
+
+        <!-- Crear una sala o unirse a la de un amigo -->
+        <div id="red-opciones" class="sala-opciones">
+          <button type="button" id="boton-crear-sala" class="boton boton-principal">Crear sala</button>
+          <p class="sala-o" aria-hidden="true">o</p>
+          <form id="form-unirse" class="form-unirse">
+            <label for="codigo-sala">Código de la sala de tu amigo</label>
+            <div class="unirse-fila">
+              <input id="codigo-sala" name="codigo" type="text" maxlength="4" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="K7PX">
+              <button type="submit" class="boton">Unirme</button>
+            </div>
+          </form>
+        </div>
+
+        <button type="button" id="boton-empezar-red" class="boton boton-principal" hidden>¡A jugar!</button>
+
+        <div class="botones-fila">
+          <button type="button" class="boton boton-secundario" data-ir="pantalla-perfil">Editar perfil</button>
+          <button type="button" class="boton boton-secundario" data-ir="pantalla-jugadores" data-volver data-salir-sala>Volver</button>
+        </div>
+        <p class="ayuda ayuda-centrada">Necesita internet en los dos dispositivos. No funciona dentro de la vista previa de Claude: abre el juego con Live Server o desde una página publicada (por ejemplo, GitHub Pages).</p>
+      </div>
+    </section>
+
+    <!-- 3. PARTIDA =============================================== -->
+    <section id="pantalla-partida" class="pantalla pantalla-partida" aria-labelledby="titulo-partida" data-modo="1j" hidden>
+      <h2 id="titulo-partida" class="visualmente-oculto" tabindex="-1">Partida en juego</h2>
+
+      <!-- Barra superior: pausa, marcador, reloj de mitad y sonido -->
+      <header class="hud">
+        <button type="button" id="boton-pausa" class="boton-icono" aria-label="Pausar" title="Pausa (P)">
+          <img src="img/icono-pausa.svg" alt="" width="80" height="80">
+        </button>
+
+        <div class="marcador" aria-live="polite" aria-atomic="true">
+          <span class="visualmente-oculto">Marcador:</span>
+          <span id="marcador-equipo-0" class="marcador-equipo equipo-cometa" data-color="celeste">
+            <canvas id="capitan-0" class="marcador-capitan" width="36" height="36" aria-hidden="true"></canvas>
+            <span id="nombre-equipo-0" class="marcador-nombre">Tú</span>
+            <span id="goles-0" class="marcador-goles">0</span>
+          </span>
+          <span class="marcador-guion" aria-hidden="true">-</span>
+          <span id="marcador-equipo-1" class="marcador-equipo equipo-zorp" data-color="rosado">
+            <span id="goles-1" class="marcador-goles">0</span>
+            <span id="nombre-equipo-1" class="marcador-nombre">Zorp</span>
+            <canvas id="capitan-1" class="marcador-capitan" width="36" height="36" aria-hidden="true"></canvas>
+          </span>
+        </div>
+
+        <div class="reloj" role="timer" aria-label="Segundos para que el balón cruce la mitad">
+          <span class="reloj-titulo" aria-hidden="true">Mitad</span>
+          <span id="reloj-segmentos" class="reloj-segmentos" aria-hidden="true">
+            <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+          </span>
+        </div>
+
+        <button type="button" id="boton-sonido" class="boton-icono" aria-label="Silencio" aria-pressed="false" title="Silencio (M)">
+          <img id="icono-sonido" src="img/icono-sonido.svg" alt="" width="80" height="80">
+        </button>
+
+        <!-- Pantalla completa (se esconde si el navegador no la permite, como en iPhone) -->
+        <button type="button" id="boton-pantalla" class="boton-icono boton-pantalla" aria-label="Pantalla completa" aria-pressed="false" title="Pantalla completa">
+          <!-- Icono pixelado: cuatro esquinas hacia afuera (agrandar) -->
+          <svg class="icono-agrandar" viewBox="0 0 10 10" width="26" height="26" aria-hidden="true" focusable="false">
+            <path d="M0 0h4v1H1v3H0zM6 0h4v4H9V1H6zM0 6h1v3h3v1H0zM9 6h1v4H6V9h3z"></path>
+          </svg>
+          <!-- Icono pixelado: cuatro esquinas hacia adentro (achicar) -->
+          <svg class="icono-achicar" viewBox="0 0 10 10" width="26" height="26" aria-hidden="true" focusable="false">
+            <path d="M3 0h1v4H0V3h3zM6 0h1v3h3v1H6zM0 6h4v4H3V7H0zM6 6h4v1H7v3H6z"></path>
+          </svg>
+        </button>
+      </header>
+
+      <!-- Cancha dibujada con canvas -->
+      <div id="zona-cancha" class="zona-cancha">
+        <canvas id="cancha" width="1112" height="692" tabindex="-1" role="img"
+                aria-label="Cancha de fútbol vista desde arriba. Tu equipo es celeste y el de Zorp es rosado.">
+          Tu navegador no puede mostrar el juego.
+        </canvas>
+        <p id="mensaje" class="mensaje" aria-hidden="true"></p>
+
+        <!-- Guía de botones (esquina inferior derecha): se ilumina la acción que aprietas (solo con teclado) -->
+        <div class="guia-teclas" aria-hidden="true">
+          <div class="guia-jugador" data-jugador="0">
+            <span class="guia-accion guia-patear" data-accion="patear" data-nivel="0"><kbd>F</kbd><span class="guia-texto">Patear<small>toca: pasa · mantén: tira</small></span><span class="guia-carga"></span></span>
+            <span class="guia-accion" data-accion="derrapar"><kbd>G</kbd>Derrapar</span>
+          </div>
+          <div class="guia-jugador guia-j2" data-jugador="1">
+            <span class="guia-accion guia-patear" data-accion="patear" data-nivel="0"><kbd>Ñ</kbd><span class="guia-texto">Patear<small>toca: pasa · mantén: tira</small></span><span class="guia-carga"></span></span>
+            <span class="guia-accion" data-accion="derrapar"><kbd>.</kbd>Derrapar</span>
+          </div>
+        </div>
+
+        <!-- Instrucciones del tutorial -->
+        <aside id="tutorial" class="tutorial" aria-labelledby="tutorial-paso" hidden>
+          <p id="tutorial-paso" class="tutorial-paso">Paso 1 de 7</p>
+          <p id="tutorial-texto" class="tutorial-texto" aria-live="polite"></p>
+          <button type="button" id="tutorial-saltar" class="boton boton-secundario boton-chico">Saltar paso</button>
+        </aside>
+      </div>
+
+      <!-- Controles táctiles del jugador 1 -->
+      <div class="pad pad-j1 control-tactil" role="group" aria-label="Controles táctiles del jugador 1">
+        <div class="joystick" data-jugador="0" aria-hidden="true">
+          <svg viewBox="-64 -64 128 128" width="128" height="128" focusable="false">
+            <circle class="joystick-base" r="58"></circle>
+            <circle class="joystick-perilla" r="26" cx="0" cy="0"></circle>
+          </svg>
+        </div>
+        <div class="pad-botones">
+          <button type="button" class="boton-tactil boton-tactil-patear" data-jugador="0" data-accion="patear" aria-label="Patear: toca para pasar, mantén para tirar">Patear</button>
+          <button type="button" class="boton-tactil boton-tactil-derrapar" data-jugador="0" data-accion="derrapar">Derrapar</button>
+        </div>
+      </div>
+
+      <!-- Controles táctiles del jugador 2 (solo en modo 2 jugadores) -->
+      <div class="pad pad-j2 control-tactil" role="group" aria-label="Controles táctiles del jugador 2">
+        <div class="joystick" data-jugador="1" aria-hidden="true">
+          <svg viewBox="-64 -64 128 128" width="128" height="128" focusable="false">
+            <circle class="joystick-base" r="58"></circle>
+            <circle class="joystick-perilla" r="26" cx="0" cy="0"></circle>
+          </svg>
+        </div>
+        <div class="pad-botones">
+          <button type="button" class="boton-tactil boton-tactil-patear" data-jugador="1" data-accion="patear" aria-label="Patear: toca para pasar, mantén para tirar">Patear</button>
+          <button type="button" class="boton-tactil boton-tactil-derrapar" data-jugador="1" data-accion="derrapar">Derrapar</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4a. PAUSA (ventana encima de la partida) ================= -->
+    <section id="pantalla-pausa" class="superpuesta" role="dialog" aria-modal="true" aria-labelledby="titulo-pausa" hidden>
+      <div class="panel panel-chico">
+        <h2 id="titulo-pausa" class="titulo-pantalla" tabindex="-1">Pausa</h2>
+        <p id="resumen-pausa" class="nota"></p>
+        <div class="botones-columna">
+          <button type="button" id="boton-continuar" class="boton boton-principal">Continuar</button>
+          <button type="button" class="boton" data-accion-menu="otra-vez">Jugar otra vez</button>
+          <button type="button" class="boton boton-secundario" data-accion-menu="inicio">Volver al inicio</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4b. PANTALLA FINAL ======================================= -->
+    <section id="pantalla-final" class="superpuesta" role="dialog" aria-modal="true" aria-labelledby="titulo-final" hidden>
+      <div class="panel panel-chico panel-final">
+        <img id="imagen-final" class="imagen-final" src="img/zorp.svg" alt="" width="170" height="190">
+        <h2 id="titulo-final" class="titulo-pantalla" tabindex="-1">¡Fin del partido!</h2>
+        <p id="texto-final" class="texto-final"></p>
+        <div id="logros-final" class="logros-final" hidden>
+          <h3>Logros nuevos</h3>
+          <ul id="lista-logros-final"></ul>
+        </div>
+        <div class="botones-columna">
+          <button type="button" id="boton-otra-vez" class="boton boton-principal" data-accion-menu="otra-vez">Jugar otra vez</button>
+          <button type="button" class="boton boton-secundario" data-accion-menu="inicio">Volver al inicio</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Avisos para lectores de pantalla (no se ven en pantalla) -->
+  <div id="aviso-gol" class="visualmente-oculto" aria-live="assertive" aria-atomic="true"></div>
+  <div id="aviso" class="visualmente-oculto" aria-live="polite" aria-atomic="true"></div>
+
+  <!-- Notificaciones de logros que aparecen arriba -->
+  <div id="notificaciones" class="notificaciones" aria-hidden="true"></div>
+</body>
+</html>

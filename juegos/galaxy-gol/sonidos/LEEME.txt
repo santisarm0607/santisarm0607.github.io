@@ -1,0 +1,9 @@
+Carpeta para tus propios sonidos de Galaxy Gol.
+
+1. Guarda aquí el archivo con el nombre exacto de la guía (por ejemplo: gol.mp3).
+2. Abre script.js, sección 2, y escribe el nombre sin ".mp3" en la lista SONIDOS_PROPIOS.
+   Ejemplo: const SONIDOS_PROPIOS = ['gol', 'pase'];
+3. Recarga la página.
+
+Todos los nombres, duraciones y descripciones están en guias/guia-sonidos-galaxy-gol.pdf.
+Si un archivo falta, el juego usa el sonido creado por código.

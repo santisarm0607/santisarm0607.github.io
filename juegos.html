@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Juegos | Santiago Sarmiento</title>
+    <meta name="description" content="Arcade de Santiago Sarmiento: elige un planeta y viaja a sus videojuegos 2D hechos con JavaScript y Canvas.">
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="js/main.js" defer></script> <!-- efectos con JavaScript (ver js/main.js) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header class="header">
+        <div class="contenedor header__contenedor">
+            <a href="index.html" class="header__logo" aria-label="Ir al inicio - Santisarm">
+                <img src="img/logo-santisarm-horizontal.webp" alt="Logo de Santisarm" width="180" height="52" class="header__logo-img">
+            </a>
+            <nav aria-label="Menú principal">
+                <ul class="nav__lista">
+                    <li><a href="index.html" class="nav__enlace">Inicio</a></li>
+                    <li><a href="blog.html" class="nav__enlace">Portafolio</a></li>
+                    <li><a href="juegos.html" class="nav__enlace nav__enlace--activo" aria-current="page">Juegos</a></li>
+                    <li><a href="contacto.html" class="nav__enlace">Contacto</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="arcade" aria-labelledby="titulo-arcade">
+            <div class="contenedor">
+                <p id="titulo-arcade" class="arcade__titulo">Arcade Santisarm</p>
+                <p class="arcade__texto">
+                    Elige un planeta y viaja a su juego. Pasa el mouse por encima para verlo de cerca
+                    y haz clic (o tócalo) para despegar.
+                </p>
+
+                <!-- La escena: los planetas son enlaces normales (funcionan aunque no haya JavaScript).
+                     js/main.js (parte 16) les agrega el viaje de la nave. -->
+                <div class="arcade__escena">
+
+                    <ul class="planetas">
+
+                        <!-- PLANETA 1: Galaxy Gol (fútbol) -->
+                        <li class="planetas__item">
+                            <a href="futbol.html" class="planeta planeta--gol" data-color="#3FAF4A">
+                                <span class="planeta__esfera" aria-hidden="true">
+                                    <!-- las líneas de la cancha dibujadas encima del planeta -->
+                                    <svg class="planeta__cancha" viewBox="0 0 100 100">
+                                        <line x1="50" y1="0" x2="50" y2="100"></line>
+                                        <circle cx="50" cy="50" r="13"></circle>
+                                        <rect x="-2" y="32" width="18" height="36"></rect>
+                                        <rect x="84" y="32" width="18" height="36"></rect>
+                                    </svg>
+                                    <span class="planeta__luna planeta__luna--balon"></span>
+                                </span>
+                                <span class="planeta__nombre">Galaxy Gol</span>
+                                <span class="planeta__info">Fútbol 4 contra 4 · contra Zorp, 2 jugadores o en línea</span>
+                            </a>
+                        </li>
+
+                        <!-- PLANETA 2: COSMOBALL (ping-pong). Es un agujero negro, como el logo del juego -->
+                        <li class="planetas__item">
+                            <a href="cosmoball.html" class="planeta planeta--cosmo" data-color="#9B5CFF">
+                                <span class="planeta__esfera" aria-hidden="true">
+                                    <span class="planeta__disco"></span>
+                                    <span class="planeta__luna planeta__luna--pelota"></span>
+                                </span>
+                                <span class="planeta__nombre">COSMOBALL</span>
+                                <span class="planeta__info">Ping-pong · 1 jugador, 2 o en línea</span>
+                            </a>
+                        </li>
+
+                        <!-- PLANETA 3: en construcción (para un juego futuro) -->
+                        <li class="planetas__item">
+                            <button type="button" class="planeta planeta--bloqueado" aria-disabled="true">
+                                <span class="planeta__esfera" aria-hidden="true">
+                                    <span class="planeta__crater planeta__crater--1"></span>
+                                    <span class="planeta__crater planeta__crater--2"></span>
+                                    <span class="planeta__crater planeta__crater--3"></span>
+                                    <span class="planeta__candado">🔒</span>
+                                </span>
+                                <span class="planeta__nombre">Próximamente</span>
+                                <span class="planeta__info">Planeta en construcción</span>
+                            </button>
+                        </li>
+
+                    </ul>
+
+                    <!-- La nave espacial (dibujo SVG). Es decorativa: los lectores de pantalla la saltan. -->
+                    <div class="nave" aria-hidden="true">
+                        <div class="nave__giro">
+                            <div class="nave__cuerpo">
+                                <svg class="nave__dibujo" viewBox="0 0 100 150">
+                                    <defs>
+                                        <linearGradient id="nave-metal" x1="0" x2="1" y1="0" y2="0">
+                                            <stop offset="0" stop-color="#B8C8F0"></stop>
+                                            <stop offset="0.45" stop-color="#FFFFFF"></stop>
+                                            <stop offset="1" stop-color="#8FA3D6"></stop>
+                                        </linearGradient>
+                                        <linearGradient id="nave-fuego" x1="0" x2="0" y1="0" y2="1">
+                                            <stop offset="0" stop-color="#FFF6C2"></stop>
+                                            <stop offset="0.4" stop-color="#FFD54F"></stop>
+                                            <stop offset="1" stop-color="#29B6F6" stop-opacity="0"></stop>
+                                        </linearGradient>
+                                    </defs>
+                                    <!-- fuego del motor (se mueve con CSS) -->
+                                    <g class="nave__fuego">
+                                        <path d="M38 108 Q50 150 62 108 Z" fill="url(#nave-fuego)"></path>
+                                        <path d="M44 108 Q50 132 56 108 Z" fill="#FFFFFF"></path>
+                                    </g>
+                                    <!-- aletas -->
+                                    <path d="M31 72 L10 110 L32 102 Z" fill="#3153A1"></path>
+                                    <path d="M69 72 L90 110 L68 102 Z" fill="#3153A1"></path>
+                                    <!-- cuerpo -->
+                                    <path d="M50 4 C71 24 76 62 70 102 L30 102 C24 62 29 24 50 4 Z" fill="url(#nave-metal)"></path>
+                                    <!-- franja y motor -->
+                                    <rect x="29" y="84" width="42" height="7" fill="#3153A1"></rect>
+                                    <rect x="38" y="101" width="24" height="8" rx="2" fill="#24346B"></rect>
+                                    <!-- ventana -->
+                                    <circle cx="50" cy="48" r="13" fill="#29B6F6" stroke="#3153A1" stroke-width="4"></circle>
+                                    <circle cx="45" cy="43" r="4" fill="#FFFFFF" opacity="0.8"></circle>
+                                    <!-- punta -->
+                                    <path d="M50 4 C56 10 60 16 62 22 L38 22 C40 16 44 10 50 4 Z" fill="#29B6F6"></path>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="contenedor footer__contenedor"></div>
+    </footer>
+
+</body>
+</html>

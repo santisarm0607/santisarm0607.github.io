@@ -1,0 +1,10 @@
+Carpeta para tus propias animaciones de Galaxy Gol.
+
+1. Dibuja los cuadros uno al lado del otro en una sola imagen PNG con fondo transparente (una "tira").
+2. Guárdala aquí con el nombre exacto de la guía (por ejemplo: cometa-correr.png).
+3. Abre script.js, sección 2, y escribe el nombre sin ".png" en la lista HOJAS_PROPIAS.
+   Ejemplo: const HOJAS_PROPIAS = ['cometa-correr'];
+4. Recarga la página.
+
+Nombres, número de cuadros, cuadros por segundo y medidas exactas en guias/guia-animaciones-galaxy-gol.pdf.
+Si un archivo falta, el juego usa el dibujo hecho con código.

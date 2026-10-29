@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galaxy Gol | Santiago Sarmiento</title>
+    <meta name="description" content="Galaxy Gol: fútbol arcade 2D de alienígenas, 4 contra 4, hecho con JavaScript y Canvas. Juega contra Zorp, con un amigo en el mismo teclado o en línea.">
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="js/main.js" defer></script> <!-- efectos con JavaScript (ver js/main.js) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header class="header">
+        <div class="contenedor header__contenedor">
+            <a href="index.html" class="header__logo" aria-label="Ir al inicio - Santisarm">
+                <img src="img/logo-santisarm-horizontal.webp" alt="Logo de Santisarm" width="180" height="52" class="header__logo-img">
+            </a>
+            <nav aria-label="Menú principal">
+                <ul class="nav__lista">
+                    <li><a href="index.html" class="nav__enlace">Inicio</a></li>
+                    <li><a href="blog.html" class="nav__enlace">Portafolio</a></li>
+                    <li><a href="juegos.html" class="nav__enlace nav__enlace--activo">Juegos</a></li>
+                    <li><a href="contacto.html" class="nav__enlace">Contacto</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="juego" aria-labelledby="titulo-juego">
+            <div class="contenedor">
+                <p id="titulo-juego" class="juego__titulo">Galaxy Gol</p>
+                <p class="juego__eslogan">Fútbol arcade de alienígenas, 4 contra 4. ¿Le ganas a Zorp?</p>
+
+                <!-- El juego va en una ventana (iframe) para que sus estilos no choquen con los del portafolio.
+                     El código del juego está en juegos/galaxy-gol/ (copia del repositorio santisarm0607/galaxy-gol). -->
+                <div class="juego__marco">
+                    <iframe class="juego__ventana" src="juegos/galaxy-gol/index.html" loading="lazy"
+                            title="Juego Galaxy Gol: fútbol de alienígenas" allow="fullscreen; autoplay" allowfullscreen></iframe>
+                </div>
+                <p class="juego__pista">Haz clic dentro del juego para usar el teclado. Con el botón de pantalla completa del juego se ve más grande.</p>
+
+                <!-- En el celular la ventana queda muy pequeña: se muestra esta portada y el juego se abre solo -->
+                <div class="juego__portada">
+                    <div class="planeta planeta--gol juego__planeta">
+                        <span class="planeta__esfera" aria-hidden="true">
+                            <svg class="planeta__cancha" viewBox="0 0 100 100">
+                                <line x1="50" y1="0" x2="50" y2="100"></line>
+                                <circle cx="50" cy="50" r="13"></circle>
+                                <rect x="-2" y="32" width="18" height="36"></rect>
+                                <rect x="84" y="32" width="18" height="36"></rect>
+                            </svg>
+                            <span class="planeta__luna planeta__luna--balon"></span>
+                        </span>
+                    </div>
+                    <a href="juegos/galaxy-gol/index.html" class="boton boton--primario juego__jugar">▶ Jugar Galaxy Gol</a>
+                    <p class="juego__pista">En el celular el juego se abre en su propia pantalla, con joystick y botones táctiles.</p>
+                </div>
+
+                <!-- Instrucciones siempre visibles (requisito del parcial) -->
+                <div class="juego__info">
+                    <div class="juego__tarjeta">
+                        <p class="juego__subtitulo">🎮 Controles</p>
+                        <ul class="juego__lista">
+                            <li><b>Jugador 1:</b> se mueve con W A S D, patea con F y derrapa con G</li>
+                            <li><b>Jugador 2:</b> se mueve con las flechas, patea con Ñ y derrapa con . (punto)</li>
+                            <li><b>Patear:</b> un toque pasa; mantener carga el tiro</li>
+                            <li><b>Celular:</b> joystick y botones Patear y Derrapar</li>
+                            <li><b>Pausa:</b> P, Espacio o Esc · <b>Silencio:</b> M</li>
+                        </ul>
+                    </div>
+                    <div class="juego__tarjeta">
+                        <p class="juego__subtitulo">⚽ Modos</p>
+                        <ul class="juego__lista">
+                            <li><b>1 jugador:</b> contra Zorp y su equipo (tutorial, fácil, normal o difícil)</li>
+                            <li><b>2 jugadores:</b> los dos en el mismo teclado</li>
+                            <li><b>En línea:</b> cada uno en su aparato</li>
+                            <li>Siempre manejas al alienígena de tu equipo más cercano al balón</li>
+                            <li>Gana el primero que llega a 5 goles</li>
+                        </ul>
+                    </div>
+                    <div class="juego__tarjeta">
+                        <p class="juego__subtitulo">🌐 Jugar en línea</p>
+                        <ol class="juego__lista juego__lista--pasos">
+                            <li>Los dos: <b>Jugar → En línea</b></li>
+                            <li>Uno toca <b>Crear sala</b> y le sale un código de 4 letras</li>
+                            <li>El otro escribe el código y toca <b>Unirme</b></li>
+                            <li>El que creó la sala toca <b>¡A jugar!</b></li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="juego__botones">
+                    <a href="juegos.html" class="boton boton--primario">Volver a la nave</a>
+                    <a href="juegos/galaxy-gol/index.html" class="boton boton--secundario">Abrir solo el juego</a>
+                    <a href="https://github.com/santisarm0607/galaxy-gol" class="boton boton--secundario" target="_blank" rel="noopener">Ver el código en GitHub</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="contenedor footer__contenedor"></div>
+    </footer>
+
+</body>
+</html>
