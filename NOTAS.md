@@ -21,13 +21,14 @@ Bootstrap se usa solo en Contacto. **Tema espacial** (fondo azul noche con estre
 | `css/styles.css` | **Único archivo de estilos**, lo usan todas las páginas |
 | `js/main.js` | **El JavaScript de la página**, lo usan todas las páginas |
 | `js/tema.js` | Pone el **modo claro u oscuro** guardado, antes de que se dibuje la página (va en el `<head>`) |
-| `img/` | Logo, avatar y `proyecto1…7`. Todo en `.webp`, máx. 800 px de ancho |
+| `img/` | Logo, avatar y `proyecto1…7`. Todo en `.webp`, máx. 800 px de ancho. Además `favicon.png` (tu muñequito en la pestaña, 96 × 96) y `apple-touch-icon.png` (el ícono si guardan la página en el celular, 180 × 180), sacados de `avatar.webp` |
 | `Manual_Tecnico_...pdf` | Informe del examen (no es parte de la página) |
 
 Cómo se conectan:
 - Las páginas se enlazan por el menú del header: **Inicio · Portafolio · Juegos · Contacto**.
   - `futbol.html` y `cosmoball.html` no están en el menú: se entra desde los planetas de `juegos.html`, y en su menú queda marcado "Juegos".
 - Todas cargan, en el `<head>`:
+  - el favicon (`img/favicon.png`) y el ícono para celular (`img/apple-touch-icon.png`)
   - `css/styles.css`
   - `js/main.js` (con `defer`: se ejecuta cuando la página ya cargó)
   - la fuente **Poppins** (Google Fonts)
@@ -269,6 +270,11 @@ Accesibilidad:
 - Si es para entregar, pásalo por el validador W3C.
 
 ## 7. Historial de cambios
+
+- **2026-10-29** — **Favicon**: tu muñequito (de `img/avatar.webp`) sale en la pestaña del navegador en las 6 páginas.
+  - Archivos nuevos: `img/favicon.png` e `img/apple-touch-icon.png`.
+  - Los 6 HTML: 2 líneas `<link rel="icon">` y `<link rel="apple-touch-icon">` en el `<head>`, justo antes de `css/styles.css`.
+  - Los juegos abiertos solos siguen con su propio ícono.
 
 - **2026-10-29** — Juegos actualizados (copiados de sus repositorios a `juegos/`). No cambió ninguna página del portafolio.
   - **Galaxy Gol 3.9**: pantalla "Prepara tu equipo" después de elegir el modo, perfiles guardados, pantalla "Perfiles" y ranking con el mayor puntaje de cada persona.
