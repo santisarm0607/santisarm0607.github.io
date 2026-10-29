@@ -1,4 +1,4 @@
-# Galaxy Gol · notas del proyecto (versión 3.8)
+# Galaxy Gol · notas del proyecto (versión 3.9)
 
 Juego web arcade de fútbol 2D estilo Atari. Tu equipo juega 4 contra 4 contra el equipo de Zorp (rosado), contra un amigo en el mismo dispositivo o **en línea, cada uno en su dispositivo**. Cada jugador tiene un perfil: nombre, nombre del equipo, color y capitán. Gana el primero que llega a 5 goles.
 
@@ -61,13 +61,28 @@ Pausa: P, Espacio o Esc. Silencio: M. Con 1 jugador también sirven las teclas d
 16. **Reglas**: goles, balón nuevo (8 segundos) y final.
 17. **Dibujo**: cancha, personajes con sus 7 animaciones, poderes y efectos. Cada equipo se pinta con su color (`colorDe`, `coloresCuerpo`).
 18. **Bucle principal**: pasos fijos de física; en línea, el invitado no simula, solo dibuja.
-19. **Perfil del jugador**: `limpiarPerfil` (revisa nombres y colores), pantalla "Tu perfil", retratos de los capitanes y `prepararEquiposVisuales` (colores, marcador y joystick).
+19. **Perfil del jugador**: `limpiarPerfil` (revisa nombres y colores), lista de perfiles guardados (`leerPerfiles`, `guardarPerfilEnLista`), pantalla "Perfiles", pantalla "Prepara tu equipo" (`abrirEquipos`), retratos de los capitanes y `prepararEquiposVisuales` (colores, marcador y joystick).
 20. **Juego en línea**: sala con código, conexión con PeerJS, fotos del estado, eventos (sonidos y avisos), pausa compartida, revancha y conexión cortada.
 21. **Arranque**.
 
-## Perfil y juego en línea (versión 3)
+## Perfiles y juego en línea (versiones 3 y 3.9)
 
-- **Perfil** (botón "Tu perfil" del inicio, o "Editar perfil" en la sala): nombre (hasta 12 letras), nombre del equipo (hasta 14), color (celeste, rosado, naranja, morado o rojo) y capitán (Cometa, Cíclope, Cuernitos o Corona). Se guarda en el navegador con `localStorage` (clave `galaxyGol.perfil`). El capitán es tu delantero.
+- **Perfil**: nombre (hasta 12 letras), nombre del equipo (hasta 14), color (celeste, rosado, naranja, morado o rojo) y capitán, que es tu aspecto (Cometa, Cíclope, Cuernitos o Corona). El capitán es tu delantero.
+- **Prepara tu equipo** (versión 3.9): sale después de elegir el modo, antes de jugar.
+  - 1 jugador: Jugar → 1 jugador → nivel (o Tutorial) → Prepara tu equipo → partido.
+  - 2 jugadores: Jugar → 2 jugadores → Prepara tu equipo (dos tarjetas: Jugador 1 con W A S D y Jugador 2 con flechas) → partido.
+  - En línea: Jugar → En línea → Prepara tu equipo → sala. En la sala, "Cambiar equipo" vuelve a esta pantalla sin cerrar la sala.
+  - Arriba de cada tarjeta están los **perfiles guardados**: un toque y se cargan nombre, equipo, color y capitán. "+ Nuevo" deja la tarjeta en blanco.
+  - El nombre es obligatorio (así queda en los récords). Con 2 jugadores no pueden tener el mismo nombre.
+- **Dónde se guarda** (`localStorage`, en este navegador):
+  - `galaxyGol.perfiles`: la lista de todos los perfiles (máximo 20, el más reciente primero). Se busca por nombre sin importar mayúsculas.
+  - `galaxyGol.perfil`: el último perfil del jugador 1 (es el que se manda al rival en línea).
+  - `galaxyGol.perfilJ2`: el último perfil del jugador 2.
+- **Pantalla Perfiles** (botón "Perfiles" del inicio): lista de todos los que han jugado, con su retrato, equipo, color, capitán y mejor puntaje.
+  - **Editar**: abre el formulario. Si le cambias el nombre, sus partidos del historial pasan al nombre nuevo (`renombrarEnHistorial`).
+  - **Borrar**: hay que tocar dos veces. Borra el perfil, pero no sus partidos (esos se borran con "Reiniciar estadísticas").
+  - **Nuevo perfil**: crea uno sin jugar.
+- Los perfiles son de cada navegador: si alguien juega en su celular, queda guardado en su celular, no en tu computador.
 - Si los dos equipos tienen el mismo color, el segundo usa rosado (o celeste, si el primero es rosado). Contra Zorp también vale: si escoges rosado, Zorp juega en celeste.
 - **En línea, 1 contra 1**:
   1. Uno toca "Jugar → En línea → Crear sala" y le sale un código de 4 letras (sin O, 0, I, 1 ni L para no confundirse).
@@ -106,9 +121,10 @@ Pausa: P, Espacio o Esc. Silencio: M. Con 1 jugador también sirven las teclas d
     - fecha, modo, nivel, jugador y rival
     - marcador, si ganó, puntaje y segundos jugados
   - **Puntaje**: 100 por gol a favor − 50 por gol en contra + bono por ganar (fácil 300, normal 600, difícil 1000, 2 jugadores 500, en línea 500).
-  - En 2 jugadores se guarda el partido del que ganó. En línea, cada aparato guarda el suyo. El tutorial no se guarda.
-  - La pantalla final muestra el puntaje y, si es el mejor, "¡Nuevo récord!".
-  - **Pantalla Récords** (botón en el inicio): resumen, los 5 mejores puntajes y los últimos 10 partidos.
+  - En 2 jugadores se guardan **los dos** (versión 3.9): uno por cada persona, con su puntaje. El del que perdió lleva `espejo: true` para no repetir el partido en "Últimos partidos". En línea, cada aparato guarda el suyo. El tutorial no se guarda.
+  - La pantalla final muestra el puntaje de cada persona: "¡Nuevo récord!" si es el mejor de todos, o "¡Récord personal!" si es su mejor.
+  - **Pantalla Récords** (botón en el inicio): resumen, **Mejores puntajes** (versión 3.9: un renglón por jugador con 🥇🥈🥉, su mayor puntaje, partidos y ganados; hasta 10, lo arma `rankingPorJugador`) y los últimos 10 partidos con los nombres reales.
+  - El historial guarda hasta 100 registros.
   - El botón **Reiniciar estadísticas** borra el historial; hay que tocarlo dos veces para no borrar por error.
 - **Balón nuevo**: si el balón no cruza la mitad en 8 segundos. El reloj se detiene mientras la nave tiene el balón.
 - **Niveles**: tutorial (paso a paso), fácil, normal y difícil. La dificultad sale de la velocidad del balón y de cómo juega Zorp (velocidad, reacción, puntería, cuánto derrapa, cuánto se distrae y si busca cápsulas).
@@ -153,6 +169,12 @@ Pausa: P, Espacio o Esc. Silencio: M. Con 1 jugador también sirven las teclas d
 - **Versión 3.3** (22 de octubre de 2026): el jugador 1 usa F (pasar), G (tirar) y H (derrapar), en fila y en el mismo orden que la guía. La guía de botones pasa a la esquina inferior derecha (con 2 jugadores, la del jugador 2 va a la izquierda).
 - **Versión 3.4** (22 de octubre de 2026): pasar y tirar se juntan en un solo botón, **Patear** (F, Ñ o el botón del celular): un toque pasa y mantener carga un tiro con fuerza, con barrita de carga. Derrapar pasa a la G. En celular quedan 2 botones: Patear y Derrapar.
 - **Versión 3.5** (23 de octubre de 2026): carpetas separadas por tipo de código: `css/style.css` y `js/script.js` (antes estaban al lado de `index.html`). No cambia nada del juego.
+- **Versión 3.9** (29 de octubre de 2026): **perfiles guardados y ranking por jugador**.
+  - Pantalla nueva **Prepara tu equipo** después de elegir el modo (1 jugador, Tutorial, 2 jugadores y En línea), con los perfiles guardados como botones.
+  - "Tu perfil" pasa a ser **Perfiles**: lista de todos los que han jugado, con su mejor puntaje, y botones Editar y Borrar.
+  - **Récords**: Mejores puntajes muestra a cada persona una vez, con su mayor puntaje. Con 2 jugadores se guardan los dos y se usan sus nombres (antes decía "Jugador 1" y "Jugador 2").
+  - Cambios en `index.html` (`#pantalla-equipo`, `<template id="plantilla-equipo">`, `#pantalla-perfil` con lista, botón "Cambiar equipo" en la sala), `css/style.css` (sección "Perfiles y Prepara tu equipo" al final) y `js/script.js` (secciones 16 y 19).
+  - No cambian los sonidos ni las animaciones.
 - **Versión 3.8** (29 de octubre de 2026): **velocidad progresiva** por tiempo y **historial de partidos con récords** (pantalla Récords, puntaje en la pantalla final y botón Reiniciar estadísticas).
   - Cambios en `index.html` (botón Récords, pantalla `#pantalla-records` y `#puntaje-final`), `css/style.css` (sección Récords al final) y `js/script.js` (`ACELERACION`, `nivelRitmo`, `multiplicador`, `guardarEnHistorial`, `pintarRecords`).
   - No cambian los sonidos ni las animaciones. Cero atributos `style`.

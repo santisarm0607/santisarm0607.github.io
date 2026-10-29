@@ -2192,3 +2192,207 @@ kbd.tecla-defensa {
   color: var(--franja-1);
   text-align: center;
 }
+
+/* ==========================================================================
+   PERFILES Y "PREPARA TU EQUIPO" (versión 3.9)
+   ========================================================================== */
+/* Lista de perfiles guardados */
+.perfiles-zona-lista {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+}
+
+.lista-perfiles {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.perfil-fila {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 14px;
+  background: var(--espacio-2);
+  border: 2px solid var(--panel-borde);
+  border-radius: var(--radio);
+}
+
+.perfil-fila canvas {
+  width: 48px;
+  height: 48px;
+  image-rendering: pixelated;
+}
+
+.perfil-fila-texto {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.perfil-fila-texto strong {
+  font-size: 1.15rem;
+}
+
+.perfil-fila-texto span {
+  font-size: 0.9rem;
+  color: var(--texto-suave);
+}
+
+.perfil-fila-texto .perfil-fila-puntos {
+  font-weight: 700;
+  color: var(--franja-1);
+}
+
+.perfil-fila-botones {
+  display: flex;
+  gap: 8px;
+}
+
+/* Botón pequeño (Editar y Borrar) */
+.boton-mini {
+  min-height: var(--toque-min);
+  padding: 0.3em 0.9em;
+  font-size: 0.95rem;
+  box-shadow: 0 4px 0 var(--boton-sombra);
+}
+
+/* Mensaje cuando falta el nombre o está repetido */
+.error-equipo {
+  margin: 0;
+  padding: 10px 14px;
+  font-weight: 700;
+  text-align: center;
+  color: var(--texto);
+  background: rgba(255, 79, 94, 0.18);
+  border: 2px solid var(--franja-4);
+  border-radius: var(--radio);
+}
+
+/* Prepara tu equipo: 1 o 2 tarjetas */
+.panel-equipo {
+  width: min(100%, 720px);
+}
+
+.panel-equipo:has(.tarjetas-equipo.dos) {
+  width: min(100%, 1100px);
+}
+
+.form-equipo {
+  display: grid;
+  gap: 20px;
+  width: 100%;
+}
+
+.tarjetas-equipo {
+  display: grid;
+  gap: 20px;
+}
+
+.tarjetas-equipo.dos {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr));
+}
+
+.tarjeta-equipo {
+  display: grid;
+  gap: 16px;
+  min-width: 0;
+  margin: 0;
+  padding: 16px;
+  background: var(--panel);
+  border: 3px solid var(--panel-borde);
+  border-radius: var(--radio);
+}
+
+.tarjeta-equipo-titulo {
+  padding: 0 8px;
+  font-family: var(--fuente-titulo);
+  font-size: 1.7rem;
+  color: var(--franja-1);
+}
+
+/* Perfiles guardados: un toque y se cargan */
+.perfiles-guardados {
+  display: grid;
+  gap: 8px;
+}
+
+.etiqueta-guardados {
+  margin: 0;
+  font-weight: 700;
+}
+
+.chips-perfiles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chip-perfil {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: var(--toque-min);
+  padding: 6px 12px 6px 8px;
+  font: inherit;
+  font-weight: 700;
+  color: var(--texto);
+  background: var(--espacio-2);
+  border: 3px solid var(--panel-borde);
+  border-radius: var(--radio);
+  cursor: pointer;
+}
+
+.chip-perfil .muestra-color {
+  width: 18px;
+  height: 18px;
+}
+
+.chip-perfil:hover {
+  background: var(--nebulosa);
+}
+
+.chip-perfil[aria-pressed="true"] {
+  background: var(--nebulosa);
+  border-color: var(--franja-1);
+}
+
+.chip-perfil[aria-pressed="true"]::after {
+  content: "✓" / "";
+  color: var(--franja-1);
+}
+
+.chip-perfil:focus-visible {
+  outline: 4px solid var(--foco);
+  outline-offset: 3px;
+}
+
+.chip-nuevo {
+  padding-left: 12px;
+  color: var(--franja-1);
+  border-style: dashed;
+}
+
+/* En celular la fila del perfil se acomoda en dos renglones */
+@media (max-width: 560px) {
+  .perfil-fila {
+    grid-template-columns: auto 1fr;
+  }
+
+  .perfil-fila-botones {
+    grid-column: 1 / -1;
+  }
+
+  .perfil-fila-botones .boton {
+    flex: 1;
+  }
+}

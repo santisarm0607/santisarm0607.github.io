@@ -74,7 +74,7 @@
         <button id="botonTitulo" class="boton grande">▶ Play</button>
         <button id="botonAyuda" class="boton secundario">❓ Cómo jugar</button>
         <button id="botonMarcador" class="boton secundario">🏆 Marcador</button>
-        <button id="botonSesion" class="boton secundario">👤 Iniciar sesión</button>
+        <button id="botonSesion" class="boton secundario">👤 Pilotos</button>
         <button id="botonLogros" class="boton secundario">🏅 Medallas</button>
         <button id="botonCreditos" class="boton secundario">⭐ Créditos</button>
         <p id="estadoSesion" class="nota"></p>
@@ -114,7 +114,7 @@
 
     <!-- ===== INICIAR SESIÓN (elegir piloto) ===== -->
     <div id="pantallaSesion" class="pantalla oculta">
-      <h2>👤 Iniciar sesión</h2>
+      <h2>👤 Pilotos</h2>
       <div id="sesionActiva" class="oculta">
         <p id="textoSesion"></p>
         <button id="botonCerrarSesion" class="boton secundario">Cerrar sesión</button>
@@ -190,6 +190,7 @@
       <!-- Paso 1: nombre, color y elegir crear o unirse -->
       <div id="lineaInicio" class="caja">
         <label for="nombreLinea">Tu nombre de piloto</label>
+        <div id="chipsLinea" class="chips-pilotos" role="group" aria-label="Pilotos guardados"></div>
         <input id="nombreLinea" class="nombre" type="text" maxlength="12" placeholder="Nombre" autocomplete="off">
         <div id="coloresLinea" class="colores"></div>
         <button id="botonCrearSala" class="boton grande">🛸 Crear sala</button>
@@ -224,6 +225,7 @@
       <div class="tarjetas">
         <div class="tarjeta" id="tarjeta1">
           <label for="nombre1"><span id="titulo1">Tu nave</span> <span class="teclas" id="teclas1"></span></label>
+          <div id="chips1" class="chips-pilotos" role="group" aria-label="Pilotos guardados"></div>
           <input id="nombre1" class="nombre" type="text" maxlength="12" placeholder="Nombre" autocomplete="off">
           <div id="colores1" class="colores"></div>
           <div id="formas1" class="formas"></div>
@@ -231,6 +233,7 @@
         </div>
         <div class="tarjeta oculta" id="tarjeta2">
           <label for="nombre2">Jugador 2 <span class="teclas">(↑ / ↓)</span></label>
+          <div id="chips2" class="chips-pilotos" role="group" aria-label="Pilotos guardados"></div>
           <input id="nombre2" class="nombre" type="text" maxlength="12" placeholder="Nombre" autocomplete="off">
           <div id="colores2" class="colores"></div>
           <div id="formas2" class="formas"></div>

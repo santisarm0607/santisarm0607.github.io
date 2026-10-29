@@ -230,7 +230,7 @@ const COLORES_EQUIPO = {
 // Perfiles por defecto. El tuyo se cambia en la pantalla "Tu perfil".
 const PERFIL_INICIAL = { nombre: '', equipo: '', color: 'celeste', capitan: 'cometa' };
 const PERFIL_ZORP = { nombre: 'Zorp', equipo: 'Zorp', color: 'rosado', capitan: 'zorp' };
-const PERFIL_J2 = { nombre: 'Jugador 2', equipo: '', color: 'rosado', capitan: 'zorp' };
+const PERFIL_J2 = { nombre: '', equipo: '', color: 'rosado', capitan: 'cuernos' };   // versión 3.9: el jugador 2 también escoge
 
 /* 2. TABLAS DE ANIMACIONES Y SONIDOS ====================================== */
 // Cada animación: cuántos cuadros tiene, a cuántos cuadros por segundo va y
@@ -456,6 +456,8 @@ const CLAVE_LOGROS = 'galaxyGol.logros';
 const CLAVE_SILENCIO = 'galaxyGol.silencio';
 const CLAVE_PERFIL = 'galaxyGol.perfil';
 const CLAVE_HISTORIAL = 'galaxyGol.historial';   // versión 3.8: partidos jugados (JSON)
+const CLAVE_PERFILES = 'galaxyGol.perfiles';     // versión 3.9: todos los perfiles guardados (JSON)
+const CLAVE_PERFIL_J2 = 'galaxyGol.perfilJ2';    // versión 3.9: último perfil del jugador 2
 
 const almacen = {
   leer(clave, porDefecto) {
@@ -684,7 +686,8 @@ const TITULOS = {
   'pantalla-creditos': 'Créditos · Galaxy Gol',
   'pantalla-jugadores': '¿Cuántos jugadores? · Galaxy Gol',
   'pantalla-nivel': 'Elige el nivel · Galaxy Gol',
-  'pantalla-perfil': 'Tu perfil · Galaxy Gol',
+  'pantalla-perfil': 'Perfiles · Galaxy Gol',
+  'pantalla-equipo': 'Prepara tu equipo · Galaxy Gol',
   'pantalla-red': 'Jugar en línea · Galaxy Gol',
   'pantalla-partida': 'Partida · Galaxy Gol'
 };
@@ -732,13 +735,13 @@ document.addEventListener('click', (evento) => {
   if (datos.ir) {
     if (datos.ir === 'pantalla-logros') pintarLogros();
     if (datos.ir === 'pantalla-records') pintarRecords();
-    if (datos.ir === 'pantalla-perfil') abrirPerfil(pantallaVisible());
+    if (datos.ir === 'pantalla-perfil') pintarPerfiles();
     if (datos.salirSala !== undefined) cerrarRed();
     sonido.tocar('menu');
     mostrarPantalla(datos.ir);
   } else if (datos.modo === 'red') {
     sonido.tocar('menu');
-    abrirSala();
+    abrirEquipos('red');   // versión 3.9: primero se prepara el equipo y luego la sala
   } else if (datos.modo) {
     juego.modo = datos.modo;
     sonido.tocar('menu');
@@ -746,11 +749,12 @@ document.addEventListener('click', (evento) => {
       mostrarPantalla('pantalla-nivel');
     } else {
       juego.nivel = 'normal';
-      empezarPartida();
+      abrirEquipos('2j');
     }
   } else if (datos.nivel) {
     juego.nivel = datos.nivel;
-    empezarPartida();
+    sonido.tocar('menu');
+    abrirEquipos('1j');
   } else if (datos.accionMenu === 'otra-vez' && juego.modo === 'red') {
     pedirRevancha();
   } else if (datos.accionMenu === 'otra-vez') {
@@ -839,7 +843,7 @@ function pausar(desdeRed = false) {
   const [a, b] = juego.marcador;
   if (juego.modo === '1j') dom.resumenPausa.textContent = `Tú ${a} - ${b} Zorp · ${juego.tutorial ? 'Tutorial' : `Nivel ${juego.ajuste.nombre}`}`;
   else if (juego.modo === 'red') dom.resumenPausa.textContent = `${nombreVisible(0)} ${a} - ${b} ${nombreVisible(1)} · En línea${desdeRed ? ` · Pausó ${nombreJugador(1 - red.miEquipo())}` : ''}`;
-  else dom.resumenPausa.textContent = `Jugador 1 ${a} - ${b} Jugador 2`;
+  else dom.resumenPausa.textContent = `${nombreJugador(0)} ${a} - ${b} ${nombreJugador(1)}`;
   dom.partida.inert = true;
   dom.pausa.hidden = false;
   dom.botonContinuar.focus();
@@ -2960,8 +2964,8 @@ function terminarPartida() {
 // Pantalla final. "conSonido" es falso en el invitado (el sonido le llega por internet).
 function pintarFinal(ganador, conSonido = true) {
   juego.estado = 'final';
-  const partido = guardarEnHistorial(ganador);   // historial y récords (versión 3.8)
-  pintarPuntajeFinal(partido);
+  const partidos = guardarEnHistorial(ganador);   // historial y récords (versiones 3.8 y 3.9)
+  pintarPuntajeFinal(partidos);
   const [a, b] = juego.marcador;
   const unJugador = juego.modo === '1j';
   dom.botonOtraVez.hidden = false;
@@ -2979,10 +2983,10 @@ function pintarFinal(ganador, conSonido = true) {
     dom.imagenFinal.src = ganador === 0 ? IMAGENES.zorpTriste : IMAGENES.zorp;
     dom.imagenFinal.alt = ganador === 0 ? 'Zorp, triste por perder' : 'Zorp, feliz por ganar';
   } else {
-    dom.tituloFinal.textContent = `¡Gana el jugador ${ganador + 1}!`;
-    dom.textoFinal.textContent = `Jugador 1 ${a} - ${b} Jugador 2.`;
+    dom.tituloFinal.textContent = `¡Ganó ${nombreJugador(ganador)}!`;
+    dom.textoFinal.textContent = `${nombreJugador(0)} ${a} - ${b} ${nombreJugador(1)}.`;
     dom.imagenFinal.src = ganador === 0 ? IMAGENES.cometa : IMAGENES.zorp;
-    dom.imagenFinal.alt = ganador === 0 ? 'Capitán celeste del jugador 1' : 'Zorp, capitán rosado del jugador 2';
+    dom.imagenFinal.alt = `Alienígena del equipo de ${nombreJugador(ganador)} celebrando`;
   }
   dom.botonOtraVez.textContent = juego.modo === 'red' ? 'Revancha' : 'Jugar otra vez';
   if (conSonido) sonido.tocar((unJugador || juego.modo === 'red') && ganador === 1 ? 'derrota' : 'victoria');
@@ -2998,12 +3002,17 @@ function pintarFinal(ganador, conSonido = true) {
   mostrarFinal();
 }
 
-// ---- Historial de partidos y récords (versión 3.8) ----
+// ---- Historial de partidos y récords (versiones 3.8 y 3.9) ----
 // Cada partido terminado se guarda en localStorage (clave galaxyGol.historial)
 // como JSON. Puntaje = 100 por gol a favor − 50 por gol en contra + bono por ganar.
 // El tutorial no se guarda. En línea cada aparato guarda su propio partido.
+// Versión 3.9: con 2 jugadores se guarda a los dos (cada uno con su puntaje),
+// y "Mejores puntajes" muestra a cada jugador una sola vez, con su mayor puntaje.
 const BONO_GANAR = { facil: 300, normal: 600, dificil: 1000, '2j': 500, red: 500 };
-const MAX_HISTORIAL = 50;
+const MAX_HISTORIAL = 100;
+
+// ¿Es el mismo nombre? (sin importar mayúsculas ni espacios de más)
+const mismoNombre = (a, b) => String(a ?? '').trim().toLowerCase() === String(b ?? '').trim().toLowerCase();
 const NOMBRE_MODO = { '1j': 'contra Zorp', '2j': '2 jugadores', red: 'en línea' };
 
 function leerHistorial() {
@@ -3012,39 +3021,69 @@ function leerHistorial() {
   return lista.filter((p) => p && typeof p.puntaje === 'number' && Array.isArray(p.marcador));
 }
 
+// Guarda el partido y devuelve la lista de lo guardado (1 o 2 registros)
 function guardarEnHistorial(ganador) {
-  if (juego.tutorial || juego.historialGuardado) return null;
+  if (juego.tutorial || juego.historialGuardado) return [];
   juego.historialGuardado = true;
-  // De quién es el partido: 1 jugador = tú; en línea = tu equipo; 2 jugadores = el que ganó
-  const mio = juego.modo === 'red' ? red.miEquipo() : juego.modo === '2j' ? ganador : 0;
-  const rival = 1 - mio;
-  const favor = juego.marcador[mio];
-  const contra = juego.marcador[rival];
-  const gano = ganador === mio;
+  // De quién es el partido: 1 jugador = tú; en línea = tu equipo;
+  // 2 jugadores = los dos (primero el que ganó)
+  const lados = juego.modo === '2j' ? [ganador, 1 - ganador] : [juego.modo === 'red' ? red.miEquipo() : 0];
   const claveBono = juego.modo === '1j' ? juego.nivel : juego.modo;
-  const partido = {
-    fecha: Date.now(),
-    modo: juego.modo,
-    nivel: juego.modo === '1j' ? juego.nivel : null,
-    jugador: juego.modo === '2j' ? `Jugador ${mio + 1}` : nombreJugador(mio),
-    rival: juego.modo === '1j' ? 'Zorp' : juego.modo === '2j' ? `Jugador ${rival + 1}` : nombreJugador(rival),
-    marcador: [favor, contra],
-    gano,
-    puntaje: Math.max(0, favor * 100 - contra * 50 + (gano ? BONO_GANAR[claveBono] || 0 : 0)),
-    segundos: Math.round(juego.reloj)
-  };
   const anteriores = leerHistorial();
-  partido.record = anteriores.every((p) => partido.puntaje > p.puntaje) && partido.puntaje > 0;
-  almacen.guardar(CLAVE_HISTORIAL, [partido, ...anteriores].slice(0, MAX_HISTORIAL));
-  return partido;
+  const mejorDeTodos = Math.max(0, ...anteriores.map((p) => p.puntaje));
+  const fecha = Date.now();
+  const nuevos = lados.map((mio, i) => {
+    const rival = 1 - mio;
+    const favor = juego.marcador[mio];
+    const contra = juego.marcador[rival];
+    const gano = ganador === mio;
+    const partido = {
+      fecha,
+      modo: juego.modo,
+      nivel: juego.modo === '1j' ? juego.nivel : null,
+      jugador: nombreJugador(mio),
+      rival: juego.modo === '1j' ? 'Zorp' : nombreJugador(rival),
+      marcador: [favor, contra],
+      gano,
+      puntaje: Math.max(0, favor * 100 - contra * 50 + (gano ? BONO_GANAR[claveBono] || 0 : 0)),
+      segundos: Math.round(juego.reloj)
+    };
+    // El mismo partido visto por el otro jugador: cuenta en su récord, pero no se repite en "Últimos partidos"
+    if (i > 0) partido.espejo = true;
+    const suyos = anteriores.filter((p) => mismoNombre(p.jugador, partido.jugador));
+    const mejorSuyo = Math.max(0, ...suyos.map((p) => p.puntaje));
+    partido.record = partido.puntaje > 0 && partido.puntaje > mejorDeTodos;
+    partido.recordPersonal = !partido.record && suyos.length > 0 && partido.puntaje > mejorSuyo;
+    return partido;
+  });
+  almacen.guardar(CLAVE_HISTORIAL, [...nuevos, ...anteriores].slice(0, MAX_HISTORIAL));
+  return nuevos;
 }
 
-function pintarPuntajeFinal(partido) {
+function pintarPuntajeFinal(partidos) {
   if (!dom.puntajeFinal) return;
-  dom.puntajeFinal.hidden = !partido;
-  if (!partido) return;
-  dom.puntajeFinal.textContent = `${partido.jugador}: ${partido.puntaje} puntos` +
-    (partido.record ? ' · ¡Nuevo récord!' : '');
+  dom.puntajeFinal.hidden = partidos.length === 0;
+  dom.puntajeFinal.textContent = partidos.map((p) => `${p.jugador}: ${p.puntaje} puntos` +
+    (p.record ? ' · ¡Nuevo récord!' : p.recordPersonal ? ' · ¡Récord personal!' : '')).join('   |   ');
+}
+
+// Junta los partidos por jugador: mayor puntaje, partidos y ganados (versión 3.9)
+function rankingPorJugador(lista) {
+  const porNombre = new Map();
+  for (const p of lista) {
+    const clave = String(p.jugador).trim().toLowerCase();
+    const fila = porNombre.get(clave) || { nombre: p.jugador, mejor: 0, partidos: 0, ganados: 0 };
+    fila.partidos += 1;
+    if (p.gano) fila.ganados += 1;
+    fila.mejor = Math.max(fila.mejor, p.puntaje);
+    porNombre.set(clave, fila);
+  }
+  return [...porNombre.values()].sort((a, b) => b.mejor - a.mejor || b.ganados - a.ganados);
+}
+
+// Mayor puntaje de una persona (para la pantalla "Perfiles")
+function datosDeJugador(nombre, lista = leerHistorial()) {
+  return rankingPorJugador(lista.filter((p) => mismoNombre(p.jugador, nombre)))[0] || null;
 }
 
 // Texto de un partido para las listas (nombres como texto, nunca como HTML)
@@ -3070,15 +3109,34 @@ function filaRecord(p, izquierda) {
   return item;
 }
 
-// Pinta la pantalla "Récords": mejores puntajes, últimos partidos y resumen
+// Una fila del ranking: medalla o puesto, nombre, partidos y mayor puntaje
+function filaRanking(fila, puesto) {
+  const item = document.createElement('li');
+  item.className = puesto < 3 ? 'record ganado' : 'record';
+  const marca = document.createElement('span');
+  marca.className = 'record-marca';
+  marca.textContent = ['🥇', '🥈', '🥉'][puesto] || `${puesto + 1}.`;
+  const texto = document.createElement('span');
+  texto.className = 'record-texto';
+  const nombre = document.createElement('strong');
+  nombre.textContent = fila.nombre;
+  texto.append(nombre, ` · ${fila.partidos} ${fila.partidos === 1 ? 'partido' : 'partidos'} · ${fila.ganados} ${fila.ganados === 1 ? 'ganado' : 'ganados'}`);
+  const puntos = document.createElement('span');
+  puntos.className = 'record-puntos';
+  puntos.textContent = `${fila.mejor} pts`;
+  item.append(marca, texto, puntos);
+  return item;
+}
+
+// Pinta la pantalla "Récords": ranking por jugador, últimos partidos y resumen
 function pintarRecords() {
   const lista = leerHistorial();
-  const mejores = [...lista].sort((a, b) => b.puntaje - a.puntaje).slice(0, 5);
-  dom.listaMejores.replaceChildren(...mejores.map((p, i) => filaRecord(p, `${i + 1}.`)));
-  dom.listaHistorial.replaceChildren(...lista.slice(0, 10).map((p) => filaRecord(p, p.gano ? 'Ganó' : 'Perdió')));
-  const ganados = lista.filter((p) => p.gano).length;
+  const ranking = rankingPorJugador(lista).slice(0, 10);
+  const partidos = lista.filter((p) => !p.espejo);
+  dom.listaMejores.replaceChildren(...ranking.map((fila, i) => filaRanking(fila, i)));
+  dom.listaHistorial.replaceChildren(...partidos.slice(0, 10).map((p) => filaRecord(p, p.gano ? 'Ganó' : 'Perdió')));
   dom.resumenRecords.textContent = lista.length
-    ? `Partidos: ${lista.length} · Ganados: ${ganados} · Mejor puntaje: ${mejores[0].puntaje}`
+    ? `Partidos: ${partidos.length} · Jugadores: ${rankingPorJugador(lista).length} · Mejor puntaje: ${ranking[0].mejor} (${ranking[0].nombre})`
     : '';
   dom.sinPartidos.hidden = lista.length > 0;
   dom.listaMejores.hidden = lista.length === 0;
@@ -3974,7 +4032,41 @@ function limpiarPerfil(datos) {
   };
 }
 
-let perfil = limpiarPerfil(almacen.leer(CLAVE_PERFIL, PERFIL_INICIAL));
+let perfil = limpiarPerfil(almacen.leer(CLAVE_PERFIL, PERFIL_INICIAL));      // jugador 1 (o tú)
+let perfilJ2 = limpiarPerfil(almacen.leer(CLAVE_PERFIL_J2, PERFIL_J2));      // jugador 2 (versión 3.9)
+
+// ---- Lista de perfiles guardados (versión 3.9) ----
+// Cada persona que juega queda guardada (nombre, equipo, color y capitán).
+// El más reciente va primero. Se busca por nombre sin importar mayúsculas.
+const MAX_PERFILES = 20;
+
+function leerPerfiles() {
+  const lista = almacen.leer(CLAVE_PERFILES, null);
+  if (Array.isArray(lista)) return lista.map(limpiarPerfil).filter((p) => p.nombre);
+  // Primera vez con la versión 3.9: se pasa el perfil que ya existía a la lista
+  return perfil.nombre ? [perfil] : [];
+}
+
+// Guarda (o actualiza) un perfil. "nombreViejo" sirve para cuando le cambian el nombre.
+function guardarPerfilEnLista(p, nombreViejo = p.nombre) {
+  if (!p.nombre) return;
+  const resto = leerPerfiles().filter((x) => !mismoNombre(x.nombre, p.nombre) && !mismoNombre(x.nombre, nombreViejo));
+  almacen.guardar(CLAVE_PERFILES, [p, ...resto].slice(0, MAX_PERFILES));
+}
+
+function borrarPerfil(nombre) {
+  almacen.guardar(CLAVE_PERFILES, leerPerfiles().filter((x) => !mismoNombre(x.nombre, nombre)));
+}
+
+// Si a un perfil le cambian el nombre, sus partidos pasan al nombre nuevo
+function renombrarEnHistorial(viejo, nuevo) {
+  const lista = leerHistorial().map((p) => ({
+    ...p,
+    jugador: mismoNombre(p.jugador, viejo) ? nuevo : p.jugador,
+    rival: mismoNombre(p.rival, viejo) ? nuevo : p.rival
+  }));
+  almacen.guardar(CLAVE_HISTORIAL, lista);
+}
 
 // Nombre que se muestra de un perfil (con algo por defecto si está vacío)
 const nombreDe = (p, porDefecto = 'Jugador') => p.nombre || porDefecto;
@@ -4000,14 +4092,13 @@ function resolverColores(color0, color1) {
 // Prepara colores, dibujos, nombres y capitanes del marcador antes de una partida
 function prepararEquiposVisuales() {
   if (juego.modo === '1j') juego.perfiles = [perfil, PERFIL_ZORP];
-  else if (juego.modo === '2j') juego.perfiles = [perfil, PERFIL_J2];
+  else if (juego.modo === '2j') juego.perfiles = [perfil, perfilJ2];
   // En línea, juego.perfiles ya llegó con los datos de los dos jugadores
   juego.colores = resolverColores(juego.perfiles[0].color, juego.perfiles[1].color);
   crearSprites();
 
   let nombres = [nombreVisible(0), nombreVisible(1)];
   if (juego.modo === '1j') nombres = [perfil.equipo || 'Tú', 'Zorp'];
-  if (juego.modo === '2j') nombres = [perfil.equipo || 'J1', 'J2'];
   [0, 1].forEach((i) => {
     dom.nombres[i].textContent = nombres[i];
     dom.marcadorEquipos[i].dataset.color = juego.colores[i];
@@ -4021,7 +4112,7 @@ function prepararEquiposVisuales() {
 
   const [c0, c1] = juego.colores.map((c) => COLORES_EQUIPO[c].nombre.toLowerCase());
   let descripcion = `Tu equipo es ${c0} y el de Zorp es ${c1}.`;
-  if (juego.modo === '2j') descripcion = `El jugador 1 es ${c0} y el jugador 2 es ${c1}.`;
+  if (juego.modo === '2j') descripcion = `${nombreJugador(0)} (jugador 1) es ${c0} y ${nombreJugador(1)} (jugador 2) es ${c1}.`;
   if (juego.modo === 'red') descripcion = `${nombres[0]} es ${c0} y ${nombres[1]} es ${c1}.`;
   dom.canvas.setAttribute('aria-label', `Cancha de fútbol vista desde arriba. ${descripcion}`);
 }
@@ -4049,19 +4140,29 @@ function pintarRetrato(lienzo, nombreColor, cuerpo) {
   pincel.drawImage(crearRetrato(nombreColor, cuerpo), 0, 0, lienzo.width, lienzo.height);
 }
 
-// ---- Pantalla "Tu perfil" ----
+// ---- Pantalla "Perfiles" (versión 3.9) ----
+// Arriba la lista de todos los perfiles; al tocar "Editar" o "Nuevo perfil"
+// se muestra el formulario (el mismo de la versión 3).
 const formPerfil = {
   form: $('#form-perfil'),
   nombre: $('#perfil-nombre'),
   equipo: $('#perfil-equipo'),
   vista: $('#perfil-vista'),
   resumen: $('#perfil-resumen'),
-  volver: $('#perfil-volver')
+  error: $('#perfil-error'),
+  cancelar: $('#perfil-cancelar'),
+  zonaLista: $('#perfiles-zona-lista'),
+  lista: $('#lista-perfiles'),
+  sinPerfiles: $('#sin-perfiles'),
+  nuevo: $('#boton-nuevo-perfil')
 };
-let origenPerfil = 'pantalla-inicio';
+let perfilEditando = null;   // nombre del perfil que se está editando (null = perfil nuevo)
 
-// ¿Qué pantalla se ve ahora? (para volver a ella después del perfil)
-const pantallaVisible = () => [...dom.pantallas].find((p) => !p.hidden)?.id || 'pantalla-inicio';
+// Texto corto de un perfil: equipo · color · capitán
+function resumenPerfil(p) {
+  const color = COLORES_EQUIPO[p.color].nombre.toLowerCase();
+  return `${p.equipo || 'Equipo sin nombre'} · ${color} · capitán ${CAPITANES[p.capitan].nombre}`;
+}
 
 // Lo que está escrito y marcado en el formulario, ya revisado
 function leerFormularioPerfil() {
@@ -4081,36 +4182,283 @@ function pintarVistaPerfil() {
   for (const lienzo of formPerfil.form.querySelectorAll('canvas[data-capitan]')) {
     pintarRetrato(lienzo, p.color, CAPITANES[lienzo.dataset.capitan].cuerpo);
   }
-  const color = COLORES_EQUIPO[p.color].nombre.toLowerCase();
-  formPerfil.resumen.textContent = `${nombreDe(p, 'Sin nombre')} · ${p.equipo || 'Equipo sin nombre'} · ${color} · capitán ${CAPITANES[p.capitan].nombre}`;
+  formPerfil.resumen.textContent = `${nombreDe(p, 'Sin nombre')} · ${resumenPerfil(p)}`;
 }
 
-// Abre el perfil recordando de qué pantalla se vino
-function abrirPerfil(origen) {
-  origenPerfil = origen === 'pantalla-perfil' ? origenPerfil : origen;
-  formPerfil.volver.dataset.ir = origenPerfil;
-  formPerfil.nombre.value = perfil.nombre;
-  formPerfil.equipo.value = perfil.equipo;
+// Una fila de la lista: retrato, nombre, equipo, mejor puntaje y botones
+function filaPerfil(p, historial) {
+  const item = document.createElement('li');
+  item.className = 'perfil-fila';
+  const retrato = document.createElement('canvas');
+  retrato.width = 48;
+  retrato.height = 48;
+  retrato.setAttribute('aria-hidden', 'true');
+  pintarRetrato(retrato, p.color, CAPITANES[p.capitan].cuerpo);
+
+  const texto = document.createElement('div');
+  texto.className = 'perfil-fila-texto';
+  const nombre = document.createElement('strong');
+  nombre.textContent = p.nombre;
+  const detalle = document.createElement('span');
+  detalle.textContent = resumenPerfil(p);
+  const puntos = document.createElement('span');
+  puntos.className = 'perfil-fila-puntos';
+  const datos = datosDeJugador(p.nombre, historial);
+  puntos.textContent = datos
+    ? `Mejor puntaje: ${datos.mejor} pts · ${datos.partidos} ${datos.partidos === 1 ? 'partido' : 'partidos'}`
+    : 'Todavía sin partidos';
+  texto.append(nombre, detalle, puntos);
+
+  const botones = document.createElement('div');
+  botones.className = 'perfil-fila-botones';
+  const editar = document.createElement('button');
+  editar.type = 'button';
+  editar.className = 'boton boton-mini';
+  editar.textContent = 'Editar';
+  editar.setAttribute('aria-label', `Editar el perfil de ${p.nombre}`);
+  editar.addEventListener('click', () => abrirEditorPerfil(p));
+  const borrar = document.createElement('button');
+  borrar.type = 'button';
+  borrar.className = 'boton boton-mini boton-secundario';
+  borrar.textContent = 'Borrar';
+  borrar.setAttribute('aria-label', `Borrar el perfil de ${p.nombre}`);
+  // Hay que tocar dos veces para no borrar por error
+  let confirmar = 0;
+  borrar.addEventListener('click', () => {
+    if (!confirmar) {
+      borrar.textContent = '¿Seguro?';
+      confirmar = window.setTimeout(() => { confirmar = 0; borrar.textContent = 'Borrar'; }, 3000);
+      return;
+    }
+    window.clearTimeout(confirmar);
+    borrarPerfil(p.nombre);
+    pintarPerfiles();
+    formPerfil.nuevo.focus();
+    anunciar(`Perfil de ${p.nombre} borrado.`, false, true);
+  });
+  botones.append(editar, borrar);
+
+  item.append(retrato, texto, botones);
+  return item;
+}
+
+// Muestra la lista de perfiles (y esconde el formulario)
+function pintarPerfiles() {
+  const historial = leerHistorial();
+  const lista = leerPerfiles();
+  formPerfil.lista.replaceChildren(...lista.map((p) => filaPerfil(p, historial)));
+  formPerfil.lista.hidden = lista.length === 0;
+  formPerfil.sinPerfiles.hidden = lista.length > 0;
+  formPerfil.form.hidden = true;
+  formPerfil.zonaLista.hidden = false;
+}
+
+// Abre el formulario para editar un perfil (o crear uno nuevo si p es null)
+function abrirEditorPerfil(p) {
+  perfilEditando = p ? p.nombre : null;
+  const datos = p || { ...PERFIL_INICIAL };
+  formPerfil.nombre.value = datos.nombre;
+  formPerfil.equipo.value = datos.equipo;
   for (const opcion of formPerfil.form.querySelectorAll('input[type="radio"]')) {
-    opcion.checked = (opcion.name === 'perfil-color' && opcion.value === perfil.color)
-      || (opcion.name === 'perfil-capitan' && opcion.value === perfil.capitan);
+    opcion.checked = (opcion.name === 'perfil-color' && opcion.value === datos.color)
+      || (opcion.name === 'perfil-capitan' && opcion.value === datos.capitan);
   }
+  formPerfil.error.hidden = true;
+  formPerfil.zonaLista.hidden = true;
+  formPerfil.form.hidden = false;
   pintarVistaPerfil();
+  formPerfil.nombre.focus();
+}
+
+function errorPerfil(texto) {
+  formPerfil.error.textContent = texto;
+  formPerfil.error.hidden = false;
+  formPerfil.nombre.focus();
 }
 
 function prepararPantallaPerfil() {
   formPerfil.form.addEventListener('input', pintarVistaPerfil);
   formPerfil.form.addEventListener('change', pintarVistaPerfil);
+  formPerfil.nuevo.addEventListener('click', () => abrirEditorPerfil(null));
+  formPerfil.cancelar.addEventListener('click', () => {
+    pintarPerfiles();
+    formPerfil.nuevo.focus();
+  });
   formPerfil.form.addEventListener('submit', (evento) => {
     evento.preventDefault();
-    perfil = leerFormularioPerfil();
-    almacen.guardar(CLAVE_PERFIL, perfil);
+    const nuevo = leerFormularioPerfil();
+    if (!nuevo.nombre) return errorPerfil('Escribe un nombre para el perfil.');
+    const repetido = leerPerfiles().some((x) => mismoNombre(x.nombre, nuevo.nombre) && !mismoNombre(x.nombre, perfilEditando));
+    if (repetido) return errorPerfil('Ya hay un perfil con ese nombre. Escoge otro.');
+    const viejo = perfilEditando || nuevo.nombre;
+    guardarPerfilEnLista(nuevo, viejo);
+    if (perfilEditando && nuevo.nombre !== perfilEditando) renombrarEnHistorial(perfilEditando, nuevo.nombre);
+    // Si era el perfil que se está usando, también se actualiza
+    if (mismoNombre(perfil.nombre, viejo)) { perfil = nuevo; almacen.guardar(CLAVE_PERFIL, perfil); }
+    if (mismoNombre(perfilJ2.nombre, viejo)) { perfilJ2 = nuevo; almacen.guardar(CLAVE_PERFIL_J2, perfilJ2); }
     sonido.iniciar();
     sonido.tocar('menu');
-    mostrarPantalla(origenPerfil);
-    anunciar(`Perfil guardado: ${formPerfil.resumen.textContent}.`);
+    pintarPerfiles();
+    formPerfil.nuevo.focus();
+    anunciar(`Perfil guardado: ${nuevo.nombre} · ${resumenPerfil(nuevo)}.`);
     perfilCambiado();
   });
+}
+
+// ---- Pantalla "Prepara tu equipo" (versión 3.9) ----
+// Sale después de elegir el modo. Con 2 jugadores hay dos tarjetas.
+// Arriba de cada tarjeta están los perfiles guardados: un toque y se carga.
+const equipos = {
+  form: $('#form-equipo'),
+  tarjetas: $('#tarjetas-equipo'),
+  plantilla: $('#plantilla-equipo'),
+  error: $('#error-equipo'),
+  listo: $('#boton-listo-equipo'),
+  volver: $('#equipo-volver'),
+  cambiarEnSala: $('#boton-cambiar-equipo'),
+  modo: '1j',          // para qué modo se está preparando
+  desdeSala: false     // true si se abrió con "Cambiar equipo" desde la sala en línea
+};
+
+// Copia la plantilla del HTML y le pone el número de jugador (0 o 1)
+function crearTarjetaEquipo(n) {
+  const caja = document.createElement('div');
+  caja.innerHTML = equipos.plantilla.innerHTML.replaceAll('__N__', String(n));
+  return caja.firstElementChild;
+}
+
+// Lo que está escrito y marcado en una tarjeta, ya revisado
+function datosTarjeta(tarjeta) {
+  const marcado = (campo) => tarjeta.querySelector(`input[name^="${campo}-"]:checked`)?.value;
+  return limpiarPerfil({
+    nombre: tarjeta.querySelector('input[name="nombre"]').value,
+    equipo: tarjeta.querySelector('input[name="equipo"]').value,
+    color: marcado('color'),
+    capitan: marcado('capitan')
+  });
+}
+
+// Llena una tarjeta con un perfil
+function ponerEnTarjeta(tarjeta, p) {
+  tarjeta.querySelector('input[name="nombre"]').value = p.nombre;
+  tarjeta.querySelector('input[name="equipo"]').value = p.equipo;
+  for (const opcion of tarjeta.querySelectorAll('input[type="radio"]')) {
+    opcion.checked = (opcion.name.startsWith('color-') && opcion.value === p.color)
+      || (opcion.name.startsWith('capitan-') && opcion.value === p.capitan);
+  }
+  pintarTarjeta(tarjeta);
+}
+
+// Vista previa, capitanes con el color escogido y el botón del perfil marcado
+function pintarTarjeta(tarjeta) {
+  const p = datosTarjeta(tarjeta);
+  pintarRetrato(tarjeta.querySelector('.perfil-vista'), p.color, CAPITANES[p.capitan].cuerpo);
+  for (const lienzo of tarjeta.querySelectorAll('canvas[data-capitan]')) {
+    pintarRetrato(lienzo, p.color, CAPITANES[lienzo.dataset.capitan].cuerpo);
+  }
+  tarjeta.querySelector('.perfil-resumen').textContent = `${nombreDe(p, 'Sin nombre')} · ${resumenPerfil(p)}`;
+  for (const chip of tarjeta.querySelectorAll('.chip-perfil[data-perfil]')) {
+    chip.setAttribute('aria-pressed', String(mismoNombre(chip.dataset.perfil, p.nombre)));
+  }
+}
+
+// Botones con los perfiles guardados (y uno para empezar uno nuevo)
+function pintarChips(tarjeta, colorNuevo) {
+  const lista = leerPerfiles();
+  const caja = tarjeta.querySelector('.chips-perfiles');
+  tarjeta.querySelector('.perfiles-guardados').hidden = lista.length === 0;
+  const chips = lista.map((p) => {
+    const chip = document.createElement('button');
+    chip.type = 'button';
+    chip.className = 'chip-perfil';
+    chip.dataset.perfil = p.nombre;
+    const muestra = document.createElement('span');
+    muestra.className = `muestra-color color-${p.color}`;
+    muestra.setAttribute('aria-hidden', 'true');
+    chip.append(muestra, document.createTextNode(p.nombre));
+    chip.addEventListener('click', () => {
+      ponerEnTarjeta(tarjeta, p);
+      equipos.error.hidden = true;
+    });
+    return chip;
+  });
+  const nuevo = document.createElement('button');
+  nuevo.type = 'button';
+  nuevo.className = 'chip-perfil chip-nuevo';
+  nuevo.textContent = '+ Nuevo';
+  nuevo.addEventListener('click', () => {
+    ponerEnTarjeta(tarjeta, { ...PERFIL_INICIAL, color: colorNuevo });
+    tarjeta.querySelector('input[name="nombre"]').focus();
+  });
+  caja.replaceChildren(...chips, nuevo);
+}
+
+// Abre "Prepara tu equipo" para un modo: '1j', '2j' o 'red'
+function abrirEquipos(modo, desdeSala = false) {
+  equipos.modo = modo;
+  equipos.desdeSala = desdeSala;
+  const dos = modo === '2j';
+  const titulos = dos ? ['Jugador 1 · W A S D', 'Jugador 2 · flechas'] : ['Tu equipo'];
+  const perfiles = [perfil, perfilJ2];
+  const tarjetas = titulos.map((titulo, n) => {
+    const tarjeta = crearTarjetaEquipo(n);
+    tarjeta.querySelector('.tarjeta-equipo-titulo').textContent = titulo;
+    tarjeta.addEventListener('input', () => pintarTarjeta(tarjeta));
+    tarjeta.addEventListener('change', () => pintarTarjeta(tarjeta));
+    return tarjeta;
+  });
+  equipos.tarjetas.replaceChildren(...tarjetas);
+  equipos.tarjetas.classList.toggle('dos', dos);
+  tarjetas.forEach((tarjeta, n) => {
+    pintarChips(tarjeta, n === 0 ? 'celeste' : 'rosado');
+    ponerEnTarjeta(tarjeta, perfiles[n]);
+  });
+  equipos.listo.textContent = modo === 'red' ? (desdeSala ? 'Guardar' : 'Continuar') : '¡A jugar!';
+  equipos.error.hidden = true;
+  mostrarPantalla('pantalla-equipo');
+}
+
+function errorEquipo(tarjeta, texto) {
+  equipos.error.textContent = texto;
+  equipos.error.hidden = false;
+  tarjeta.querySelector('input[name="nombre"]').focus();
+}
+
+function prepararPantallaEquipo() {
+  equipos.form.addEventListener('submit', (evento) => {
+    evento.preventDefault();
+    const tarjetas = [...equipos.tarjetas.children];
+    const datos = tarjetas.map(datosTarjeta);
+    const falta = datos.findIndex((p) => !p.nombre);
+    if (falta >= 0) return errorEquipo(tarjetas[falta], 'Escribe tu nombre: así quedas guardado en los récords.');
+    if (datos.length === 2 && mismoNombre(datos[0].nombre, datos[1].nombre)) {
+      return errorEquipo(tarjetas[1], 'Los dos jugadores no pueden tener el mismo nombre.');
+    }
+    // Se guardan en la lista de perfiles (el jugador 1 queda de primero)
+    if (datos[1]) {
+      perfilJ2 = datos[1];
+      almacen.guardar(CLAVE_PERFIL_J2, perfilJ2);
+      guardarPerfilEnLista(perfilJ2);
+    }
+    perfil = datos[0];
+    almacen.guardar(CLAVE_PERFIL, perfil);
+    guardarPerfilEnLista(perfil);
+    sonido.tocar('menu');
+    if (equipos.desdeSala) {
+      // Volver a la sala sin cerrarla; el rival recibe el equipo nuevo
+      mostrarPantalla('pantalla-red');
+      perfilCambiado();
+    } else if (equipos.modo === 'red') {
+      abrirSala();
+    } else {
+      empezarPartida();
+    }
+  });
+  equipos.volver.addEventListener('click', () => {
+    if (equipos.desdeSala) mostrarPantalla('pantalla-red');
+    else mostrarPantalla(equipos.modo === '1j' ? 'pantalla-nivel' : 'pantalla-jugadores');
+  });
+  equipos.cambiarEnSala.addEventListener('click', () => abrirEquipos('red', true));
 }
 
 /* 20. JUEGO EN LÍNEA ====================================================== */
@@ -4717,6 +5065,7 @@ function iniciar() {
   crearSprites();
   crearArteObjetos();
   prepararPantallaPerfil();
+  prepararPantallaEquipo();   // versión 3.9
   prepararSala();
   cargarHojas();
   sonido.cargarArchivos();

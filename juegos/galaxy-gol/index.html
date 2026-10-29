@@ -39,7 +39,7 @@
         <nav class="menu" aria-label="Menú principal">
           <ul class="menu-lista">
             <li><button type="button" class="boton boton-principal" data-ir="pantalla-jugadores">Jugar</button></li>
-            <li><button type="button" class="boton" data-ir="pantalla-perfil">Tu perfil</button></li>
+            <li><button type="button" class="boton" data-ir="pantalla-perfil">Perfiles</button></li>
             <li><button type="button" class="boton" data-ir="pantalla-controles">Controles</button></li>
             <li><button type="button" class="boton" data-ir="pantalla-logros">Logros</button></li>
             <li><button type="button" class="boton" data-ir="pantalla-records">Récords</button></li>
@@ -186,6 +186,7 @@
         <p id="sin-partidos" class="nota">Todavía no hay partidos. ¡Juega uno para empezar tu historial!</p>
         <!-- Las listas las llena js/script.js (pintarRecords) -->
         <h3 class="subtitulo-records">Mejores puntajes</h3>
+        <p class="nota">Cada jugador sale una vez, con su mayor puntaje.</p>
         <ol id="lista-mejores" class="lista-records"></ol>
         <h3 class="subtitulo-records">Últimos partidos</h3>
         <ul id="lista-historial" class="lista-records"></ul>
@@ -216,8 +217,21 @@
     <!-- 1d. TU PERFIL =========================================== -->
     <section id="pantalla-perfil" class="pantalla pantalla-menu" aria-labelledby="titulo-perfil" hidden>
       <div class="panel panel-perfil">
-        <h2 id="titulo-perfil" class="titulo-pantalla" tabindex="-1">Tu perfil</h2>
-        <form id="form-perfil" class="form-perfil">
+        <h2 id="titulo-perfil" class="titulo-pantalla" tabindex="-1">Perfiles</h2>
+
+        <!-- Versión 3.9: lista de todos los que han jugado en este navegador (la llena js/script.js) -->
+        <div id="perfiles-zona-lista" class="perfiles-zona-lista">
+          <p class="nota">Cada persona que juega en este navegador queda guardada aquí con su mejor puntaje.</p>
+          <p id="sin-perfiles" class="nota">Todavía no hay perfiles. Se crean solos al jugar, o crea uno aquí.</p>
+          <ul id="lista-perfiles" class="lista-perfiles"></ul>
+          <div class="botones-fila">
+            <button type="button" id="boton-nuevo-perfil" class="boton">Nuevo perfil</button>
+            <button type="button" class="boton boton-secundario" data-ir="pantalla-inicio" data-volver>Volver</button>
+          </div>
+        </div>
+
+        <!-- Formulario para crear o editar un perfil (se muestra al tocar "Editar" o "Nuevo perfil") -->
+        <form id="form-perfil" class="form-perfil" novalidate hidden>
           <!-- Vista previa: tu capitán con el color escogido -->
           <div class="perfil-vista-caja">
             <canvas id="perfil-vista" class="perfil-vista" width="96" height="96" aria-hidden="true"></canvas>
@@ -228,7 +242,7 @@
             <div class="campo">
               <label for="perfil-nombre">Tu nombre</label>
               <input id="perfil-nombre" name="nombre" type="text" maxlength="12" autocomplete="nickname" spellcheck="false" placeholder="Ej.: SantiSarm" aria-describedby="ayuda-nombre">
-              <p id="ayuda-nombre" class="ayuda">Hasta 12 letras. Sale sobre tu alienígena cuando juegas en línea.</p>
+              <p id="ayuda-nombre" class="ayuda">Hasta 12 letras. Es el nombre que sale en los récords.</p>
             </div>
             <div class="campo">
               <label for="perfil-equipo">Nombre de tu equipo</label>
@@ -260,9 +274,10 @@
             <p class="ayuda">El capitán es tu delantero: el alienígena con el que empiezas cada saque.</p>
           </fieldset>
 
+          <p id="perfil-error" class="error-equipo" role="alert" hidden></p>
           <div class="botones-fila">
             <button type="submit" class="boton boton-principal">Guardar</button>
-            <button type="button" id="perfil-volver" class="boton boton-secundario" data-ir="pantalla-inicio" data-volver>Volver</button>
+            <button type="button" id="perfil-cancelar" class="boton boton-secundario">Cancelar</button>
           </div>
         </form>
       </div>
@@ -319,6 +334,72 @@
       </div>
     </section>
 
+    <!-- 2b-bis. PREPARA TU EQUIPO (versión 3.9) ===================
+         Sale después de elegir el modo: nombre, equipo, color y capitán.
+         Las tarjetas (1 o 2) las arma js/script.js copiando la plantilla de abajo. -->
+    <section id="pantalla-equipo" class="pantalla pantalla-menu" aria-labelledby="titulo-equipo" hidden>
+      <div class="panel panel-equipo">
+        <h2 id="titulo-equipo" class="titulo-pantalla" tabindex="-1">Prepara tu equipo</h2>
+        <form id="form-equipo" class="form-equipo" novalidate>
+          <div id="tarjetas-equipo" class="tarjetas-equipo"></div>
+          <p id="error-equipo" class="error-equipo" role="alert" hidden></p>
+          <div class="botones-fila">
+            <button type="submit" id="boton-listo-equipo" class="boton boton-principal">¡A jugar!</button>
+            <button type="button" id="equipo-volver" class="boton boton-secundario">Volver</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- Plantilla de una tarjeta de "Prepara tu equipo". __N__ se cambia por 0 o 1. -->
+    <template id="plantilla-equipo">
+      <fieldset class="tarjeta-equipo" data-jugador="__N__">
+        <legend class="tarjeta-equipo-titulo">Tu equipo</legend>
+
+        <div class="perfiles-guardados">
+          <p id="guardados-__N__" class="etiqueta-guardados">Perfiles guardados</p>
+          <div class="chips-perfiles" role="group" aria-labelledby="guardados-__N__"></div>
+        </div>
+
+        <div class="perfil-vista-caja">
+          <canvas class="perfil-vista" width="96" height="96" aria-hidden="true"></canvas>
+          <p class="perfil-resumen"></p>
+        </div>
+
+        <div class="campos-perfil">
+          <div class="campo">
+            <label for="equipo-nombre-__N__">Tu nombre</label>
+            <input id="equipo-nombre-__N__" name="nombre" type="text" maxlength="12" autocomplete="off" spellcheck="false" placeholder="Ej.: SantiSarm" required>
+          </div>
+          <div class="campo">
+            <label for="equipo-equipo-__N__">Nombre de tu equipo</label>
+            <input id="equipo-equipo-__N__" name="equipo" type="text" maxlength="14" autocomplete="off" spellcheck="false" placeholder="Ej.: Los Cometas">
+          </div>
+        </div>
+
+        <fieldset class="grupo-opciones">
+          <legend>Color</legend>
+          <div class="colores">
+            <label class="opcion-color"><input class="visualmente-oculto" type="radio" name="color-__N__" value="celeste"><span class="muestra-color color-celeste" aria-hidden="true"></span><span>Celeste</span></label>
+            <label class="opcion-color"><input class="visualmente-oculto" type="radio" name="color-__N__" value="rosado"><span class="muestra-color color-rosado" aria-hidden="true"></span><span>Rosado</span></label>
+            <label class="opcion-color"><input class="visualmente-oculto" type="radio" name="color-__N__" value="naranja"><span class="muestra-color color-naranja" aria-hidden="true"></span><span>Naranja</span></label>
+            <label class="opcion-color"><input class="visualmente-oculto" type="radio" name="color-__N__" value="morado"><span class="muestra-color color-morado" aria-hidden="true"></span><span>Morado</span></label>
+            <label class="opcion-color"><input class="visualmente-oculto" type="radio" name="color-__N__" value="rojo"><span class="muestra-color color-rojo" aria-hidden="true"></span><span>Rojo</span></label>
+          </div>
+        </fieldset>
+
+        <fieldset class="grupo-opciones">
+          <legend>Capitán (tu aspecto)</legend>
+          <div class="capitanes">
+            <label class="opcion-capitan"><input class="visualmente-oculto" type="radio" name="capitan-__N__" value="cometa"><canvas data-capitan="cometa" width="48" height="48" aria-hidden="true"></canvas><span class="capitan-nombre">Cometa</span></label>
+            <label class="opcion-capitan"><input class="visualmente-oculto" type="radio" name="capitan-__N__" value="ciclope"><canvas data-capitan="ciclope" width="48" height="48" aria-hidden="true"></canvas><span class="capitan-nombre">Cíclope</span></label>
+            <label class="opcion-capitan"><input class="visualmente-oculto" type="radio" name="capitan-__N__" value="cuernos"><canvas data-capitan="cuernos" width="48" height="48" aria-hidden="true"></canvas><span class="capitan-nombre">Cuernitos</span></label>
+            <label class="opcion-capitan"><input class="visualmente-oculto" type="radio" name="capitan-__N__" value="corona"><canvas data-capitan="corona" width="48" height="48" aria-hidden="true"></canvas><span class="capitan-nombre">Corona</span></label>
+          </div>
+        </fieldset>
+      </fieldset>
+    </template>
+
     <!-- 2c. JUGAR EN LÍNEA (sala) ================================ -->
     <section id="pantalla-red" class="pantalla pantalla-menu" aria-labelledby="titulo-red" hidden>
       <div class="panel panel-sala">
@@ -366,7 +447,7 @@
         <button type="button" id="boton-empezar-red" class="boton boton-principal" hidden>¡A jugar!</button>
 
         <div class="botones-fila">
-          <button type="button" class="boton boton-secundario" data-ir="pantalla-perfil">Editar perfil</button>
+          <button type="button" id="boton-cambiar-equipo" class="boton boton-secundario">Cambiar equipo</button>
           <button type="button" class="boton boton-secundario" data-ir="pantalla-jugadores" data-volver data-salir-sala>Volver</button>
         </div>
         <p class="ayuda ayuda-centrada">Necesita internet en los dos dispositivos. No funciona dentro de la vista previa de Claude: abre el juego con Live Server o desde una página publicada (por ejemplo, GitHub Pages).</p>

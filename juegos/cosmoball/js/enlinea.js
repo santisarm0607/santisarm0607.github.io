@@ -218,6 +218,11 @@
     if (ses && !$("nombreLinea").value) $("nombreLinea").value = ses.nombre;
     if (ses && ses.color) colorLinea = ses.color;
     marcarColor($("coloresLinea"), colorLinea);
+    // 👤 Pilotos guardados: un toque y se cargan su nombre y su color
+    pintarChipsPilotos($("chipsLinea"), $("nombreLinea"), p => {
+      colorLinea = p.color;
+      marcarColor($("coloresLinea"), colorLinea);
+    });
   }
 
   crearSelectorColores($("coloresLinea"), COLORES_NAVE, c => { colorLinea = c; });

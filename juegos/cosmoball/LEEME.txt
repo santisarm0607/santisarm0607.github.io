@@ -87,7 +87,7 @@ PUNTAJE Y MARCADOR
 - Goles: 500 puntos repartidos entre los goles (a 5 goles = 100 por gol),
   + 2 por golpe + bono por ganar
   (Fácil +300, Normal +600, Difícil +1000, 2 jugadores +500).
-- "Iniciar sesión" guarda tu nombre y color de piloto (sin contraseña).
+- "👤 Pilotos" guarda tu nombre y color de piloto (sin contraseña). En "Prepara tu nave" y en "En línea" tus pilotos salen como botones: un toque y se cargan.
 - El marcador muestra el mejor puntaje, partidas jugadas, ganadas y goles
   de cada piloto, separado por dificultad.
 - Los puntajes se guardan en el aparato donde se juega. En la página

@@ -270,6 +270,10 @@ Accesibilidad:
 
 ## 7. Historial de cambios
 
+- **2026-10-29** — Juegos actualizados (copiados de sus repositorios a `juegos/`). No cambió ninguna página del portafolio.
+  - **Galaxy Gol 3.9**: pantalla "Prepara tu equipo" después de elegir el modo, perfiles guardados, pantalla "Perfiles" y ranking con el mayor puntaje de cada persona.
+  - **COSMOBALL**: pilotos guardados como botones en "Prepara tu nave" y "En línea"; "Iniciar sesión" pasa a llamarse "👤 Pilotos".
+
 - **2026-10-29** — Galaxy Gol pasa a la **versión 3.8** (copiado de su repositorio):
   - **velocidad progresiva** por tiempo
   - **historial de partidos** en LocalStorage, con pantalla Récords y botón Reiniciar estadísticas

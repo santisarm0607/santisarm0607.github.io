@@ -442,3 +442,12 @@ body.en-titulo h1 { visibility: hidden; }
 .estado-linea.conectado { color: #7dff6a; font-weight: 600; }
 #pantallaEnLinea .caja { gap: 10px; }
 #pantallaEnLinea .nota-forma { color: #ff9a3c; min-height: 1.2em; text-align: center; }
+
+/* ===== 👤 Pilotos guardados en "Prepara tu nave" y "En línea" ===== */
+.chips-pilotos { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; max-width: 280px; }
+.piloto.mini { padding: 4px 10px; font-size: .85rem; gap: 6px; }
+.piloto.mini .punto { width: 10px; height: 10px; }
+.piloto.elegido { border-color: var(--magenta); background: rgba(255, 60, 172, .18); }
+@media (orientation: landscape) and (max-height: 520px) {
+  .piloto.mini { padding: 2px 8px; font-size: .75rem; }
+}

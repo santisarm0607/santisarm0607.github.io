@@ -81,7 +81,15 @@ Todo se dibuja con Canvas y todos los sonidos se crean con Web Audio, así que n
 Título → Play → Modo → Config (selección de nave) → JUEGO → Fin (volver a jugar / marcador / inicio).
 En línea: Título → Play → Modo → 🌐 En línea (crear sala o unirse) → JUEGO → Fin.
 En la pantalla de título la marca (agujero negro, nombre y eslogan) va arriba y el menú va en una columna de botones del mismo ancho, con Play primero y más grande (`.menu-principal`). En el celular acostado la marca queda a la izquierda y el menú a la derecha.
-Desde el título también se abren Cómo jugar, Marcador, Iniciar sesión, Medallas y Créditos.
+Desde el título también se abren Cómo jugar, Marcador, 👤 Pilotos (antes "Iniciar sesión"), Medallas y Créditos.
+
+## 👤 Pilotos guardados
+- Cada piloto que juega queda guardado en `localStorage` (clave `galaxyPongPilotos`, máximo 20): nombre, color y nave.
+- En **Prepara tu nave** (cada tarjeta) y en **🌐 En línea** salen los 8 pilotos más recientes como botones (`pintarChipsPilotos` en `juego.js`). Un toque carga el nombre, el color y la nave; el elegido queda marcado en rosa.
+- Si el nombre escrito ya es de un piloto guardado, se usa su color.
+- En 2 jugadores los dos pilotos no pueden tener el mismo nombre (cada uno guarda su propio puntaje).
+- El 🏆 Marcador muestra a cada piloto una vez, con su mejor puntaje (`armarTabla`).
+- Los pilotos son de cada navegador: si alguien juega en su celular, queda guardado en su celular.
 La pausa sale encima del juego. `mostrarPantalla(id)` esconde todas las pantallas y muestra solo una (la lista de pantallas está escrita a mano dentro de esa función).
 
 ## Marcador y administrador
@@ -120,3 +128,8 @@ La pausa sale encima del juego. `mostrarPantalla(id)` esconde todas las pantalla
   - Ganchos 🌐 en `juego.js`.
   - Los fuegos artificiales pasaron a la función `lanzarFuegos()`.
   - En línea, la pantalla final dice "¡Ganaste!" solo al que ganó.
+- **👤 Pilotos guardados como botones** (29 oct 2026):
+  - "Iniciar sesión" pasa a llamarse **👤 Pilotos**.
+  - Botones con los pilotos guardados en Prepara tu nave (`#chips1`, `#chips2`) y en En línea (`#chipsLinea`).
+  - Aviso si en 2 jugadores los dos pilotos se llaman igual.
+  - Cambios en `html/index.html`, `css/estilos.css` (al final), `js/juego.js` (`pintarChipsPilotos`, `chipsDeTarjeta`) y `js/enlinea.js` (`abrirPantallaLinea`).

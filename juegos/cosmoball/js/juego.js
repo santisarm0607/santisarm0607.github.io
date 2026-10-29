@@ -391,6 +391,47 @@ crearSelectorColores($("colores2"), COLORES_NAVE, c => { p2.color = c; pintarSel
 crearSelectorFormas($("formas1"), $("notaFormas1"), p1, $("nombre1"));
 crearSelectorFormas($("formas2"), $("notaFormas2"), p2, $("nombre2"));
 
+// 👤 Botones con los pilotos guardados (los 8 más recientes): un toque y se
+// cargan su nombre, su color y su nave. Los usan "Prepara tu nave" y "En línea".
+function pintarChipsPilotos(caja, campo, alElegir) {
+  caja.innerHTML = "";
+  const pilotos = leerPilotos().slice(0, 8);
+  caja.classList.toggle("oculta", pilotos.length === 0);
+  pilotos.forEach(p => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "piloto mini";
+    if (mismoNombre(campo.value || "-", p.nombre)) b.classList.add("elegido");
+    const punto = document.createElement("span");
+    punto.className = "punto";
+    punto.style.background = p.color;
+    punto.style.color = p.color;
+    b.appendChild(punto);
+    b.appendChild(document.createTextNode(p.nombre));   // textContent: el nombre se muestra tal cual
+    b.addEventListener("click", () => {
+      campo.value = p.nombre;
+      alElegir(p);
+      pintarChipsPilotos(caja, campo, alElegir);
+      sonido(660, 0.08, "triangle");
+    });
+    caja.appendChild(b);
+  });
+}
+// Los botones de cada tarjeta (1 = jugador 1, 2 = jugador 2)
+function chipsDeTarjeta(n) {
+  const jugador = n === 1 ? p1 : p2;
+  const campo = $("nombre" + n);
+  pintarChipsPilotos($("chips" + n), campo, p => {
+    jugador.color = p.color;
+    jugador.forma = p.forma || "clasica";
+    marcarColor($("colores" + n), jugador.color);
+    $("notaFormas" + n).textContent = "";
+    pintarSelectorFormas($("formas" + n), jugador, campo);
+  });
+}
+$("nombre1").addEventListener("input", () => chipsDeTarjeta(1));
+$("nombre2").addEventListener("input", () => chipsDeTarjeta(2));
+
 function elegirModo(m) {
   modo = m;
   sonido(660, 0.1, "triangle");
@@ -406,6 +447,11 @@ function elegirModo(m) {
   // 👤 Si hay sesión iniciada, el jugador 1 ya tiene su nombre y su color
   const sesion = sesionActual();
   if (sesion) { $("nombre1").value = sesion.nombre; p1.color = sesion.color; p1.forma = sesion.forma || "clasica"; }
+  // 👤 Si el nombre escrito es de un piloto guardado, se usa su color
+  [[1, p1], [2, p2]].forEach(([n, jugador]) => {
+    const guardado = leerPilotos().find(p => mismoNombre(p.nombre, $("nombre" + n).value || "-"));
+    if (guardado && !(n === 1 && sesion)) jugador.color = guardado.color;
+  });
   if (p2.color === p1.color) p2.color = "#ffd23f";
   marcarColor($("colores1"), p1.color);
   marcarColor($("colores2"), p2.color);
@@ -415,6 +461,8 @@ function elegirModo(m) {
   $("notaFormas1").textContent = ""; $("notaFormas2").textContent = "";
   pintarSelectorFormas($("formas1"), p1, $("nombre1"));
   pintarSelectorFormas($("formas2"), p2, $("nombre2"));
+  chipsDeTarjeta(1);   // 👤 pilotos guardados
+  chipsDeTarjeta(2);
   mostrarPantalla("pantallaConfig");
   $("nombre1").focus();
 }
@@ -464,6 +512,13 @@ $("botonPlay").addEventListener("click", () => {
     p1.nombre = $("nombre1").value.trim() || "Jugador 1";
     p2.nombre = $("nombre2").value.trim() || "Jugador 2";
     p2.esRobot = false;
+    // 👤 Cada piloto guarda su propio puntaje: no pueden llamarse igual
+    if (mismoNombre(p1.nombre, p2.nombre)) {
+      $("notaFormas2").textContent = "⚠ Los dos pilotos no pueden tener el mismo nombre";
+      sonido(200, 0.1, "square", 0.08);
+      $("nombre2").focus();
+      return;
+    }
   }
   nuevaPartida();
 });
@@ -633,7 +688,7 @@ function cerrarSesion() {
 function mostrarEstadoSesion() {
   const s = sesionActual();
   $("estadoSesion").textContent = s ? "👤 Piloto: " + s.nombre : "";
-  $("botonSesion").textContent = s ? "👤 Cambiar piloto" : "👤 Iniciar sesión";
+  $("botonSesion").textContent = "👤 Pilotos";
 }
 function mostrarPantallaSesion() {
   mostrarPantalla("pantallaSesion");
