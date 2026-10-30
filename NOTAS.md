@@ -190,7 +190,7 @@ Accesibilidad:
 2. **Footer vacío** (franja azul de 32 px). Hay CSS sin usar para redes y copyright (`.footer__redes`, `.footer__copy`).
 3. **Correo en la tarjeta de Contacto:** no es enlace `mailto:` y se parte en dos líneas. Ya tiene botón "Copiar".
 4. **Imágenes de tarjetas:** se recortan al centro (210 px de alto). Ahora se pueden ver completas en el visor.
-5. **Contenido:** Figma está en la bio pero no en Habilidades; "3D Max" se escribe oficialmente "3ds Max".
+5. ~~**Contenido:** Figma en Habilidades y "3ds Max"~~ ✓ (2026-10-30).
 6. **Código repetido:** header y footer están copiados en las 3 páginas. Si cambias el menú, cámbialo en los 3 archivos.
 
 ## 6. Cómo hacer cambios sin dañar el diseño
@@ -270,6 +270,8 @@ Accesibilidad:
 - Si es para entregar, pásalo por el validador W3C.
 
 ## 7. Historial de cambios
+
+- **2026-10-30** — `index.html`, Habilidades: "3D Max" → "3ds Max" y se agregó "Figma" (antes de UI/UX). El JS toma la habilidad nueva solo.
 
 - **2026-10-29** — **Favicon**: tu muñequito (de `img/avatar.webp`) sale en la pestaña del navegador en las 6 páginas.
   - Archivos nuevos: `img/favicon.png` e `img/apple-touch-icon.png`.
