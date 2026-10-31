@@ -350,7 +350,7 @@ ul {
 }
 
 /* ===========================================================
-   6. PÁGINA DE PORTAFOLIO (blog.html)
+   6. PÁGINA DE PORTAFOLIO (portafolio.html)
    =========================================================== */
 
 .portafolio-intro {
@@ -2215,4 +2215,404 @@ html[data-tema="claro"] .habilidad:hover {
     display: flex;
   }
 
+}
+
+
+/* ===========================================================
+   12. PROYECTOS DESTACADOS Y PÁGINA DE CADA PROYECTO
+   Todo usa los colores --espacio- de la parte 1, así que también
+   cambia solo con el modo claro. Va al final para ganarle a las partes de arriba.
+   =========================================================== */
+
+/* --- Proyectos destacados (index.html) --- */
+.destacados {
+  padding: 64px 0 24px;
+}
+
+.destacados .proyectos__lista {
+  display: grid; /* 4 tarjetas en una fila; en pantallas más chicas bajan solas */
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 28px;
+}
+
+.destacados .proyecto {
+  max-width: none; /* acá que se estiren para llenar la fila */
+}
+
+.destacados__mas {
+  text-align: center;
+  margin-top: 34px;
+}
+
+/* --- Franja del Arcade (index.html) --- */
+.arcade-franja {
+  padding: 36px 0 64px;
+}
+
+.arcade-franja__contenedor {
+  display: flex;
+  gap: 18px 32px;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  max-width: 1000px;
+  background-color: var(--espacio-panel);
+  border: 1px solid var(--espacio-borde);
+  border-radius: var(--radio-borde);
+  padding: 28px 30px;
+}
+
+.arcade-franja__titulo {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--espacio-lavanda);
+  margin-bottom: 4px;
+}
+
+.arcade-franja__texto {
+  color: var(--espacio-texto-suave);
+  max-width: 52ch;
+}
+
+/* --- La imagen de cada tarjeta se recorta desde abajo: así se ve siempre la parte de arriba (título y logo) --- */
+.proyecto__imagen {
+  object-position: center top;
+}
+
+/* --- "Ver proyecto" al final de cada tarjeta --- */
+.proyecto__ver {
+  align-self: flex-start;
+  margin-top: 4px;
+  color: var(--espacio-acento-texto);
+  font-weight: 700;
+  font-size: 0.9rem;
+  text-decoration: none;
+}
+
+.proyecto__ver:hover {
+  text-decoration: underline;
+}
+
+.proyecto__flecha {
+  display: inline-block;
+  transition: transform 0.2s ease;
+}
+
+.proyecto:hover .proyecto__flecha,
+.proyecto__ver:focus-visible .proyecto__flecha {
+  transform: translateX(6px); /* la flecha se mueve al pasar el mouse */
+}
+
+/* --- Página de un proyecto (proyecto-*.html) --- */
+.ficha-pagina {
+  padding: 48px 0 80px;
+}
+
+.ficha__volver {
+  display: inline-block;
+  margin-bottom: 22px;
+  color: var(--espacio-acento-texto);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.ficha__volver:hover {
+  text-decoration: underline;
+}
+
+.ficha__cab {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 32px;
+}
+
+.ficha__titulo {
+  font-size: clamp(1.7rem, 4vw, 2.5rem);
+  line-height: 1.15;
+  font-weight: 700;
+  color: var(--espacio-titulo);
+}
+
+/* la obra a la izquierda y la información a la derecha */
+.ficha {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+  gap: 36px 48px;
+  align-items: start;
+}
+
+.ficha--ancha {
+  grid-template-columns: minmax(0, 1fr); /* si la obra es horizontal, va arriba y ancha */
+}
+
+.ficha__obra {
+  position: sticky; /* la obra se queda quieta mientras leo el texto */
+  top: 120px;
+}
+
+.ficha--ancha .ficha__obra {
+  position: static;
+}
+
+.ficha__img {
+  display: block;
+  width: 100%;
+  height: auto; /* aquí la imagen se ve completa, sin recortar */
+  border-radius: var(--radio-borde);
+  border: 1px solid var(--espacio-borde);
+  background-color: var(--espacio-fondo);
+  transition: transform 0.25s ease;
+}
+
+.ficha__texto {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  min-width: 0;
+}
+
+/* cuadro con materia, herramientas y con quién lo hice */
+.ficha__datos {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 10px 20px;
+  background-color: var(--espacio-panel);
+  border: 1px solid var(--espacio-borde);
+  border-radius: var(--radio-borde);
+  padding: 20px 22px;
+}
+
+.ficha__datos dt {
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--espacio-celeste-claro);
+  padding-top: 3px;
+}
+
+.ficha__datos dd {
+  color: var(--espacio-texto);
+  min-width: 0;
+}
+
+.ficha__etiqueta {
+  margin-bottom: 8px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--espacio-celeste-claro);
+}
+
+.ficha__bloque p:not(.ficha__etiqueta) {
+  color: var(--espacio-texto-suave);
+  max-width: 62ch;
+  margin-bottom: 10px;
+}
+
+.ficha__bloque p:last-child {
+  margin-bottom: 0;
+}
+
+/* frase destacada (Feu Doux y Flama) */
+.ficha__cita {
+  margin-top: 14px;
+  max-width: 62ch;
+  padding: 16px 20px;
+  background-color: var(--espacio-panel);
+  border-left: 3px solid var(--color-acento);
+  border-radius: 0 var(--radio-borde) var(--radio-borde) 0;
+}
+
+.ficha__cita p {
+  margin-bottom: 0 !important;
+}
+
+.ficha__cita .fr {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--espacio-lavanda) !important;
+}
+
+.ficha__cita .es {
+  font-size: 0.92rem;
+}
+
+/* colores del proyecto: al tocar uno se copia su código */
+.ficha__paleta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.ficha__muestra {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 16px 6px 6px;
+  font: inherit;
+  font-size: 0.85rem;
+  color: var(--espacio-texto);
+  background-color: var(--espacio-panel);
+  border: 1px solid var(--espacio-borde);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: transform 0.15s ease, border-color 0.15s ease;
+}
+
+.ficha__muestra:hover {
+  transform: translateY(-2px);
+  border-color: var(--color-acento);
+}
+
+.ficha__muestra i {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1px solid rgba(128, 128, 128, 0.5);
+}
+
+/* el color de cada muestra (así no uso estilos dentro del HTML) */
+.ficha__muestra[data-hex="#0A0A09"] i {
+  background-color: #0A0A09;
+}
+
+.ficha__muestra[data-hex="#C4AE7C"] i {
+  background-color: #C4AE7C;
+}
+
+.ficha__cita + p {
+  margin-top: 12px; /* el texto que va después de la frase destacada */
+}
+
+/* las 3 páginas de la revista una al lado de la otra */
+.ficha__paginas {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 18px;
+}
+
+.ficha__paginas figure {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ficha__paginas figcaption {
+  font-size: 0.88rem;
+  line-height: 1.45;
+  color: var(--espacio-texto-suave);
+}
+
+.ficha__paginas figcaption b {
+  display: block;
+  color: var(--espacio-texto);
+  font-weight: 600;
+}
+
+/* el video del Trío Amoroso (vertical) */
+.ficha__video {
+  display: block;
+  width: 100%;
+  max-width: 300px;
+  height: auto;
+  aspect-ratio: 9 / 16;
+  background-color: #000;
+  border-radius: var(--radio-borde);
+  border: 1px solid var(--espacio-borde);
+}
+
+/* anterior / siguiente al final de la página */
+.ficha__otros {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-top: 56px;
+  padding-top: 26px;
+  border-top: 1px solid var(--espacio-borde);
+}
+
+.ficha__otros a {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-width: 46%;
+  min-width: 0;
+  text-decoration: none;
+}
+
+.ficha__otros small {
+  font-size: 0.78rem;
+  color: var(--espacio-texto-suave);
+}
+
+.ficha__otros span {
+  font-weight: 600;
+  color: var(--espacio-lavanda);
+}
+
+.ficha__otros a:hover span {
+  text-decoration: underline;
+}
+
+.ficha__otros .sig {
+  margin-left: auto;
+  text-align: right;
+}
+
+/* barra celeste de arriba que se llena mientras leo (la crea el JS) */
+.ficha__progreso {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background-color: var(--color-acento);
+  box-shadow: 0 0 10px var(--espacio-brillo);
+  transform-origin: 0 50%;
+  transform: scaleX(0);
+  z-index: 160;
+}
+
+@media (max-width: 820px) {
+  .ficha {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .ficha__obra {
+    position: static;
+  }
+
+  .ficha__otros a {
+    max-width: 100%;
+  }
+
+  .ficha__otros .sig {
+    margin-left: 0;
+    text-align: left;
+  }
+}
+
+@media (max-width: 480px) {
+  .ficha__datos {
+    grid-template-columns: 1fr;
+    gap: 2px;
+  }
+
+  .ficha__datos dd {
+    margin-bottom: 10px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .proyecto__flecha,
+  .ficha__img,
+  .ficha__muestra {
+    transition: none;
+  }
 }

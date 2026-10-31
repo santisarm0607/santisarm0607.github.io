@@ -10,8 +10,10 @@ Bootstrap se usa solo en Contacto. **Tema espacial** (fondo azul noche con estre
 
 | Archivo | Qué es |
 |---|---|
-| `index.html` | Inicio: presentación, habilidades y correo |
-| `blog.html` | Portafolio: 7 proyectos en tarjetas, con filtros y visor |
+| `index.html` | Inicio: presentación, **proyectos destacados**, franja del Arcade, habilidades y correo |
+| `blog.html` | Solo una **redirección** a `portafolio.html`, para que los enlaces viejos sigan funcionando (no tiene contenido) |
+| `portafolio.html` | Portafolio: 7 proyectos en tarjetas, con filtros, visor y el enlace «Ver proyecto» |
+| `proyecto-*.html` | **Una página por proyecto** (7): `proyecto-feu-doux`, `proyecto-marvel`, `proyecto-santisarm-animation`, `proyecto-revista-up-date`, `proyecto-love-market`, `proyecto-trio-amoroso` y `proyecto-flama`. Cada una tiene la obra completa, un cuadro con los datos y los textos «El pedido», «Mi rol» y «La idea». Al final llevan a la anterior y a la siguiente |
 | `contacto.html` | Formulario (maqueta) + tarjetas de Correo y Ubicación |
 | `juegos.html` | **Arcade**: una nave y un planeta por cada juego. Al hacer clic, la nave viaja al planeta y entra al juego |
 | `futbol.html` | **Galaxy Gol** (fútbol). Igual que `cosmoball.html`: menú, juego en ventana, "Volver a la nave" y portada para celular |
@@ -21,7 +23,9 @@ Bootstrap se usa solo en Contacto. **Tema espacial** (fondo azul noche con estre
 | `css/styles.css` | **Único archivo de estilos**, lo usan todas las páginas |
 | `js/main.js` | **El JavaScript de la página**, lo usan todas las páginas |
 | `js/tema.js` | Pone el **modo claro u oscuro** guardado, antes de que se dibuje la página (va en el `<head>`) |
-| `img/` | Logo, avatar y `proyecto1…7`. Todo en `.webp`, máx. 800 px de ancho. Además `favicon.png` (tu muñequito en la pestaña, 96 × 96) y `apple-touch-icon.png` (el ícono si guardan la página en el celular, 180 × 180), sacados de `avatar.webp` |
+| `img/og-*.jpg` | Imágenes de 1200 × 630 para cuando comparten un enlace (WhatsApp, LinkedIn…): `og-portada.jpg` (inicio, portafolio, contacto y juegos) y `og-proyecto-1…7.jpg` (una por página de proyecto). Se ven en las etiquetas `og:image` del `<head>` |
+| `video/` | `trio-amoroso.mp4`: el video del proyecto 6, comprimido a 720 × 1280 (unos 4 MB). Su póster es `img/trio-amoroso-poster.webp` |
+| `img/` | Logo, avatar, `proyecto1…7` y las 3 páginas de la revista (`revista-excelencia-*.webp`). `proyecto3-santisarm-marca.webp` ahora es la **portada** del manual de marca. Todo en `.webp`, máx. 800 px de ancho. Además `favicon.png` (tu muñequito en la pestaña, 96 × 96) y `apple-touch-icon.png` (el ícono si guardan la página en el celular, 180 × 180), sacados de `avatar.webp` |
 | `Manual_Tecnico_...pdf` | Informe del examen (no es parte de la página) |
 
 Cómo se conectan:
@@ -38,11 +42,13 @@ Cómo se conectan:
 ## 2. Secciones (y dónde están)
 
 **index.html**
-- Header + menú → líneas 16–30 *(igual en todas las páginas; solo cambia cuál está activo)*
-- `.hero` (avatar, nombre, bio, botones) → 33–54
-- `.habilidades` (píldoras) → 56–69
-- `.contacto-rapido` (franja azul con correo) → 71–79
-- Footer (vacío) → 82–84
+- Header + menú → líneas 32–46 *(igual en todas las páginas; solo cambia cuál está activo)*
+- `.hero` (avatar, nombre, bio, botones) → 49–70
+- `.destacados` (4 tarjetas: Marvel, Manual de marca, Love Market y Flama + botón «Ver los 7 proyectos») → 72–132
+- `.arcade-franja` (acceso a Juegos) → 134–142
+- `.habilidades` (píldoras) → 144–158
+- `.contacto-rapido` (franja azul con correo) → 160–168
+- Footer (vacío) → 171–173
 
 **juegos.html**
 - `.arcade` (título y texto) → desde la línea 33
@@ -52,10 +58,16 @@ Cómo se conectan:
   - Próximamente → 78
 - La nave (`.nave`, dibujo SVG) → 94–134
 
-**blog.html**
-- `.portafolio-intro` → 33–41
-- Botones de filtro (`.filtros`) → 46–52
-- Tarjetas → cada proyecto es un `<li class="proyecto" data-filtro="...">` entre las líneas 54–144
+**portafolio.html**
+- `.portafolio-intro` → 49–57
+- Botones de filtro (`.filtros`) → 62–68
+- Tarjetas → cada proyecto es un `<li class="proyecto" data-filtro="...">` entre las líneas 71–163. Cada una termina con su enlace `proyecto__ver` («Ver proyecto →») hacia su página
+
+**proyecto-*.html** (las 7 tienen la misma estructura)
+- Header + menú (Portafolio queda marcado) y footer igual que las demás
+- `.ficha-pagina` → `← Portafolio`, categoría y título (`.ficha__titulo`, es un `<p>` como en el resto del sitio)
+- `.ficha` → `.ficha__obra` (la imagen completa; en el manual y la revista va arriba y ancha con `ficha--ancha`) + `.ficha__texto` (`.ficha__datos` y varios `.ficha__bloque`)
+- `.ficha__otros` → anterior / siguiente
 
 **contacto.html**
 - `.contacto-hero` → 35–43
@@ -118,6 +130,7 @@ Cómo se conectan:
 | 9 | **Efectos del JavaScript** |
 | 10 | **Tema espacial**: pinta todo de galaxia. Va después de las partes 3 a 9 para ganarle a sus colores claros |
 | 11 | **Página de Juegos / Arcade**: planetas, nave, viaje, páginas de aterrizaje y la página de un juego (`.juego`, para `cosmoball.html`) |
+| 12 | **Proyectos destacados y páginas de proyecto**: `.destacados`, `.arcade-franja`, `.proyecto__ver` y todo `.ficha*`. Usa los colores `--espacio-` (cambia con el modo claro) |
 
 **Qué tiene el tema espacial (parte 10):**
 - **Cielo:** dos capas de estrellas detrás de todo (`body::before` y `body::after`), hechas con `radial-gradient`, sin imágenes.
@@ -157,12 +170,13 @@ Está dividido en partes numeradas con comentarios.
 | 8 | Habilidades | inicio | Rebotan y sueltan confeti al hacer clic |
 | 9 | Copiar correo | inicio y contacto | Botón "Copiar" junto al correo + aviso "¡Correo copiado!" |
 | 10 | Filtros | portafolio | Todos / Branding / Diseño gráfico / Publicidad / Editorial, con contador |
-| 11 | Visor | portafolio | Clic en una imagen = se ve en grande y **completa** (sin recorte). Se navega con flechas, teclado (← → Esc) o deslizando el dedo |
+| 11 | Visor | portafolio (solo ahí; en el inicio las tarjetas llevan a su proyecto) | Clic en una imagen = se ve en grande y **completa** (sin recorte). Se navega con flechas, teclado (← → Esc) o deslizando el dedo |
 | 12 | Inclinación 3D | portafolio | La tarjeta se inclina siguiendo el mouse (solo computador) |
 | 13 | Formulario | contacto | Contador de caracteres. Al enviar ya no recarga la página: muestra "¡Gracias, Nombre!" con confeti y un botón que abre el correo con el mensaje ya escrito (`mailto:`) |
 | 14 | Estrellas fugaces | todas | Cada 4 a 9 segundos cruza una estrella fugaz (solo si la pestaña se está viendo) |
 | 18 | Ventana del juego | cosmoball | Cuando el juego termina de cargar, le pasa el foco para que el teclado funcione sin hacer clic |
 | 19 | Modo claro / oscuro | todas | Botón ☀️/🌙 al lado del menú. Guarda la elección en `localStorage` (`santisarm.tema`). Cambia el atributo `data-tema` del `<html>` y el CSS hace el resto |
+| 20 | Página de proyecto | proyecto-* | Barra celeste de lectura arriba, la obra se inclina con el mouse (solo computador) y los colores (Feu Doux) se copian con un toque. Además `ELEMENTOS_QUE_APARECEN` ahora incluye lo de destacados y de las fichas |
 | 16 | Arcade | juegos | Al pasar el mouse (o Tab) por un planeta, la nave gira para mirarlo. Al hacer clic: la nave gira, despega, vuela al planeta haciéndose pequeña, la pantalla se llena del color del planeta (`data-color`) y entra al juego. El planeta "Próximamente" solo se sacude y avisa |
 
 Herramientas que usan los efectos:
@@ -191,7 +205,10 @@ Accesibilidad:
 3. **Correo en la tarjeta de Contacto:** no es enlace `mailto:` y se parte en dos líneas. Ya tiene botón "Copiar".
 4. **Imágenes de tarjetas:** se recortan al centro (210 px de alto). Ahora se pueden ver completas en el visor.
 5. ~~**Contenido:** Figma en Habilidades y "3ds Max"~~ ✓ (2026-10-30).
-6. **Código repetido:** header y footer están copiados en las 3 páginas. Si cambias el menú, cámbialo en los 3 archivos.
+6. **Código repetido:** header y footer están copiados en todas las páginas (ahora 13). Si cambias el menú, cámbialo en todos los archivos.
+7. **Redes sociales y correo nuevo:** cuando existan, se agregan al footer y se cambia el correo (está en `index.html`, `contacto.html` y `js/main.js`, parte 0).
+8. **Pendientes que dependen de ti:** formulario que sí envíe (cuando tengas el correo nuevo), botón «Descargar hoja de vida» (falta el PDF) y redes sociales en el footer (faltan los enlaces).
+9. **Títulos de las páginas de proyecto:** son `<p>`, igual que en Blog y Contacto. Si algún día se pasan a `h2`/`h3`, consultar antes.
 
 ## 6. Cómo hacer cambios sin dañar el diseño
 
@@ -207,7 +224,7 @@ Accesibilidad:
 <li class="habilidad">Figma</li>
 ```
 
-**Agregar un proyecto** (`blog.html`): copia un `<li class="proyecto" ...>…</li>` completo y pégalo antes de `</ul>`.
+**Agregar un proyecto** (`portafolio.html`): copia un `<li class="proyecto" ...>…</li>` completo y pégalo antes de `</ul>`.
 - La imagen va en `img/` con el nombre `proyecto8-nombre.webp`, de unos 800 px de ancho.
 - En `data-filtro` pon uno o varios filtros, separados por espacio: `branding`, `diseno`, `publicidad`, `editorial`.
 - Los contadores de los botones y el visor lo toman solos.
@@ -225,7 +242,7 @@ Accesibilidad:
 ```
 
 **Agregar un filtro nuevo** (ej. "Animación"):
-1. En `blog.html`, dentro de `<div class="filtros">`, agrega:
+1. En `portafolio.html`, dentro de `<div class="filtros">`, agrega:
    ```html
    <button type="button" class="filtro" data-filtro="animacion" aria-pressed="false">Animación</button>
    ```
@@ -260,7 +277,7 @@ Accesibilidad:
 3. No hay que tocar el JS: la nave viaja sola a cualquier planeta que sea un enlace.
 
 **Agregar una página nueva:**
-1. Copia `blog.html` y cambia `<title>`, `description` y el contenido de `<main>`. Deja el `<script src="js/main.js" defer>`.
+1. Copia `portafolio.html` y cambia `<title>`, `description` y el contenido de `<main>`. Deja el `<script src="js/main.js" defer>`.
 2. Agrega el enlace al menú en **todas** las páginas.
 3. En la página nueva, ponle `nav__enlace--activo` y `aria-current="page"` a su propio enlace.
 
@@ -271,7 +288,22 @@ Accesibilidad:
 
 ## 7. Historial de cambios
 
-- **2026-10-30** — `index.html`, Habilidades: "3D Max" → "3ds Max" y se agregó "Figma" (antes de UI/UX). El JS toma la habilidad nueva solo.
+- **2026-10-30** — **Portafolio con nuevo nombre, tarjetas para compartir y ajustes.**
+  - `blog.html` → **`portafolio.html`**. Se actualizaron los enlaces de todas las páginas y `blog.html` quedó como una redirección (`<meta http-equiv="refresh">`).
+  - **Etiquetas para compartir** (`og:` y `twitter:card`, más `canonical`) en las 13 páginas, con imágenes nuevas `img/og-*.jpg`.
+  - Las imágenes de las tarjetas se recortan desde abajo (`.proyecto__imagen { object-position: center top }`, parte 12 del CSS).
+  - Descripciones nuevas en las tarjetas del manual de marca y del Trío Amoroso (en `portafolio.html` y en el inicio).
+
+- **2026-10-30** — **Proyectos destacados y una página por proyecto.**
+  - Nuevos: `proyecto-*.html` (7), `video/trio-amoroso.mp4`, `img/trio-amoroso-poster.webp` e `img/revista-excelencia-*.webp` (3).
+  - `index.html`: secciones `.destacados` (Marvel, Manual de marca, Love Market y Flama) y `.arcade-franja`, entre el hero y Habilidades.
+  - `blog.html` (hoy `portafolio.html`): cada tarjeta termina con «Ver proyecto →». Flama ya no dice «En conjunto con Santiago Colmenares» (lo hizo solo). El manual de marca ahora muestra su **portada** (`proyecto3-santisarm-marca.webp`, y su `alt` cambió).
+  - `styles.css`: parte 12 nueva (no se cambió nada de las partes 1–11).
+  - `main.js`: parte 20 nueva, `iniciarFicha()` en «Encender todo»; el visor ahora solo se activa en el portafolio (si no, en el inicio se abría el visor en vez de ir al proyecto); más elementos en `ELEMENTOS_QUE_APARECEN`.
+  - Categorías corregidas: Flama pasa de «Branding & Diseño Textil» a «Branding & Merchandising» (las camisetas se diseñaron y se hicieron mockups, no se imprimieron) y 1076 Perfumería de «Pauta Publicitaria» a «Campaña Publicitaria» (la pauta es pagar por mostrar los anuncios; acá se hicieron las piezas y el video).
+  - Los textos de las páginas son lo que Santiago contó de cada trabajo: materia y semestre, herramientas, su rol y la idea.
+
+- **2026-10-30** — `index.html`, Habilidades: «3D Max» → «3ds Max» y se agregó «Figma» (antes de UI/UX).
 
 - **2026-10-29** — **Favicon**: tu muñequito (de `img/avatar.webp`) sale en la pestaña del navegador en las 6 páginas.
   - Archivos nuevos: `img/favicon.png` e `img/apple-touch-icon.png`.

@@ -9,7 +9,7 @@ Portafolio web de **Santiago Sarmiento (SantiSarm)**, estudiante de Ingeniería 
 | Página | Qué tiene |
 | --- | --- |
 | `index.html` | Inicio: presentación, habilidades y contacto rápido |
-| `blog.html` | Portafolio: 7 proyectos de diseño con filtros y visor de imágenes |
+| `portafolio.html` | Portafolio: 7 proyectos de diseño con filtros y visor de imágenes |
 | `juegos.html` | **Arcade**: una nave viaja al planeta de cada juego |
 | `cosmoball.html` | COSMOBALL, ping-pong espacial (1 jugador, 2 jugadores o en línea) |
 | `futbol.html` | Galaxy Gol, fútbol 4 contra 4 de alienígenas (contra Zorp, 2 jugadores o en línea) |

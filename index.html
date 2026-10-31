@@ -5,6 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Santiago Sarmiento | Ingeniero Multimedia</title>
     <meta name="description" content="Portafolio profesional de Santiago Sarmiento, estudiante de Ingeniería Multimedia especializado en diseño gráfico, animación, UI/UX y desarrollo web.">
+    <!-- para que se vea bonito al compartir el enlace (WhatsApp, LinkedIn, etc.) -->
+    <link rel="canonical" href="https://santisarm0607.github.io/">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Santiago Sarmiento">
+    <meta property="og:locale" content="es_CO">
+    <meta property="og:title" content="Santiago Sarmiento | Ingeniero Multimedia">
+    <meta property="og:description" content="Portafolio profesional de Santiago Sarmiento, estudiante de Ingeniería Multimedia especializado en diseño gráfico, animación, UI/UX y desarrollo web.">
+    <meta property="og:url" content="https://santisarm0607.github.io/">
+    <meta property="og:image" content="https://santisarm0607.github.io/img/og-portada.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Santiago Sarmiento, Ingeniero Multimedia">
+    <meta name="twitter:card" content="summary_large_image">
     <link rel="icon" href="img/favicon.png" type="image/png"> <!-- tu muñequito en la pestaña -->
     <link rel="apple-touch-icon" href="img/apple-touch-icon.png"> <!-- ícono si guardan la página en el celular -->
     <link rel="stylesheet" href="css/styles.css">
@@ -24,7 +37,7 @@
             <nav aria-label="Menú principal">
                 <ul class="nav__lista">
                     <li><a href="index.html" class="nav__enlace nav__enlace--activo" aria-current="page">Inicio</a></li>
-                    <li><a href="blog.html" class="nav__enlace">Portafolio</a></li>
+                    <li><a href="portafolio.html" class="nav__enlace">Portafolio</a></li>
                     <li><a href="juegos.html" class="nav__enlace">Juegos</a></li>
                     <li><a href="contacto.html" class="nav__enlace">Contacto</a></li>
                 </ul>
@@ -49,10 +62,82 @@
                         impacto social.
                     </p>
                     <div class="hero__botones">
-                        <a href="blog.html" class="boton boton--primario">Ver Portafolio</a>
+                        <a href="portafolio.html" class="boton boton--primario">Ver Portafolio</a>
                         <a href="contacto.html" class="boton boton--secundario">Contáctame</a>
                     </div>
                 </div>
+            </div>
+        </section>
+
+        <section class="destacados" aria-labelledby="titulo-destacados">
+            <div class="contenedor">
+                <p id="titulo-destacados" class="habilidades__titulo">Proyectos destacados</p>
+                <ul class="proyectos__lista">
+
+                    <li class="proyecto" data-filtro="diseno">
+                        <img class="proyecto__imagen" src="img/proyecto2-marvel.webp" alt="Pendón informativo con estilo de cómic sobre la historia de Marvel Comics" width="360" height="210" loading="lazy">
+                        <div class="proyecto__contenido">
+                            <span class="proyecto__categoria">Identidad Visual</span>
+                            <p class="proyecto__titulo">¿Qué es Marvel Comics?</p>
+                            <p class="proyecto__descripcion">
+                                Pendón de tema libre con estilo visual tipo cómic, explicando la historia y
+                                curiosidades del universo Marvel, con una identidad visual clara y consistente.
+                            </p>
+                            <a class="proyecto__ver" href="proyecto-marvel.html">Ver proyecto <span class="proyecto__flecha" aria-hidden="true">→</span></a>
+                        </div>
+                    </li>
+
+                    <li class="proyecto" data-filtro="branding">
+                        <img class="proyecto__imagen" src="img/proyecto3-santisarm-marca.webp" alt="Portada del manual de marca Santisarm Animation: logo de estrella azul, el nombre y olas azules" width="360" height="210" loading="lazy">
+                        <div class="proyecto__contenido">
+                            <span class="proyecto__categoria">Branding & Identidad Corporativa</span>
+                            <p class="proyecto__titulo">Santisarm Animation — Manual de Marca</p>
+                            <p class="proyecto__descripcion">
+                                Manual de marca de un estudio de animación ficticio: logo y sus variantes, usos correctos e incorrectos, versiones en positivo y negativo, tipografías, paleta de colores y mockups. Se imprimió al final.
+                            </p>
+                            <a class="proyecto__ver" href="proyecto-santisarm-animation.html">Ver proyecto <span class="proyecto__flecha" aria-hidden="true">→</span></a>
+                        </div>
+                    </li>
+
+                    <li class="proyecto" data-filtro="publicidad">
+                        <img class="proyecto__imagen" src="img/proyecto5-lovemarket.webp" alt="Afiche promocional Love Market feria de oportunidades con personaje ilustrado de corazón" width="360" height="210" loading="lazy">
+                        <div class="proyecto__contenido">
+                            <span class="proyecto__categoria">Pieza Publicitaria</span>
+                            <p class="proyecto__titulo">Love Market — Feria de Oportunidades</p>
+                            <p class="proyecto__descripcion">
+                                Pieza gráfica promocional para MacondoLab Cúcuta, creada para el evento que
+                                conecta emprendimientos con la comunidad de la Universidad Simón Bolívar.
+                            </p>
+                            <p class="proyecto__colaboracion">En conjunto con Cielo Caicedo</p>
+                            <a class="proyecto__ver" href="proyecto-love-market.html">Ver proyecto <span class="proyecto__flecha" aria-hidden="true">→</span></a>
+                        </div>
+                    </li>
+
+                    <li class="proyecto" data-filtro="branding">
+                        <img class="proyecto__imagen" src="img/proyecto7-flama.webp" alt="Camiseta con el nuevo logotipo de Flama, escuela de liderazgo" width="360" height="210" loading="lazy">
+                        <div class="proyecto__contenido">
+                            <span class="proyecto__categoria">Branding & Merchandising</span>
+                            <p class="proyecto__titulo">Flama — Rebranding Escuela de Liderazgo</p>
+                            <p class="proyecto__descripcion">
+                                Rebranding de Flama, escuela de liderazgo: nuevo logotipo y diseño de camiseta
+                                oficial con la frase "Chispa que inspira, fuego que permanece".
+                            </p>
+                            <a class="proyecto__ver" href="proyecto-flama.html">Ver proyecto <span class="proyecto__flecha" aria-hidden="true">→</span></a>
+                        </div>
+                    </li>
+
+                </ul>
+                <p class="destacados__mas"><a href="portafolio.html" class="boton boton--secundario">Ver los 7 proyectos</a></p>
+            </div>
+        </section>
+
+        <section class="arcade-franja" aria-labelledby="titulo-arcade">
+            <div class="contenedor arcade-franja__contenedor">
+                <div>
+                    <p id="titulo-arcade" class="arcade-franja__titulo">Arcade Santisarm</p>
+                    <p class="arcade-franja__texto">Dos juegos de mi autoría: Galaxy Gol y COSMOBALL. Elige un planeta y viaja a su juego.</p>
+                </div>
+                <a href="juegos.html" class="boton boton--primario">Entrar al Arcade</a>
             </div>
         </section>
 

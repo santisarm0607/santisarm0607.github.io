@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portafolio | Santiago Sarmiento</title>
+    <meta name="description" content="Portafolio de proyectos de diseño gráfico, branding, animación y diseño editorial de Santiago Sarmiento.">
+    <!-- para que se vea bonito al compartir el enlace (WhatsApp, LinkedIn, etc.) -->
+    <link rel="canonical" href="https://santisarm0607.github.io/portafolio.html">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Santiago Sarmiento">
+    <meta property="og:locale" content="es_CO">
+    <meta property="og:title" content="Portafolio | Santiago Sarmiento">
+    <meta property="og:description" content="Portafolio de proyectos de diseño gráfico, branding, animación y diseño editorial de Santiago Sarmiento.">
+    <meta property="og:url" content="https://santisarm0607.github.io/portafolio.html">
+    <meta property="og:image" content="https://santisarm0607.github.io/img/og-portada.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Santiago Sarmiento, Ingeniero Multimedia">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="icon" href="img/favicon.png" type="image/png"> <!-- tu muñequito en la pestaña -->
+    <link rel="apple-touch-icon" href="img/apple-touch-icon.png"> <!-- ícono si guardan la página en el celular -->
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="js/tema.js"></script> <!-- modo claro/oscuro guardado (va antes de dibujar) -->
+    <script src="js/main.js" defer></script> <!-- efectos con JavaScript (ver js/main.js) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header class="header">
+        <div class="contenedor header__contenedor">
+            <a href="index.html" class="header__logo" aria-label="Ir al inicio - Santisarm">
+                <img src="img/logo-santisarm-horizontal.webp" alt="Logo de Santisarm" width="180" height="52" class="header__logo-img">
+            </a>
+            <nav aria-label="Menú principal">
+                <ul class="nav__lista">
+                    <li><a href="index.html" class="nav__enlace">Inicio</a></li>
+                    <li><a href="portafolio.html" class="nav__enlace nav__enlace--activo" aria-current="page">Portafolio</a></li>
+                    <li><a href="juegos.html" class="nav__enlace">Juegos</a></li>
+                    <li><a href="contacto.html" class="nav__enlace">Contacto</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="portafolio-intro" aria-labelledby="titulo-portafolio">
+            <div class="contenedor">
+                <p id="titulo-portafolio" class="portafolio-intro__titulo">Mi Portafolio</p>
+                <p class="portafolio-intro__texto">
+                    Una selección de proyectos de diseño gráfico, branding, animación y diseño editorial
+                    en los que he trabajado durante mi formación como Ingeniero Multimedia.
+                </p>
+            </div>
+        </section>
+
+        <section class="proyectos" aria-label="Lista de proyectos">
+            <div class="contenedor">
+                <!-- Filtros: los activa js/main.js. Cada tarjeta dice sus filtros en data-filtro="..." -->
+                <div class="filtros" role="group" aria-label="Filtrar proyectos por tipo" hidden>
+                    <button type="button" class="filtro" data-filtro="todos" aria-pressed="true">Todos</button>
+                    <button type="button" class="filtro" data-filtro="branding" aria-pressed="false">Branding</button>
+                    <button type="button" class="filtro" data-filtro="diseno" aria-pressed="false">Diseño gráfico</button>
+                    <button type="button" class="filtro" data-filtro="publicidad" aria-pressed="false">Publicidad</button>
+                    <button type="button" class="filtro" data-filtro="editorial" aria-pressed="false">Editorial</button>
+                </div>
+
+                <ul class="proyectos__lista">
+
+                    <li class="proyecto" data-filtro="branding diseno">
+                        <img class="proyecto__imagen" src="img/proyecto1-feudoux.webp" alt="Etiqueta de vino Feu Doux Delux con estilo de grabado, copa en llamas rodeada de vides" width="360" height="210" loading="lazy">
+                        <div class="proyecto__contenido">
+                            <span class="proyecto__categoria">Diseño Gráfico / Branding</span>
+                            <p class="proyecto__titulo">Feu Doux Delux</p>
+                            <p class="proyecto__descripcion">
+                                Etiqueta de vino con estilo de grabado (engraving), creada como una metáfora
+                                de las amistades profundas: construidas con calma y compartidas sin prisa.
+                            </p>
+                            <a class="proyecto__ver" href="proyecto-feu-doux.html">Ver proyecto <span class="proyecto__flecha" aria-hidden="true">→</span></a>
+                        </div>
+                    </li>
+
+                    <li class="proyecto" data-filtro="diseno">
+                        <img class="proyecto__imagen" src="img/proyecto2-marvel.webp" alt="Pendón informativo con estilo de cómic sobre la historia de Marvel Comics" width="360" height="210" loading="lazy">
+                        <div class="proyecto__contenido">
+                            <span class="proyecto__categoria">Identidad Visual</span>
+                            <p class="proyecto__titulo">¿Qué es Marvel Comics?</p>
+                            <p class="proyecto__descripcion">
+                                Pendón de tema libre con estilo visual tipo cómic, explicando la historia y
+                                curiosidades del universo Marvel, con una identidad visual clara y consistente.
+                            </p>
+                            <a class="proyecto__ver" href="proyecto-marvel.html">Ver proyecto <span class="proyecto__flecha" aria-hidden="true">→</span></a>
+                        </div>
+                    </li>
+
+                    <li class="proyecto" data-filtro="branding">
+                        <img class="proyecto__imagen" src="img/proyecto3-santisarm-marca.webp" alt="Portada del manual de marca Santisarm Animation: logo de estrella azul, el nombre y olas azules" width="360" height="210" loading="lazy">
+                        <div class="proyecto__contenido">
+                            <span class="proyecto__categoria">Branding & Identidad Corporativa</span>
+                            <p class="proyecto__titulo">Santisarm Animation — Manual de Marca</p>
+                            <p class="proyecto__descripcion">
+                                Manual de marca de un estudio de animación ficticio: logo y sus variantes, usos correctos e incorrectos, versiones en positivo y negativo, tipografías, paleta de colores y mockups. Se imprimió al final.
+                            </p>
+                            <a class="proyecto__ver" href="proyecto-santisarm-animation.html">Ver proyecto <span class="proyecto__flecha" aria-hidden="true">→</span></a>
+                        </div>
+                    </li>
+
+                    <li class="proyecto" data-filtro="editorial">
+                        <img class="proyecto__imagen" src="img/proyecto4-revista.webp" alt="Página de revista digital sobre excelencia deportiva de la Universidad Simón Bolívar" width="360" height="210" loading="lazy">
+                        <div class="proyecto__contenido">
+                            <span class="proyecto__categoria">Diagramación Editorial</span>
+                            <p class="proyecto__titulo">Revista Up Date — Excelencia USB</p>
+                            <p class="proyecto__descripcion">
+                                Diagramación y diseño de 3 páginas para una revista digital institucional,
+                                presentada en el Showroom semestral de la Universidad Simón Bolívar.
+                            </p>
+                            <p class="proyecto__colaboracion">En conjunto con Santiago Daniel Colmenares</p>
+                            <a class="proyecto__ver" href="proyecto-revista-up-date.html">Ver proyecto <span class="proyecto__flecha" aria-hidden="true">→</span></a>
+                        </div>
+                    </li>
+
+                    <li class="proyecto" data-filtro="publicidad">
+                        <img class="proyecto__imagen" src="img/proyecto5-lovemarket.webp" alt="Afiche promocional Love Market feria de oportunidades con personaje ilustrado de corazón" width="360" height="210" loading="lazy">
+                        <div class="proyecto__contenido">
+                            <span class="proyecto__categoria">Pieza Publicitaria</span>
+                            <p class="proyecto__titulo">Love Market — Feria de Oportunidades</p>
+                            <p class="proyecto__descripcion">
+                                Pieza gráfica promocional para MacondoLab Cúcuta, creada para el evento que
+                                conecta emprendimientos con la comunidad de la Universidad Simón Bolívar.
+                            </p>
+                            <p class="proyecto__colaboracion">En conjunto con Cielo Caicedo</p>
+                            <a class="proyecto__ver" href="proyecto-love-market.html">Ver proyecto <span class="proyecto__flecha" aria-hidden="true">→</span></a>
+                        </div>
+                    </li>
+
+                    <li class="proyecto" data-filtro="publicidad">
+                        <img class="proyecto__imagen" src="img/proyecto6-perfumeria.webp" alt="Pieza publicitaria Trío Amoroso de 1076 Perfumería con tres frascos de perfume" width="360" height="210" loading="lazy">
+                        <div class="proyecto__contenido">
+                            <span class="proyecto__categoria">Campaña Publicitaria</span>
+                            <p class="proyecto__titulo">1076 Perfumería — Campaña "Trío Amoroso"</p>
+                            <p class="proyecto__descripcion">
+                                Campaña del Día del Amor y la Amistad para una perfumería: 5 piezas gráficas para redes y un video promocional, con la idea de que una compra trae tres perfumes.
+                            </p>
+                            <p class="proyecto__colaboracion">En conjunto con Cielo Caicedo</p>
+                            <a class="proyecto__ver" href="proyecto-trio-amoroso.html">Ver proyecto <span class="proyecto__flecha" aria-hidden="true">→</span></a>
+                        </div>
+                    </li>
+
+                    <li class="proyecto" data-filtro="branding">
+                        <img class="proyecto__imagen" src="img/proyecto7-flama.webp" alt="Camiseta con el nuevo logotipo de Flama, escuela de liderazgo" width="360" height="210" loading="lazy">
+                        <div class="proyecto__contenido">
+                            <span class="proyecto__categoria">Branding & Merchandising</span>
+                            <p class="proyecto__titulo">Flama — Rebranding Escuela de Liderazgo</p>
+                            <p class="proyecto__descripcion">
+                                Rebranding de Flama, escuela de liderazgo: nuevo logotipo y diseño de camiseta
+                                oficial con la frase "Chispa que inspira, fuego que permanece".
+                            </p>
+                            <a class="proyecto__ver" href="proyecto-flama.html">Ver proyecto <span class="proyecto__flecha" aria-hidden="true">→</span></a>
+                        </div>
+                    </li>
+
+                </ul>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="contenedor footer__contenedor"></div>
+    </footer>
+
+</body>
+</html>

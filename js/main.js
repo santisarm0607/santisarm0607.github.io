@@ -185,7 +185,9 @@ const ELEMENTOS_QUE_APARECEN = [
   '.habilidades__titulo', '.habilidad',
   '.contacto-rapido .contenedor',
   '.portafolio-intro .contenedor', '.filtros', '.proyecto',
-  '.contacto-hero .contenedor', '.form-tarjeta', '.contacto-dato'
+  '.contacto-hero .contenedor', '.form-tarjeta', '.contacto-dato',
+  '.destacados .habilidades__titulo', '.arcade-franja .contenedor',
+  '.ficha__cab', '.ficha__datos', '.ficha__bloque', '.ficha__otros'
 ];
 
 function iniciarAparecer() {
@@ -437,7 +439,7 @@ function iniciarCopiarCorreo() {
 
 
 /* ---------------------------------------------------------
-   10. FILTROS DEL PORTAFOLIO (blog.html)
+   10. FILTROS DEL PORTAFOLIO (portafolio.html)
    Los botones están en el HTML (<div class="filtros">).
    Cada tarjeta dice a qué filtros pertenece con data-filtro="...".
    --------------------------------------------------------- */
@@ -488,7 +490,7 @@ function iniciarFiltros() {
 
 
 /* ---------------------------------------------------------
-   11. VISOR DE IMÁGENES (blog.html)
+   11. VISOR DE IMÁGENES (portafolio.html)
    Clic en la imagen de un proyecto = se abre en grande y completa
    (sin recorte). Se pasa de proyecto con las flechas, con el teclado
    (← →) o deslizando el dedo en el celular. Esc o clic afuera = cerrar.
@@ -496,6 +498,7 @@ function iniciarFiltros() {
 function iniciarVisor() {
   const tarjetas = Array.from(document.querySelectorAll('.proyecto'));
   if (tarjetas.length === 0 || typeof HTMLDialogElement !== 'function') return;
+  if (!document.querySelector('.filtros')) return; // el visor es solo del portafolio; en el inicio las tarjetas llevan al proyecto
 
   // armo la ventana una sola vez
   const visor = document.createElement('dialog');
@@ -609,7 +612,7 @@ function iniciarVisor() {
 
 
 /* ---------------------------------------------------------
-   12. TARJETAS QUE SE INCLINAN CON EL MOUSE (blog.html)
+   12. TARJETAS QUE SE INCLINAN CON EL MOUSE (portafolio.html)
    Solo en computador (en celular no hay mouse).
    --------------------------------------------------------- */
 function iniciarInclinacion() {
@@ -928,6 +931,59 @@ function iniciarTema() {
 
 
 /* ---------------------------------------------------------
+   20. PÁGINA DE CADA PROYECTO (proyecto-*.html)
+   - Barra celeste arriba que se llena mientras leo.
+   - La imagen de la obra se inclina con el mouse (solo computador).
+   - Los colores se copian con un toque (uso copiarTexto de la parte 9).
+   --------------------------------------------------------- */
+function iniciarFicha() {
+  if (!document.querySelector('.ficha-pagina')) return;
+
+  // barra de lectura
+  const barra = document.createElement('div');
+  barra.className = 'ficha__progreso';
+  barra.setAttribute('aria-hidden', 'true');
+  document.body.appendChild(barra);
+
+  function pintarBarra() {
+    const total = document.documentElement.scrollHeight - window.innerHeight;
+    const avance = total > 0 ? Math.min(1, window.scrollY / total) : 0;
+    barra.style.transform = 'scaleX(' + avance + ')';
+  }
+  window.addEventListener('scroll', pintarBarra, { passive: true });
+  window.addEventListener('resize', pintarBarra);
+  pintarBarra();
+
+  // inclinación de la obra
+  const hayMouse = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  if (!movimientoReducido && hayMouse) {
+    document.querySelectorAll('.ficha__img').forEach(function (img) {
+      img.addEventListener('pointermove', function (e) {
+        const caja = img.getBoundingClientRect();
+        const x = (e.clientX - caja.left) / caja.width - 0.5;
+        const y = (e.clientY - caja.top) / caja.height - 0.5;
+        img.style.transform = 'perspective(900px) rotateY(' + (x * 6) + 'deg) rotateX(' + (-y * 6) + 'deg)';
+      });
+      img.addEventListener('pointerleave', function () {
+        img.style.transform = '';
+      });
+    });
+  }
+
+  // colores que se copian
+  document.querySelectorAll('.ficha__muestra').forEach(function (boton) {
+    boton.addEventListener('click', function () {
+      const codigo = boton.dataset.hex;
+      copiarTexto(codigo).then(
+        function () { mostrarAviso('Color ' + codigo + ' copiado'); },
+        function () { mostrarAviso('Color ' + codigo); }
+      );
+    });
+  });
+}
+
+
+/* ---------------------------------------------------------
    17. ENCENDER TODO
    Si algún día quiero apagar un efecto, solo pongo // delante de su línea.
    --------------------------------------------------------- */
@@ -947,3 +1003,4 @@ iniciarEstrellasFugaces();
 iniciarArcade();
 iniciarVentanaJuego();
 iniciarTema();
+iniciarFicha();
