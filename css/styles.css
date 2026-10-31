@@ -2249,17 +2249,67 @@ html[data-tema="claro"] .habilidad:hover {
   padding: 36px 0 64px;
 }
 
-.arcade-franja__contenedor {
+.arcade-franja__caja {
+  position: relative;
+  overflow: hidden; /* para que el brillo y los planetas no se salgan del recuadro */
   display: flex;
-  gap: 18px 32px;
+  gap: 18px 28px;
   align-items: center;
-  justify-content: space-between;
   flex-wrap: wrap;
   max-width: 1000px;
+  margin: 0 auto;
   background-color: var(--espacio-panel);
+  background-image: radial-gradient(circle at 12% 50%, rgba(41, 182, 246, 0.16), transparent 55%);
   border: 1px solid var(--espacio-borde);
   border-radius: var(--radio-borde);
-  padding: 28px 30px;
+  padding: 30px 34px;
+  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.arcade-franja__caja:hover {
+  transform: translateY(-3px);
+  border-color: var(--espacio-acento-texto);
+  box-shadow: 0 12px 30px rgba(41, 182, 246, 0.18);
+}
+
+/* dos planetitas que flotan, hechos solo con CSS */
+.arcade-franja__planetas {
+  position: relative;
+  flex: 0 0 96px;
+  height: 80px;
+}
+
+.arcade-franja__planeta {
+  position: absolute;
+  border-radius: 50%;
+  animation: flotar-planeta 4s ease-in-out infinite;
+}
+
+.arcade-franja__planeta--uno {
+  width: 56px;
+  height: 56px;
+  left: 0;
+  top: 18px;
+  background: radial-gradient(circle at 30% 30%, #9be0ff, #2a6fd6 65%, #17306b);
+}
+
+.arcade-franja__planeta--dos {
+  width: 34px;
+  height: 34px;
+  right: 4px;
+  top: 0;
+  background: radial-gradient(circle at 30% 30%, #ffd1f0, #c75ad6 65%, #5b2a8c);
+  animation-delay: -2s; /* para que no suban y bajen a la vez */
+}
+
+@keyframes flotar-planeta {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+.arcade-franja__info {
+  flex: 1 1 260px;
+  min-width: 0;
 }
 
 .arcade-franja__titulo {
@@ -2272,6 +2322,29 @@ html[data-tema="claro"] .habilidad:hover {
 .arcade-franja__texto {
   color: var(--espacio-texto-suave);
   max-width: 52ch;
+}
+
+@media (max-width: 600px) {
+  .arcade-franja__caja {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 26px 22px;
+  }
+
+  .arcade-franja__info {
+    flex: 0 1 auto; /* en columna no debe estirarse a lo alto */
+  }
+
+  .arcade-franja__planetas {
+    flex: 0 0 auto; /* en columna el ancho lo da width, no flex-basis */
+    width: 96px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .arcade-franja__planeta { animation: none; }
+  .arcade-franja__caja { transition: none; }
+  .arcade-franja__caja:hover { transform: none; }
 }
 
 /* --- La imagen de cada tarjeta se recorta desde abajo: así se ve siempre la parte de arriba (título y logo) --- */

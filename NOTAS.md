@@ -294,6 +294,10 @@ Accesibilidad:
   - Las imágenes de las tarjetas se recortan desde abajo (`.proyecto__imagen { object-position: center top }`, parte 12 del CSS).
   - Descripciones nuevas en las tarjetas del manual de marca y del Trío Amoroso (en `portafolio.html` y en el inicio).
 
+- **2026-10-31** — **Franja del Arcade más dinámica y CSS sin caché vieja.**
+  - La franja del Arcade ahora tiene dos planetas que flotan, brillo y sube al pasar el mouse (se apaga con «reducir movimiento»).
+  - Los enlaces a `styles.css`, `main.js` y `tema.js` llevan `?v=20261031`. **Cada vez que cambies el CSS o el JS, cambia ese número en todas las páginas**, para que el navegador no muestre la versión vieja guardada.
+  - Destacados quedó en 3 tarjetas (Marvel, Manual de marca y Love Market).
 - **2026-10-30** — **Proyectos destacados y una página por proyecto.**
   - Nuevos: `proyecto-*.html` (7), `video/trio-amoroso.mp4`, `img/trio-amoroso-poster.webp` e `img/revista-excelencia-*.webp` (3).
   - `index.html`: secciones `.destacados` (Marvel, Manual de marca y Love Market) y `.arcade-franja`, entre el hero y Habilidades.
