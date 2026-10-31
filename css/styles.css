@@ -2246,7 +2246,7 @@ html[data-tema="claro"] .habilidad:hover {
 
 /* --- Franja del Arcade (index.html) --- */
 .arcade-franja {
-  padding: 36px 0 64px;
+  padding: 36px 0 0; /* abajo 0: el espacio hasta Habilidades lo da el padding de Habilidades */
 }
 
 .arcade-franja__caja {
