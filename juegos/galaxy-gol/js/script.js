@@ -1,6 +1,6 @@
 'use strict';
 /* ==========================================================================
-   GALAXY GOL · js/script.js · versión 3.8
+   GALAXY GOL · js/script.js · versión 4.0
    Fútbol arcade 2D de alienígenas. Autor: David Santiago Sarmiento Salguero.
 
    Índice:
@@ -297,7 +297,7 @@ const EFECTOS = {
   rebote: { grupo: 'Balón y jugadas', que: 'Rebote', cuando: 'El balón choca rápido con la banda, el fondo, un cráter o un alienígena.', capas: [{ f: 320, dur: 0.03, vol: 0.06 }] },
   poste: { grupo: 'Balón y jugadas', que: 'Balón en el poste', cuando: 'El balón pega en un palo del arco.', capas: [{ f: 1250, hasta: 900, dur: 0.14, onda: 'triangle', vol: 0.16 }] },
   atajada: { grupo: 'Balón y jugadas', que: 'Atajada', cuando: 'El arquero atrapa el balón.', capas: [{ f: 150, hasta: 90, dur: 0.12, vol: 0.22 }] },
-  cambio: { grupo: 'Balón y jugadas', que: 'Cambio de alienígena', cuando: 'Sin uso desde la versión 3.2 (el cambio de alienígena es automático). Se deja por si lo quieres usar.', capas: [{ f: 440, dur: 0.05, vol: 0.07 }] },
+  cambio: { grupo: 'Balón y jugadas', que: 'Cambio de alienígena', cuando: 'Aprietas Cambiar (H o L) y pasas a manejar a otro alienígena.', capas: [{ f: 440, dur: 0.05, vol: 0.07 }] },
   'no-valido': { grupo: 'Balón y jugadas', que: 'Acción no permitida', cuando: 'Sueltas Patear sin el balón cerca, o Derrapas mientras te levantas.', capas: [{ f: 140, dur: 0.06, vol: 0.06 }] },
   // Poderes
   capsula: { grupo: 'Poderes', que: 'Aparece una cápsula', cuando: 'Sale una cápsula de poder en la cancha.', capas: melodia([880, 1175, 1568], 0.05, { onda: 'triangle', vol: 0.1 }) },
@@ -874,21 +874,27 @@ function alternarPausa() {
 //    (carga llena en 1 s; a los 1,25 s tira solo).
 // Versión 3.2: ya no hay tecla Cambiar. Siempre manejas al alienígena de tu
 // equipo más cercano al balón (ver cambioAutomatico, sección 12).
+// Versión 4.0: vuelve la tecla Cambiar. Las tres acciones del jugador 1 quedan
+// en fila (F G H), una por dedo, sin soltar nunca W A S D: F patea, G derrapa
+// y H cambia de alienígena. Las dos de defensa (derrapar y cambiar) van juntas.
+// El jugador 2 tiene el mismo orden al revés junto a las flechas: L cambia,
+// Ñ patea y el punto derrapa. Entre los dos bloques quedan libres J y K, para
+// que las manos no choquen jugando de a dos.
 const CONTROLES = [
   {
-    // Jugador 1: mano izquierda en W A S D; F patea y G derrapa
+    // Jugador 1: mano izquierda en W A S D; F patea, G derrapa y H cambia
     arriba: ['KeyW'], abajo: ['KeyS'], izquierda: ['KeyA'], derecha: ['KeyD'],
-    patear: ['KeyF'], derrapar: ['KeyG']
+    patear: ['KeyF'], derrapar: ['KeyG'], cambiar: ['KeyH']
   },
   {
-    // Jugador 2: mano derecha en las flechas; Ñ patea y el punto derrapa
+    // Jugador 2: mano derecha en las flechas; L cambia, Ñ patea y el punto derrapa
     // (Semicolon es la Ñ en teclado latinoamericano)
     arriba: ['ArrowUp'], abajo: ['ArrowDown'], izquierda: ['ArrowLeft'], derecha: ['ArrowRight'],
-    patear: ['Semicolon'], derrapar: ['Period']
+    patear: ['Semicolon'], derrapar: ['Period'], cambiar: ['KeyL']
   }
 ];
-const BOTONES = ['patear', 'derrapar'];             // lo que se aprieta
-const ACCIONES = ['pasar', 'tirar', 'derrapar'];     // lo que hace el alienígena
+const BOTONES = ['patear', 'derrapar', 'cambiar'];             // lo que se aprieta
+const ACCIONES = ['pasar', 'tirar', 'derrapar', 'cambiar'];     // lo que hace el equipo
 const CARGA = { toque: 0.18, llena: 1, maxima: 1.25 };   // segundos
 const cargas = [null, null];   // tiro cargándose de cada jugador de este aparato
 const teclas = new Set();
@@ -1186,10 +1192,15 @@ function accion(jugador, tipo, fuerza = null) {
   if (juego.estado !== 'jugando' || juego.pausado) return;
   if (jugador === 1 && juego.modo === '1j') return;
   const equipo = juego.equipos[jugador];
+  // Cambiar sirve aunque tu alienígena esté en el piso
+  if (tipo === 'cambiar') {
+    if (!cambiarManual(equipo)) sonido.tocar('no-valido');
+    return;
+  }
   const alien = equipo.aliens[equipo.controlado];
   let hecho = false;
   if (alien.estado !== 'normal') hecho = false;
-  else if (tipo === 'pasar') hecho = pasar(alien);
+  else if (tipo === 'pasar') hecho = pasar(alien, entrada(jugador));   // el pase va hacia donde apuntas
   else if (tipo === 'tirar') hecho = tirar(alien, entrada(jugador), fuerza);
   else if (tipo === 'derrapar') {
     const m = entrada(jugador);
@@ -1258,6 +1269,7 @@ function crearEquipo(indice) {
     vaPorCapsula: false,
     ultimoPase: -10,
     esperaCambio: 0,                           // (persona) pausa corta entre cambios automáticos
+    ultimoCambioManual: -10,                   // (persona) cuándo apretó Cambiar (en segundos)
     aliens: ROLES.map((rol, numero) => ({
       equipo: indice,
       numero,
@@ -1853,14 +1865,33 @@ function puedeTocar(a) {
   return b.dueno === a || (!b.dueno && a.estado === 'normal' && distancia(a, b) < ALCANCE_TOQUE);
 }
 
-// Elige al compañero más adelantado o más libre
-function elegirCompanero(a) {
+// ---- Pase dirigido (versión 4.0) ----
+//  · Si aprietas una dirección, el pase va al compañero que esté hacia ese lado
+//    (dentro de un cono de unos 74°, 37° a cada lado). Si hay varios, el mejor.
+//  · Si no aprietas nada, el juego elige al más adelantado o más libre (como antes).
+//  · Si hacia ese lado no hay nadie, el balón sale al espacio en esa dirección
+//    y corre a buscarlo el compañero que esté más cerca de donde va a caer.
+const PASE = {
+  cono: 0.8,        // coseno del ángulo máximo (0,8 ≈ 37° a cada lado)
+  apuntado: 0.3,    // desde cuánto se cuenta que aprietas una dirección
+  espacio: 190      // qué tan lejos va un pase al espacio (unidades de cancha)
+};
+
+// Elige al compañero más adelantado o más libre. Con "direccion", solo los que
+// están hacia ese lado, y ganan los mejor alineados.
+function elegirCompanero(a, direccion = null) {
   const eq = juego.equipos[a.equipo];
   const rival = juego.equipos[1 - a.equipo];
   let mejor = null;
   let mejorPuntaje = -Infinity;
   for (const c of eq.aliens) {
     if (c === a || c.estado === 'aturdido') continue;
+    let alineado = 0;
+    if (direccion) {
+      const hacia = normalizar(c.x - a.x, c.y - a.y);
+      alineado = hacia.x * direccion.x + hacia.y * direccion.y;
+      if (alineado < PASE.cono) continue;   // no está hacia donde apuntas
+    }
     const avance = ((c.x - a.x) * eq.sentido) / 400;
     let libre = Infinity;
     for (const r of rival.aliens) libre = Math.min(libre, distancia(c, r));
@@ -1872,7 +1903,7 @@ function elegirCompanero(a) {
     for (const cr of juego.crateres) {
       if (distanciaASegmento(cr, a, c) < radioCrater(cr)) bloqueo += 0.4;
     }
-    let puntaje = avance * 0.55 + libre * 0.45 - bloqueo;
+    let puntaje = avance * 0.55 + libre * 0.45 - bloqueo + alineado * 2;
     if (c.rol === 'arquero') puntaje -= 0.9;
     if (distancia(a, c) < 70) puntaje -= 0.5;
     if (puntaje > mejorPuntaje) {
@@ -1883,20 +1914,48 @@ function elegirCompanero(a) {
   return mejor;
 }
 
-function pasar(a) {
+// Decide a quién va el pase y a qué punto, sin patear todavía.
+// Lo usan pasar() y la marca que se dibuja antes de soltar el pase.
+// Devuelve { destino, meta, alEspacio } o null si no hay a quién pasarle.
+function planDePase(a, apunte = null) {
+  const b = juego.balon;
+  const eq = juego.equipos[a.equipo];
+  const apuntando = apunte && Math.hypot(apunte.x, apunte.y) > PASE.apuntado;
+  const direccion = apuntando ? normalizar(apunte.x, apunte.y) : null;
+  const destino = elegirCompanero(a, direccion);
+  if (destino) {
+    // Se apunta un poco adelante del compañero si va corriendo
+    const tiempo = distancia(b, destino) / 420;
+    const meta = {
+      x: limitar(destino.x + destino.vx * tiempo * 0.7, RADIO_ALIEN, CANCHA.largo - RADIO_ALIEN),
+      y: limitar(destino.y + destino.vy * tiempo * 0.7, RADIO_ALIEN, CANCHA.ancho - RADIO_ALIEN)
+    };
+    return { destino, meta, alEspacio: false };
+  }
+  if (!direccion) return null;
+  // Nadie hacia ese lado: pase al espacio
+  const meta = {
+    x: limitar(b.x + direccion.x * PASE.espacio, RADIO_ALIEN, CANCHA.largo - RADIO_ALIEN),
+    y: limitar(b.y + direccion.y * PASE.espacio, RADIO_ALIEN, CANCHA.ancho - RADIO_ALIEN)
+  };
+  let receptor = null;
+  for (const c of eq.aliens) {
+    if (c === a || c.rol === 'arquero' || c.estado === 'aturdido') continue;
+    if (!receptor || distancia(c, meta) < distancia(receptor, meta)) receptor = c;
+  }
+  return { destino: receptor, meta, alEspacio: true };
+}
+
+// "apunte": hacia dónde aprieta la persona (la máquina pasa sin apunte)
+function pasar(a, apunte = null) {
   if (!puedeTocar(a)) return false;
   const b = juego.balon;
   const eq = juego.equipos[a.equipo];
-  const destino = elegirCompanero(a);
-  if (!destino) return false;
+  const plan = planDePase(a, apunte);
+  if (!plan) return false;
+  const { destino, meta } = plan;
   if (b.dueno !== a) registrarToque(a);
 
-  // Se apunta un poco adelante del compañero si va corriendo
-  const tiempo = distancia(b, destino) / 420;
-  const meta = {
-    x: limitar(destino.x + destino.vx * tiempo * 0.7, RADIO_ALIEN, CANCHA.largo - RADIO_ALIEN),
-    y: limitar(destino.y + destino.vy * tiempo * 0.7, RADIO_ALIEN, CANCHA.ancho - RADIO_ALIEN)
-  };
   const dir = normalizar(meta.x - b.x, meta.y - b.y);
   const velocidad = limitar(dir.l * FRICCION + 210 * multiplicador(), 260, 900);
   soltarBalon(a, dir.x * velocidad, dir.y * velocidad);
@@ -1905,8 +1964,10 @@ function pasar(a) {
   a.patada = 0.18;
   juego.pase = { equipo: a.equipo, desde: a, hacia: destino, tiempo: 0 };
   eq.ultimoPase = juego.reloj;
-  eq.activo = destino.numero;
-  if (eq.humano) eq.controlado = destino.numero;   // el control pasa al que recibe
+  if (destino) {
+    eq.activo = destino.numero;
+    if (eq.humano) eq.controlado = destino.numero;   // el control pasa al que recibe
+  }
   sonido.tocar('pase');
   return true;
 }
@@ -2057,9 +2118,6 @@ function perderBalonEnBaba(a, dt) {
   }
 }
 
-// Cambia al compañero más cercano al balón. Si llevabas el balón, tu compañero
-// se queda con él y lo juega solo (puede pasártelo). El arquero solo se elige
-// cuando el balón está cerca de su área.
 // Cambio automático (versión 3.2): cada persona maneja siempre al alienígena de
 // su equipo más cercano al balón. El arquero lo maneja siempre la máquina.
 //  · Si tu equipo tiene el balón, manejas al que lo lleva.
@@ -2067,7 +2125,45 @@ function perderBalonEnBaba(a, dt) {
 //  · Para que no salte de un lado a otro, el nuevo debe estar bastante más cerca
 //    (45 unidades) y entre un cambio y otro pasan al menos 0,35 s.
 //  · No cambia a mitad de un derrape.
-const CAMBIO = { ventaja: 45, espera: 0.35, anticipo: 0.2, castigoCaido: 90 };
+// Cambio manual (versión 4.0): con H (o L) eliges tú. El cambio automático
+// respeta tu elección durante 3 segundos y luego vuelve a ayudarte.
+const CAMBIO = { ventaja: 45, espera: 0.35, anticipo: 0.2, castigoCaido: 90, manual: 3, seguido: 1 };
+
+// Qué tan lejos está un alienígena del balón (mirando un poquito adelante,
+// hacia donde va el balón o la nave que lo lleva). Los del piso cuentan más lejos.
+function medidorDeLejania() {
+  const b = juego.balon;
+  const objetivo = juego.nave && juego.nave.conBalon
+    ? juego.nave
+    : { x: b.x + b.vx * CAMBIO.anticipo, y: b.y + b.vy * CAMBIO.anticipo };
+  return (a) => distancia(a, objetivo) + (a.estado === 'normal' ? 0 : CAMBIO.castigoCaido);
+}
+
+// Tecla Cambiar. El primer toque salta al compañero más cercano al balón (sin
+// contarte a ti); si vuelves a tocar antes de 1 s, sigue con el siguiente en
+// orden de cercanía, así puedes llegar a cualquiera de los tres.
+// No hace nada si tu equipo lleva el balón (ya manejas al que lo tiene).
+function cambiarManual(eq) {
+  if (!eq.humano) return false;
+  const b = juego.balon;
+  if (b.dueno && b.dueno.equipo === eq.indice && b.dueno.rol !== 'arquero') return false;
+  const actual = eq.aliens[eq.controlado];
+  const lejania = medidorDeLejania();
+  const orden = eq.aliens.filter((c) => c.rol !== 'arquero').sort((m, n) => lejania(m) - lejania(n));
+  const ahora = performance.now() / 1000;
+  let nuevo;
+  if (ahora - eq.ultimoCambioManual < CAMBIO.seguido && orden.includes(actual)) {
+    nuevo = orden[(orden.indexOf(actual) + 1) % orden.length];
+  } else {
+    nuevo = orden.find((c) => c !== actual);
+  }
+  if (!nuevo || nuevo === actual) return false;
+  eq.controlado = nuevo.numero;
+  eq.esperaCambio = CAMBIO.manual;     // el automático espera un rato
+  eq.ultimoCambioManual = ahora;
+  sonido.tocar('cambio');
+  return true;
+}
 
 function cambioAutomatico(eq, dt) {
   if (!eq.humano) return;
@@ -2082,12 +2178,7 @@ function cambioAutomatico(eq, dt) {
   if (juego.pase && juego.pase.equipo === eq.indice && actual.rol !== 'arquero') return;
   if (actual.estado === 'derrapando') return;
 
-  // Se mira un poquito adelante, hacia donde va el balón (o la nave que lo lleva)
-  const objetivo = juego.nave && juego.nave.conBalon
-    ? juego.nave
-    : { x: b.x + b.vx * CAMBIO.anticipo, y: b.y + b.vy * CAMBIO.anticipo };
-  // Los que están en el piso cuentan como si estuvieran más lejos
-  const lejania = (a) => distancia(a, objetivo) + (a.estado === 'normal' ? 0 : CAMBIO.castigoCaido);
+  const lejania = medidorDeLejania();
 
   let mejor = null;
   for (const c of eq.aliens) {
@@ -2739,9 +2830,9 @@ function iaPosicion(a, eq, dt) {
 
 /* 15. TUTORIAL ============================================================ */
 const PASOS_TUTORIAL = [
-  { id: 'mover', texto: 'Muévete con W A S D o con el joystick. Siempre manejas al alienígena de tu equipo más cercano al balón: el aro brillante te muestra cuál es.' },
+  { id: 'mover', texto: 'Muévete con W A S D o con el joystick. El aro brillante marca al alienígena que manejas: el juego te cambia solo al más cercano al balón, y con H eliges tú.' },
   { id: 'tomar', texto: 'Ve hasta el balón y tócalo: se queda pegado a tu pie.' },
-  { id: 'pase', texto: 'Pásale el balón a un compañero: toca F (o el botón Patear) una vez, rapidito. El control salta al que recibe.' },
+  { id: 'pase', texto: 'Pásale el balón a un compañero: apunta hacia él con la dirección y toca F (o Patear) una vez. El aro punteado te muestra a quién le llega.' },
   { id: 'gol', texto: 'Lleva el balón al arco de Zorp, mantén apretado F (o Patear) y suelta: más tiempo = tiro más fuerte. Para elegir palo, mantén la dirección hacia ese lado.' },
   { id: 'robo', texto: 'Zorp tiene el balón. Ponte delante de él y derrapa con G o con el botón Derrapar.' },
   { id: 'poder', texto: 'Toca la cápsula de poder. Los asteroides dejan huecos: rodéalos. La cancha se arregla sola.' }
@@ -3431,6 +3522,7 @@ function dibujar() {
   lista.sort((m, n) => m.p.y - n.p.y);
   for (const item of lista) dibujarSombra(item.p, RADIO_ALIEN, 0.95);
   for (const item of lista) if (esManejado(item.a)) dibujarAro(item);
+  dibujarPlanesDePase();
   dibujarBabosa();
   const pb = aPantalla(juego.balon.x, juego.balon.y);
   const conNave = juego.nave && juego.nave.conBalon;
@@ -3625,6 +3717,61 @@ function dibujarAro({ a, p }) {
   ctx.shadowBlur = 12 * e;
   ctx.beginPath();
   ctx.ellipse(p.x, p.y + RADIO_ALIEN * 0.85 * e, RADIO_ALIEN * 1.35 * e, RADIO_ALIEN * 0.55 * e, 0, 0, Math.PI * 2);
+  ctx.stroke();
+  ctx.restore();
+}
+
+// ---- Marca del pase (versión 4.0) ----
+// Mientras llevas el balón, un aro punteado que gira marca al compañero que
+// recibiría el pase si tocas Patear ahora. Si el pase va al espacio, se ve
+// una mira en el punto adonde va el balón. Mientras cargas un tiro no se ve.
+function dibujarPlanesDePase() {
+  if (juego.estado !== 'jugando' || juego.pausado) return;
+  const locales = juego.modo === '2j' ? [0, 1] : [0];
+  for (const jugador of locales) {
+    const indice = juego.modo === 'red' ? red.miEquipo() : jugador;
+    const eq = juego.equipos[indice];
+    if (!eq || !eq.humano) continue;
+    const a = eq.aliens[eq.controlado];
+    if (juego.balon.dueno !== a || (nivelCarga(jugador) ?? 0) > 0) continue;
+    const plan = planDePase(a, entrada(jugador));
+    if (!plan) continue;
+    if (plan.alEspacio) dibujarMira(aPantalla(plan.meta.x, plan.meta.y), indice);
+    else dibujarAroPase(aPantalla(plan.destino.x, plan.destino.y), indice);
+  }
+}
+
+function dibujarAroPase(p, equipo) {
+  const e = vista.escala;
+  ctx.save();
+  ctx.strokeStyle = colorDe(equipo, 'claro');
+  ctx.lineWidth = Math.max(2, 2.5 * e);
+  ctx.setLineDash([6 * e, 5 * e]);
+  ctx.lineDashOffset = reducirMovimiento ? 0 : -performance.now() / 40;
+  ctx.globalAlpha = 0.9;
+  ctx.beginPath();
+  ctx.ellipse(p.x, p.y + RADIO_ALIEN * 0.85 * e, RADIO_ALIEN * 1.6 * e, RADIO_ALIEN * 0.7 * e, 0, 0, Math.PI * 2);
+  ctx.stroke();
+  ctx.restore();
+}
+
+function dibujarMira(p, equipo) {
+  const e = vista.escala;
+  const r = 9 * e;
+  ctx.save();
+  ctx.strokeStyle = colorDe(equipo, 'claro');
+  ctx.lineWidth = Math.max(1.5, 2 * e);
+  ctx.globalAlpha = 0.85;
+  ctx.beginPath();
+  ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
+  ctx.moveTo(p.x - r * 1.6, p.y);
+  ctx.lineTo(p.x - r * 0.5, p.y);
+  ctx.moveTo(p.x + r * 0.5, p.y);
+  ctx.lineTo(p.x + r * 1.6, p.y);
+  ctx.moveTo(p.x, p.y - r * 1.6);
+  ctx.lineTo(p.x, p.y - r * 0.5);
+  ctx.moveTo(p.x, p.y + r * 0.5);
+  ctx.lineTo(p.x, p.y + r * 1.6);
   ctx.stroke();
   ctx.restore();
 }

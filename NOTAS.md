@@ -296,6 +296,7 @@ Accesibilidad:
   - Las imágenes de las tarjetas se recortan desde abajo (`.proyecto__imagen { object-position: center top }`, parte 12 del CSS).
   - Descripciones nuevas en las tarjetas del manual de marca y del Trío Amoroso (en `portafolio.html` y en el inicio).
 
+- **2026-10-31** — **Galaxy Gol actualizado a la Versión 4.0** (copia de `santisarm0607/galaxy-gol`, solo `index.html` y `js/script.js` de `juegos/galaxy-gol/`): pase dirigido hacia donde apuntas y tecla Cambiar (H / L). La descripción del panel del Arcade (`juegos.html`) lo menciona.
 - **2026-10-31** — **Arcade tipo consola (`juegos.html`).**
   - Los planetas van en un recuadro a la izquierda y a la derecha hay un panel con la descripción del juego elegido (género, jugadores, controles y botón «Despegar»).
   - Se elige con clic/toque, con las flechas ← → o con los botones ◀ ▶; **Enter** (o clic en el planeta ya elegido) despega. La nave siempre mira al planeta elegido.

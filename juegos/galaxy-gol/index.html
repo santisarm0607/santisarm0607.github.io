@@ -74,6 +74,10 @@
                 <dt><kbd class="tecla-defensa">G</kbd></dt>
                 <dd>Derrapar (quitar el balón)</dd>
               </div>
+              <div class="accion">
+                <dt><kbd class="tecla-defensa">H</kbd></dt>
+                <dd>Cambiar de alienígena (tócala otra vez para seguir con el siguiente)</dd>
+              </div>
             </dl>
           </section>
 
@@ -94,6 +98,10 @@
               <div class="accion">
                 <dt><kbd class="tecla-defensa"><span aria-hidden="true">.</span><span class="visualmente-oculto">Punto</span></kbd></dt>
                 <dd>Derrapar (quitar el balón)</dd>
+              </div>
+              <div class="accion">
+                <dt><kbd class="tecla-defensa">L</kbd></dt>
+                <dd>Cambiar de alienígena</dd>
               </div>
             </dl>
             <p class="nota-teclas">En un teclado en inglés, la Ñ es la tecla <kbd>;</kbd>.</p>
@@ -117,7 +125,7 @@
               </div>
             </dl>
             <p class="nota-teclas">Jugando solo, sirven los dos bloques: elige el que te quede más cómodo.</p>
-            <p class="nota-teclas">No hay que cambiar de alienígena: siempre manejas al de tu equipo más cercano al balón.</p>
+            <p class="nota-teclas">El juego te cambia solo al alienígena más cercano al balón; con Cambiar eliges tú. Para pasar, apunta hacia un compañero: el aro punteado te muestra a quién le llega.</p>
           </section>
 
           <!-- Celular -->
@@ -157,7 +165,7 @@
           <ul>
             <li>Toca el balón para quedártelo: va pegado a tu pie. Con Patear, un toque corto pasa a un compañero; si lo mantienes y sueltas, tiras al arco (más tiempo, más fuerte). Para elegir palo, mantén la dirección hacia ese lado.</li>
             <li>Para quitarle el balón a un rival, ponte delante de él y derrapa. Si fallas, tardas en levantarte.</li>
-            <li>Cada equipo tiene 4 alienígenas: arquero, defensa, volante y delantero. El aro brillante marca al que manejas, que siempre es el de tu equipo más cercano al balón; el arquero (visera amarilla) lo maneja la máquina.</li>
+            <li>Cada equipo tiene 4 alienígenas: arquero, defensa, volante y delantero. El aro brillante marca al que manejas: el juego te cambia solo al más cercano al balón y con Cambiar (H o L) eliges tú. El arquero (visera amarilla) lo maneja la máquina.</li>
             <li>Si el balón no cruza la mitad de la cancha en 8 segundos, sale un balón nuevo.</li>
             <li>Gana el primero que llegue a 5 goles.</li>
           </ul>
@@ -516,10 +524,12 @@
           <div class="guia-jugador" data-jugador="0">
             <span class="guia-accion guia-patear" data-accion="patear" data-nivel="0"><kbd>F</kbd><span class="guia-texto">Patear<small>toca: pasa · mantén: tira</small></span><span class="guia-carga"></span></span>
             <span class="guia-accion" data-accion="derrapar"><kbd>G</kbd>Derrapar</span>
+            <span class="guia-accion" data-accion="cambiar"><kbd>H</kbd>Cambiar</span>
           </div>
           <div class="guia-jugador guia-j2" data-jugador="1">
             <span class="guia-accion guia-patear" data-accion="patear" data-nivel="0"><kbd>Ñ</kbd><span class="guia-texto">Patear<small>toca: pasa · mantén: tira</small></span><span class="guia-carga"></span></span>
             <span class="guia-accion" data-accion="derrapar"><kbd>.</kbd>Derrapar</span>
+            <span class="guia-accion" data-accion="cambiar"><kbd>L</kbd>Cambiar</span>
           </div>
         </div>
 
