@@ -294,6 +294,11 @@ Accesibilidad:
   - Las imágenes de las tarjetas se recortan desde abajo (`.proyecto__imagen { object-position: center top }`, parte 12 del CSS).
   - Descripciones nuevas en las tarjetas del manual de marca y del Trío Amoroso (en `portafolio.html` y en el inicio).
 
+- **2026-10-31** — **Arcade tipo consola (`juegos.html`).**
+  - Los planetas van en un recuadro a la izquierda y a la derecha hay un panel con la descripción del juego elegido (género, jugadores, controles y botón «Despegar»).
+  - Se elige con clic/toque, con las flechas ← → o con los botones ◀ ▶; **Enter** (o clic en el planeta ya elegido) despega. La nave siempre mira al planeta elegido.
+  - Los textos del panel salen de los `data-descripcion`, `data-genero`, `data-jugadores` y `data-controles` de cada planeta en `juegos.html`: para un juego nuevo solo se llenan esos datos.
+  - JS parte 16 reescrita (`elegir()`, `despegarAlElegido()`); CSS parte 13 (`.arcade__consola`, `.ficha-juego`). Sin JavaScript el panel no sale y los planetas siguen siendo enlaces.
 - **2026-10-31** — **Franja del Arcade más dinámica.**
   - La franja del Arcade ahora tiene dos planetas que flotan, brillo y sube al pasar el mouse (se apaga con «reducir movimiento»).
   - Espaciado parejo en el inicio: la variable `--separacion-seccion` (40px, al inicio de `styles.css`) es el espacio de arriba y de abajo de cada sección, así que entre dos secciones hay 80px. Si quieres más o menos aire, cambia solo ese número.

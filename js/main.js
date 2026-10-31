@@ -756,7 +756,20 @@ function iniciarArcade() {
   const nave = escena.querySelector('.nave');
   const giro = escena.querySelector('.nave__giro');
   const planetas = Array.from(escena.querySelectorAll('.planeta'));
+  const segmentos = Array.from(escena.querySelectorAll('.arcade__segmento'));
+  const progreso = escena.querySelector('.arcade__progreso');
+  const barra = escena.querySelector('.arcade__barra');
+  const contador = escena.querySelector('.arcade__contador-actual');
+  const panel = document.querySelector('.ficha-juego');
+  const despegar = panel.querySelector('.ficha-juego__despegar');
   let viajando = false;
+  let activo = 0; // el planeta elegido (0 = el primero)
+
+  // con JavaScript se muestran el panel, la barra de progreso y la barra de abajo
+  document.querySelector('.arcade').classList.add('arcade--js');
+  panel.hidden = false;
+  barra.hidden = false;
+  progreso.hidden = false;
 
   // centro de un elemento en la pantalla
   function centro(elemento) {
@@ -776,12 +789,75 @@ function iniciarArcade() {
     return { dx: dx, dy: dy, destino: hacia };
   }
 
-  function enderezar() {
-    if (!viajando) giro.style.transform = ''; // vuelve a mirar hacia arriba
+  // la nave siempre vuelve a mirar al planeta elegido
+  function mirarAlElegido() {
+    if (!viajando) apuntarA(planetas[activo]);
+  }
+
+  function dosDigitos(n) {
+    return (n < 10 ? '0' : '') + n;
+  }
+
+  // elige un planeta: lo resalta, gira la nave y llena el panel con su descripción
+  function elegir(i) {
+    activo = (i + planetas.length) % planetas.length;
+    const planeta = planetas[activo];
+    const bloqueado = planeta.classList.contains('planeta--bloqueado');
+
+    planetas.forEach(function (p, n) {
+      p.classList.toggle('planeta--activo', n === activo);
+    });
+    segmentos.forEach(function (s, n) {
+      s.classList.toggle('arcade__segmento--activo', n === activo);
+    });
+    contador.textContent = dosDigitos(activo + 1);
+
+    panel.querySelector('.ficha-juego__numero').textContent = dosDigitos(activo + 1);
+    panel.querySelector('.ficha-juego__titulo').textContent = planeta.querySelector('.planeta__nombre').textContent;
+    panel.querySelector('.ficha-juego__texto').textContent = planeta.dataset.descripcion;
+    panel.querySelector('.ficha-juego__genero').textContent = planeta.dataset.genero;
+    panel.querySelector('.ficha-juego__jugadores').textContent = planeta.dataset.jugadores;
+    panel.querySelector('.ficha-juego__controles').textContent = planeta.dataset.controles;
+    panel.querySelector('.ficha-juego__mini').className = 'ficha-juego__mini ficha-juego__mini--' + planeta.dataset.mini;
+
+    if (bloqueado) {
+      despegar.removeAttribute('href');
+      despegar.setAttribute('aria-disabled', 'true');
+      despegar.textContent = 'En construcción';
+    } else {
+      despegar.setAttribute('href', planeta.getAttribute('href'));
+      despegar.removeAttribute('aria-disabled');
+      despegar.textContent = 'Despegar';
+    }
+
+    // el panel "entra" otra vez para que se note el cambio
+    panel.classList.remove('ficha-juego--cambia');
+    void panel.offsetWidth;
+    panel.classList.add('ficha-juego--cambia');
+
+    mirarAlElegido();
   }
 
   function esperar(ms) {
     return new Promise(function (listo) { setTimeout(listo, ms); });
+  }
+
+  // el planeta en construcción solo se sacude y avisa
+  function avisarConstruccion(planeta) {
+    planeta.classList.remove('planeta--sacudir');
+    void planeta.offsetWidth;
+    planeta.classList.add('planeta--sacudir');
+    mostrarAviso('🛠️ Este planeta está en construcción. ¡Pronto habrá un juego nuevo!');
+  }
+
+  // despega hacia el planeta elegido (o avisa si está en construcción)
+  function despegarAlElegido() {
+    const planeta = planetas[activo];
+    if (planeta.classList.contains('planeta--bloqueado')) {
+      avisarConstruccion(planeta);
+    } else {
+      viajar(planeta);
+    }
   }
 
   async function viajar(planeta) {
@@ -836,30 +912,60 @@ function iniciarArcade() {
     location.href = destino;
   }
 
-  planetas.forEach(function (planeta) {
+  planetas.forEach(function (planeta, i) {
+    // al pasar el mouse (o con Tab) la nave mira ese planeta; al salir, vuelve al elegido
     planeta.addEventListener('mouseenter', function () { if (!viajando) apuntarA(planeta); });
     planeta.addEventListener('focus', function () { if (!viajando) apuntarA(planeta); });
-    planeta.addEventListener('mouseleave', enderezar);
-    planeta.addEventListener('blur', enderezar);
-
-    // el planeta en construcción solo se sacude y avisa
-    if (planeta.classList.contains('planeta--bloqueado')) {
-      planeta.addEventListener('click', function () {
-        planeta.classList.remove('planeta--sacudir');
-        void planeta.offsetWidth;
-        planeta.classList.add('planeta--sacudir');
-        mostrarAviso('🛠️ Este planeta está en construcción. ¡Pronto habrá un juego nuevo!');
-      });
-      return;
-    }
+    planeta.addEventListener('mouseleave', mirarAlElegido);
+    planeta.addEventListener('blur', mirarAlElegido);
 
     planeta.addEventListener('click', function (e) {
-      // si lo abren en otra pestaña (Ctrl, Cmd, Shift o clic del medio), no hago la animación
+      // si lo abren en otra pestaña (Ctrl, Cmd, Shift o clic del medio), dejo el enlace normal
       if (e.ctrlKey || e.metaKey || e.shiftKey || e.button !== 0) return;
       e.preventDefault();
-      viajar(planeta);
+      if (viajando) return;
+      if (i !== activo) {
+        elegir(i);          // primer clic: lo elige y muestra la descripción
+      } else {
+        despegarAlElegido(); // clic en el que ya está elegido: despega
+      }
     });
   });
+
+  // botón "Despegar" del panel
+  despegar.addEventListener('click', function (e) {
+    if (e.ctrlKey || e.metaKey || e.shiftKey || e.button !== 0) return;
+    e.preventDefault();
+    if (!viajando) despegarAlElegido();
+  });
+
+  // flechitas de la barra de abajo
+  barra.querySelectorAll('.arcade__flecha').forEach(function (flecha) {
+    flecha.addEventListener('click', function () {
+      if (!viajando) elegir(activo + Number(flecha.dataset.paso));
+    });
+  });
+
+  // teclado: ← → eligen y Enter despega (solo si no estoy escribiendo ni parado en un botón)
+  document.addEventListener('keydown', function (e) {
+    if (viajando || e.ctrlKey || e.metaKey || e.altKey) return;
+    if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      elegir(activo - 1);
+    } else if (e.key === 'ArrowRight') {
+      e.preventDefault();
+      elegir(activo + 1);
+    } else if (e.key === 'Enter' && document.activeElement === document.body) {
+      e.preventDefault();
+      despegarAlElegido();
+    }
+  });
+
+  // si cambia el tamaño de la ventana, la nave vuelve a apuntar bien
+  window.addEventListener('resize', mirarAlElegido);
+  window.addEventListener('load', mirarAlElegido); // cuando ya cargó todo, la nave apunta bien
+
+  elegir(0);
 
   // si vuelven con el botón "atrás", el navegador puede mostrar la página congelada
   // a mitad del viaje: en ese caso la recargo para que todo empiece de nuevo

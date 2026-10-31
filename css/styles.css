@@ -2690,3 +2690,338 @@ html[data-tema="claro"] .habilidad:hover {
     transition: none;
   }
 }
+
+
+/* ---------------------------------------------------------
+   13. ARCADE TIPO CONSOLA (juegos.html)
+   La escena de planetas va a la izquierda y a la derecha un panel con la
+   descripción del planeta elegido. Sin JavaScript el panel no se muestra
+   y los planetas siguen funcionando como enlaces.
+   --------------------------------------------------------- */
+.arcade__consola {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+  gap: 24px;
+  align-items: stretch;
+  margin-top: 30px;
+  text-align: left;
+}
+
+.arcade__consola .arcade__escena {
+  margin-top: 0;
+  background-color: var(--espacio-panel);
+  border: 1px solid var(--espacio-borde);
+  border-radius: var(--radio-borde);
+}
+
+/* barrita de progreso de arriba: una raya por planeta */
+.arcade__progreso {
+  order: -3;
+  align-self: stretch;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  overflow: hidden;
+  border-radius: var(--radio-borde) var(--radio-borde) 0 0;
+}
+
+.arcade__progreso[hidden] {
+  display: none;
+}
+
+.arcade__segmento {
+  height: 6px;
+  background-color: var(--espacio-borde);
+  transition: background-color 0.3s ease;
+}
+
+.arcade__segmento--activo {
+  background-color: var(--espacio-acento-texto);
+}
+
+/* planetas más chicos para que quepan junto al panel */
+.arcade__consola .planetas {
+  max-width: none;
+  margin-top: auto; /* planetas y nave quedan centrados entre la barrita de arriba y la barra de abajo */
+  padding: 26px 20px 0;
+  gap: 12px;
+}
+
+.arcade__consola .planetas__item:nth-child(1) { margin-top: 22px; }
+.arcade__consola .planetas__item:nth-child(3) { margin-top: 46px; }
+
+.arcade__consola .planeta--gol { --tam: 128px; }
+.arcade__consola .planeta--cosmo { --tam: 118px; }
+.arcade__consola .planeta--bloqueado { --tam: 96px; }
+
+/* el planeta elegido se ve grande y brillante; los demás, más apagados */
+.planeta--activo .planeta__esfera {
+  transform: scale(1.18);
+  box-shadow:
+    inset -14px -18px 34px rgba(0, 0, 0, 0.45),
+    0 0 75px var(--halo),
+    0 0 0 2px rgba(255, 255, 255, 0.15);
+}
+
+.planeta--activo .planeta__nombre {
+  color: var(--espacio-acento-texto);
+}
+
+.arcade--js .planeta {
+  transition: opacity 0.3s ease;
+}
+
+.arcade--js .planeta:not(.planeta--activo):not(:hover):not(:focus-visible) {
+  opacity: 0.7;
+}
+
+.arcade--js .planeta__info {
+  display: none; /* la descripción completa ya está en el panel */
+}
+
+.arcade__consola .nave {
+  width: 64px;
+  margin: 14px 0 auto;
+  padding-bottom: 18px;
+}
+
+/* barra de abajo: flechas, ayuda y contador */
+.arcade__barra {
+  align-self: stretch;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 16px;
+  margin-top: auto;
+  padding: 12px 18px;
+  border-top: 1px solid var(--espacio-borde);
+  font-size: 0.85rem;
+  color: var(--espacio-texto-suave);
+}
+
+.arcade__barra[hidden] {
+  display: none;
+}
+
+.arcade__mandos {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.arcade__flecha {
+  width: 34px;
+  height: 34px;
+  border: 1px solid var(--espacio-borde);
+  border-radius: 8px;
+  background-color: transparent;
+  color: var(--espacio-texto);
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+.arcade__flecha:hover {
+  border-color: var(--espacio-acento-texto);
+  color: var(--espacio-acento-texto);
+}
+
+.arcade__flecha:focus-visible {
+  outline: 3px solid var(--color-acento);
+  outline-offset: 2px;
+}
+
+.arcade__tecla {
+  padding: 2px 7px;
+  border: 1px solid var(--espacio-borde);
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 0.8rem;
+  color: var(--espacio-texto);
+}
+
+.arcade__contador {
+  margin: 0;
+  font-weight: 600;
+}
+
+.arcade__contador-actual {
+  color: var(--espacio-acento-texto);
+}
+
+/* --- Panel con la descripción --- */
+.ficha-juego {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 24px;
+  background-color: var(--espacio-panel);
+  border: 1px solid var(--espacio-borde);
+  border-radius: var(--radio-borde);
+}
+
+.ficha-juego[hidden] {
+  display: none;
+}
+
+.ficha-juego--cambia > * {
+  animation: ficha-entra 0.35s ease-out backwards;
+}
+
+@keyframes ficha-entra {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: none; }
+}
+
+.ficha-juego__marco {
+  display: grid;
+  place-items: center;
+  height: 150px;
+  margin-bottom: 4px;
+  border-radius: 14px;
+  background:
+    radial-gradient(circle at 50% 50%, rgba(41, 182, 246, 0.12), transparent 70%),
+    var(--espacio-fondo);
+  border: 1px solid var(--espacio-borde);
+}
+
+.ficha-juego__mini {
+  display: block;
+  width: 92px;
+  height: 92px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 32% 28%, var(--luz) 0%, var(--base) 45%, var(--sombra) 88%);
+  box-shadow: inset -8px -10px 20px rgba(0, 0, 0, 0.45), 0 0 34px var(--halo);
+}
+
+.ficha-juego__mini--gol {
+  --luz: #C6F7B0;
+  --base: #3FAF4A;
+  --sombra: #0F4A22;
+  --halo: rgba(80, 220, 120, 0.35);
+}
+
+.ficha-juego__mini--cosmo {
+  --luz: #3a1f6e;
+  --base: #0d0820;
+  --sombra: #01020a;
+  --halo: rgba(155, 92, 255, 0.45);
+}
+
+.ficha-juego__mini--bloqueado {
+  --luz: #DCE3F5;
+  --base: #7484A8;
+  --sombra: #2A3456;
+  --halo: rgba(157, 184, 255, 0.18);
+}
+
+.ficha-juego__etiqueta {
+  margin: 0;
+  font-size: 0.85rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--espacio-acento-texto);
+}
+
+.ficha-juego__titulo {
+  margin: 0;
+  font-size: 1.7rem;
+  font-weight: 700;
+  color: var(--espacio-texto);
+  text-wrap: balance;
+}
+
+.ficha-juego__texto {
+  margin: 0;
+  color: var(--espacio-texto-suave);
+}
+
+.ficha-juego__datos {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 8px 14px;
+  margin: 6px 0 0;
+  font-size: 0.9rem;
+}
+
+.ficha-juego__datos dt {
+  color: var(--espacio-acento-texto);
+  font-weight: 600;
+}
+
+.ficha-juego__datos dd {
+  margin: 0;
+  color: var(--espacio-texto);
+}
+
+.ficha-juego__despegar {
+  align-self: flex-start;
+  margin-top: auto; /* el botón se queda abajo del panel */
+}
+
+.ficha-juego__despegar[aria-disabled="true"] {
+  opacity: 0.6;
+  cursor: help;
+}
+
+/* --- Pantallas medianas y celular: el panel baja debajo de la escena --- */
+@media (max-width: 900px) {
+  .arcade__consola {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .arcade__consola .planetas {
+    grid-template-columns: repeat(3, minmax(0, 1fr)); /* los 3 en una fila */
+    padding: 16px 8px 0;
+    gap: 4px;
+  }
+
+  .arcade__consola .planetas__item:nth-child(1),
+  .arcade__consola .planetas__item:nth-child(3) {
+    margin-top: 0;
+    grid-column: auto;
+  }
+
+  .arcade__consola .planeta {
+    padding: 4px;
+  }
+
+  .arcade__consola .planeta--gol { --tam: 84px; }
+  .arcade__consola .planeta--cosmo { --tam: 78px; }
+  .arcade__consola .planeta--bloqueado { --tam: 64px; }
+
+  .arcade__consola .planeta__nombre {
+    font-size: 0.8rem;
+  }
+
+  .arcade__consola .nave {
+    order: -1;
+    width: 48px;
+    margin: 10px 0 4px;
+  }
+
+  .arcade__ayuda {
+    display: none; /* en el celular no hay teclado */
+  }
+
+  .ficha-juego__datos {
+    grid-template-columns: 1fr;
+    gap: 2px;
+  }
+
+  .ficha-juego__datos dd {
+    margin-bottom: 8px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ficha-juego--cambia > * {
+    animation: none;
+  }
+}

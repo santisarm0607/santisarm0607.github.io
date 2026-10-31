@@ -50,19 +50,32 @@
             <div class="contenedor">
                 <p id="titulo-arcade" class="arcade__titulo">Arcade Santisarm</p>
                 <p class="arcade__texto">
-                    Elige un planeta y viaja a su juego. Pasa el mouse por encima para verlo de cerca
-                    y haz clic (o tócalo) para despegar.
+                    Elige un planeta (con clic, toque o las flechas del teclado), lee de qué trata
+                    su juego y despega.
                 </p>
 
                 <!-- La escena: los planetas son enlaces normales (funcionan aunque no haya JavaScript).
                      js/main.js (parte 16) les agrega el viaje de la nave. -->
+                <div class="arcade__consola">
                 <div class="arcade__escena">
+
+                    <!-- Barrita de progreso: una raya por planeta (la prende el JS) -->
+                    <ol class="arcade__progreso" aria-hidden="true" hidden>
+                        <li class="arcade__segmento"></li>
+                        <li class="arcade__segmento"></li>
+                        <li class="arcade__segmento"></li>
+                    </ol>
 
                     <ul class="planetas">
 
                         <!-- PLANETA 1: Galaxy Gol (fútbol) -->
                         <li class="planetas__item">
-                            <a href="futbol.html" class="planeta planeta--gol" data-color="#3FAF4A">
+                            <a href="futbol.html" class="planeta planeta--gol" data-color="#3FAF4A"
+                               data-mini="gol"
+                               data-descripcion="Fútbol arcade de alienígenas, 4 contra 4. Pasa, tira y derrapa para meterle 5 goles a Zorp y su equipo. De vez en cuando aparece una cápsula con un poder para lanzarle al rival."
+                               data-genero="Fútbol arcade 2D"
+                               data-jugadores="1 contra Zorp · 2 en el mismo dispositivo · en línea"
+                               data-controles="Teclado (dos bloques de teclas) o joystick y botones en el celular">
                                 <span class="planeta__esfera" aria-hidden="true">
                                     <!-- las líneas de la cancha dibujadas encima del planeta -->
                                     <svg class="planeta__cancha" viewBox="0 0 100 100">
@@ -80,7 +93,12 @@
 
                         <!-- PLANETA 2: COSMOBALL (ping-pong). Es un agujero negro, como el logo del juego -->
                         <li class="planetas__item">
-                            <a href="cosmoball.html" class="planeta planeta--cosmo" data-color="#9B5CFF">
+                            <a href="cosmoball.html" class="planeta planeta--cosmo" data-color="#9B5CFF"
+                               data-mini="cosmo"
+                               data-descripcion="Ping-pong espacial con un agujero negro de fondo. Mueve tu nave arriba y abajo y no dejes pasar la pelota. Juega solo, con un amigo o en línea."
+                               data-genero="Ping-pong arcade 2D"
+                               data-jugadores="1 · 2 jugadores · en línea"
+                               data-controles="Mouse o flechas ↑ ↓ (W / S para el jugador 2) · en celular, el dedo o los botones ▲ ▼ · Espacio pausa">
                                 <span class="planeta__esfera" aria-hidden="true">
                                     <span class="planeta__disco"></span>
                                     <span class="planeta__luna planeta__luna--pelota"></span>
@@ -92,7 +110,12 @@
 
                         <!-- PLANETA 3: en construcción (para un juego futuro) -->
                         <li class="planetas__item">
-                            <button type="button" class="planeta planeta--bloqueado" aria-disabled="true">
+                            <button type="button" class="planeta planeta--bloqueado" aria-disabled="true"
+                                    data-mini="bloqueado"
+                                    data-descripcion="Este planeta todavía está en construcción. Aquí va a llegar un juego nuevo."
+                                    data-genero="Por definir"
+                                    data-jugadores="Por definir"
+                                    data-controles="Por definir">
                                 <span class="planeta__esfera" aria-hidden="true">
                                     <span class="planeta__crater planeta__crater--1"></span>
                                     <span class="planeta__crater planeta__crater--2"></span>
@@ -145,6 +168,34 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- Barra de abajo: flechas para elegir y contador (la muestra el JS) -->
+                    <div class="arcade__barra" hidden>
+                        <div class="arcade__mandos">
+                            <button type="button" class="arcade__flecha" data-paso="-1" aria-label="Planeta anterior">&#9664;</button>
+                            <button type="button" class="arcade__flecha" data-paso="1" aria-label="Planeta siguiente">&#9654;</button>
+                            <span class="arcade__ayuda">elegir · <kbd class="arcade__tecla">Enter</kbd> despegar</span>
+                        </div>
+                        <p class="arcade__contador" aria-hidden="true"><span class="arcade__contador-actual">01</span> / 03</p>
+                    </div>
+
+                </div>
+
+                <!-- Panel con la descripción del planeta elegido (lo llena el JS; sin JavaScript no se muestra) -->
+                <aside class="ficha-juego" aria-label="Descripción del juego elegido" aria-live="polite" hidden>
+                    <div class="ficha-juego__marco">
+                        <span class="ficha-juego__mini" aria-hidden="true"></span>
+                    </div>
+                    <p class="ficha-juego__etiqueta">Planeta <span class="ficha-juego__numero">01</span> / 03</p>
+                    <p class="ficha-juego__titulo">Galaxy Gol</p>
+                    <p class="ficha-juego__texto"></p>
+                    <dl class="ficha-juego__datos">
+                        <dt>Género</dt><dd class="ficha-juego__genero"></dd>
+                        <dt>Jugadores</dt><dd class="ficha-juego__jugadores"></dd>
+                        <dt>Controles</dt><dd class="ficha-juego__controles"></dd>
+                    </dl>
+                    <a href="futbol.html" class="boton boton--primario ficha-juego__despegar">Despegar</a>
+                </aside>
 
                 </div>
             </div>
