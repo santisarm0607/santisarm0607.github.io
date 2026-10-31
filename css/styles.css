@@ -3131,3 +3131,78 @@ html[data-tema="claro"] .habilidad:hover {
     animation: none;
   }
 }
+
+
+/* ---------------------------------------------------------
+   13c. ARCADE EN 3D CON THREE.JS (se activa solo si js/arcade3d.js carga)
+   El canvas ocupa el lugar de los planetas de CSS; las etiquetas con el
+   nombre son texto normal encima del canvas.
+   --------------------------------------------------------- */
+.arcade__lienzo {
+  position: relative;
+  align-self: stretch;
+  flex: 1 1 auto;
+  min-height: 430px;
+  overflow: hidden; /* lo que se sale del canvas se corta en el recuadro */
+  cursor: default;
+}
+
+.arcade__lienzo[hidden] {
+  display: none;
+}
+
+.arcade__canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  touch-action: manipulation;
+}
+
+.arcade__etiquetas {
+  position: absolute;
+  inset: 0;
+  pointer-events: none; /* los clics pasan al canvas */
+}
+
+.arcade__etiqueta {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 3px 12px;
+  border-radius: 999px;
+  background-color: rgba(10, 14, 38, 0.55);
+  color: var(--espacio-texto-suave);
+  font-size: 0.85rem;
+  font-weight: 700;
+  white-space: nowrap;
+  transition: color 0.3s ease, background-color 0.3s ease;
+}
+
+.arcade__etiqueta--activa {
+  background-color: rgba(41, 182, 246, 0.22);
+  color: var(--espacio-acento-texto);
+}
+
+/* con la escena 3D, los planetas y la nave de CSS se esconden */
+.arcade--3d .planetas,
+.arcade--3d .nave {
+  display: none;
+}
+
+/* salto a hiperespacio: al final la pantalla se llena de luz del color del planeta */
+.warp--hiper {
+  background: radial-gradient(circle at 50% 50%, #ffffff 0%, var(--color, #29B6F6) 45%, var(--espacio-fondo) 100%);
+}
+
+@media (max-width: 768px) {
+  .arcade__lienzo {
+    min-height: 330px;
+  }
+
+  .arcade__etiqueta {
+    font-size: 0.72rem;
+    padding: 2px 8px;
+  }
+}

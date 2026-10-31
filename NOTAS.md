@@ -22,6 +22,8 @@ Bootstrap se usa solo en Contacto. **Tema espacial** (fondo azul noche con estre
 | `juegos/cosmoball/` | El juego COSMOBALL completo (`html/`, `css/`, `js/`, su propio `NOTAS.md`). Es una **copia** del repositorio `github.com/santisarm0607/cosmoball`: si cambias el juego, cámbialo en los dos lados |
 | `css/styles.css` | **Único archivo de estilos**, lo usan todas las páginas |
 | `js/main.js` | **El JavaScript de la página**, lo usan todas las páginas |
+| `js/arcade3d.js` | La escena 3D del Arcade (Three.js): nave, planetas y salto a hiperespacio. Solo la usa `juegos.html` |
+| `js/vendor/three.module.min.js` | La librería Three.js (versión 0.160.1). No se edita |
 | `js/tema.js` | Pone el **modo claro u oscuro** guardado, antes de que se dibuje la página (va en el `<head>`) |
 | `img/og-*.jpg` | Imágenes de 1200 × 630 para cuando comparten un enlace (WhatsApp, LinkedIn…): `og-portada.jpg` (inicio, portafolio, contacto y juegos) y `og-proyecto-1…7.jpg` (una por página de proyecto). Se ven en las etiquetas `og:image` del `<head>` |
 | `video/` | `trio-amoroso.mp4`: el video del proyecto 6, comprimido a 720 × 1280 (unos 4 MB). Su póster es `img/trio-amoroso-poster.webp` |
@@ -298,6 +300,9 @@ Accesibilidad:
   - Los planetas van en un recuadro a la izquierda y a la derecha hay un panel con la descripción del juego elegido (género, jugadores, controles y botón «Despegar»).
   - Se elige con clic/toque, con las flechas ← → o con los botones ◀ ▶; **Enter** (o clic en el planeta ya elegido) despega. La nave siempre mira al planeta elegido.
   - Los textos del panel salen de los `data-descripcion`, `data-genero`, `data-jugadores` y `data-controles` de cada planeta en `juegos.html`: para un juego nuevo solo se llenan esos datos.
+  - **Escena 3D de verdad con Three.js:** `js/arcade3d.js` dibuja la nave (hecha con figuras 3D), los 3 planetas (con texturas dibujadas por código) y las estrellas. Al despegar hace un **salto a hiperespacio** (las estrellas se vuelven rayas, la vista se ensancha, la nave acelera hacia el planeta) y al final la pantalla se llena de luz del color del planeta y se abre el juego. Three.js está en `js/vendor/three.module.min.js` (versión 0.160.1, licencia en `three.LICENSE.txt`); no depende de internet.
+  - Si el navegador no tiene WebGL (o algo falla al cargar), `main.js` se queda con el carrusel de CSS de abajo. Con «reducir movimiento» no hay salto: abre el juego directo.
+  - Para ajustar: posiciones de los planetas (`POSICIONES`), duración del salto (`DURACION`) y colores/tamaños de la nave (`crearNave`) están al inicio de `arcade3d.js`; los estilos del recuadro, en CSS parte 13c.
   - **Vista 3D (CSS parte 13b):** los planetas son un carrusel con `perspective`: el elegido al frente (`planetas__item--centro`) y los otros atrás a los lados (`--izq`, `--der`), sobre un piso de cuadrícula y un pedestal brillante (los `::before` y `::after` de `.planetas`). El JS solo cambia esas clases. Los números `translateX/translateZ/rotateY` de cada posición están en esa parte.
   - JS parte 16 reescrita (`elegir()`, `despegarAlElegido()`); CSS parte 13 (`.arcade__consola`, `.ficha-juego`). Sin JavaScript el panel no sale y los planetas siguen siendo enlaces.
 - **2026-10-31** — **Franja del Arcade más dinámica.**

@@ -764,6 +764,7 @@ function iniciarArcade() {
   const despegar = panel.querySelector('.ficha-juego__despegar');
   let viajando = false;
   let activo = 0; // el planeta elegido (0 = el primero)
+  let escena3d = null; // la escena 3D (si el navegador la permite; ver js/arcade3d.js)
 
   // con JavaScript se muestran el panel, la barra de progreso y la barra de abajo
   document.querySelector('.arcade').classList.add('arcade--js');
@@ -843,6 +844,7 @@ function iniciarArcade() {
 
     mirarAlElegido();
     setTimeout(mirarAlElegido, 700); // y otra vez cuando el carrusel termina de girar
+    if (escena3d) escena3d.elegir(activo); // en 3D, la nave gira hacia el planeta
   }
 
   function esperar(ms) {
@@ -879,6 +881,20 @@ function iniciarArcade() {
     }
 
     escena.classList.add('arcade__escena--viajando');
+
+    // con la escena 3D: despegue y salto a hiperespacio, y luego se abre el juego
+    if (escena3d) {
+      await escena3d.hiperespacio(planetas.indexOf(planeta));
+      const velo = document.createElement('div');
+      velo.className = 'warp warp--hiper';
+      velo.setAttribute('aria-hidden', 'true');
+      velo.style.setProperty('--color', planeta.dataset.color || '#29B6F6');
+      document.body.appendChild(velo);
+      await velo.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 350, easing: 'ease-in', fill: 'forwards' }).finished;
+      location.href = destino;
+      return;
+    }
+
     planeta.classList.add('planeta--destino');
 
     // 1) la nave gira hacia el planeta
@@ -973,6 +989,35 @@ function iniciarArcade() {
   window.addEventListener('load', mirarAlElegido); // cuando ya cargó todo, la nave apunta bien
 
   elegir(0);
+
+  // escena 3D con Three.js: se carga aparte; si falla (sin WebGL, sin internet...) se queda el carrusel de CSS
+  const lienzo = escena.querySelector('.arcade__lienzo');
+  if (lienzo && 'WebGLRenderingContext' in window) {
+    import('./arcade3d.js').then(function (modulo) {
+      lienzo.hidden = false;
+      document.querySelector('.arcade').classList.add('arcade--3d');
+      try {
+        escena3d = modulo.crearEscena({
+          contenedor: lienzo,
+          reducido: movimientoReducido,
+          planetas: planetas.map(function (p) {
+            return { id: p.dataset.mini, nombre: p.querySelector('.planeta__nombre').textContent, color: p.dataset.color || '#9DB8FF' };
+          }),
+          alClic: function (i) {
+            if (viajando) return;
+            if (i !== activo) elegir(i);   // primer clic: lo elige
+            else despegarAlElegido();      // clic en el elegido: despega
+          }
+        });
+        escena3d.elegir(activo, true);
+      } catch (error) {
+        escena3d = null;
+        lienzo.hidden = true;
+        lienzo.textContent = '';
+        document.querySelector('.arcade').classList.remove('arcade--3d');
+      }
+    }).catch(function () { /* sin escena 3D: sigue el carrusel de CSS */ });
+  }
 
   // si vuelven con el botón "atrás", el navegador puede mostrar la página congelada
   // a mitad del viaje: en ese caso la recargo para que todo empiece de nuevo
