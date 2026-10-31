@@ -2230,7 +2230,7 @@ html[data-tema="claro"] .habilidad:hover {
 }
 
 .destacados .proyectos__lista {
-  display: grid; /* 4 tarjetas en una fila; en pantallas más chicas bajan solas */
+  display: grid; /* 3 tarjetas en una fila; en pantallas más chicas bajan solas */
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 28px;
 }

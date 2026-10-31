@@ -44,7 +44,7 @@ Cómo se conectan:
 **index.html**
 - Header + menú → líneas 32–46 *(igual en todas las páginas; solo cambia cuál está activo)*
 - `.hero` (avatar, nombre, bio, botones) → 49–70
-- `.destacados` (4 tarjetas: Marvel, Manual de marca, Love Market y Flama + botón «Ver los 7 proyectos») → 72–132
+- `.destacados` (3 tarjetas: Marvel, Manual de marca y Love Market + botón «Ver los 7 proyectos») → 72–132
 - `.arcade-franja` (acceso a Juegos) → 134–142
 - `.habilidades` (píldoras) → 144–158
 - `.contacto-rapido` (franja azul con correo) → 160–168
@@ -296,7 +296,7 @@ Accesibilidad:
 
 - **2026-10-30** — **Proyectos destacados y una página por proyecto.**
   - Nuevos: `proyecto-*.html` (7), `video/trio-amoroso.mp4`, `img/trio-amoroso-poster.webp` e `img/revista-excelencia-*.webp` (3).
-  - `index.html`: secciones `.destacados` (Marvel, Manual de marca, Love Market y Flama) y `.arcade-franja`, entre el hero y Habilidades.
+  - `index.html`: secciones `.destacados` (Marvel, Manual de marca y Love Market) y `.arcade-franja`, entre el hero y Habilidades.
   - `blog.html` (hoy `portafolio.html`): cada tarjeta termina con «Ver proyecto →». Flama ya no dice «En conjunto con Santiago Colmenares» (lo hizo solo). El manual de marca ahora muestra su **portada** (`proyecto3-santisarm-marca.webp`, y su `alt` cambió).
   - `styles.css`: parte 12 nueva (no se cambió nada de las partes 1–11).
   - `main.js`: parte 20 nueva, `iniciarFicha()` en «Encender todo»; el visor ahora solo se activa en el portafolio (si no, en el inicio se abría el visor en vez de ir al proyecto); más elementos en `ELEMENTOS_QUE_APARECEN`.
