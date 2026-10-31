@@ -806,6 +806,12 @@ function iniciarArcade() {
 
     planetas.forEach(function (p, n) {
       p.classList.toggle('planeta--activo', n === activo);
+      // el carrusel 3D: el elegido al centro, el siguiente a la derecha y el otro a la izquierda
+      const item = p.closest('.planetas__item');
+      const lugar = (n - activo + planetas.length) % planetas.length;
+      item.classList.toggle('planetas__item--centro', lugar === 0);
+      item.classList.toggle('planetas__item--der', lugar === 1);
+      item.classList.toggle('planetas__item--izq', lugar > 1);
     });
     segmentos.forEach(function (s, n) {
       s.classList.toggle('arcade__segmento--activo', n === activo);
@@ -836,6 +842,7 @@ function iniciarArcade() {
     panel.classList.add('ficha-juego--cambia');
 
     mirarAlElegido();
+    setTimeout(mirarAlElegido, 700); // y otra vez cuando el carrusel termina de girar
   }
 
   function esperar(ms) {

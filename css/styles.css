@@ -2700,7 +2700,7 @@ html[data-tema="claro"] .habilidad:hover {
    --------------------------------------------------------- */
 .arcade__consola {
   display: grid;
-  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr);
   gap: 24px;
   align-items: stretch;
   margin-top: 30px;
@@ -2712,6 +2712,10 @@ html[data-tema="claro"] .habilidad:hover {
   background-color: var(--espacio-panel);
   border: 1px solid var(--espacio-borde);
   border-radius: var(--radio-borde);
+}
+
+.arcade--js .arcade__consola {
+  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
 }
 
 /* barrita de progreso de arriba: una raya por planeta */
@@ -2741,21 +2745,6 @@ html[data-tema="claro"] .habilidad:hover {
 .arcade__segmento--activo {
   background-color: var(--espacio-acento-texto);
 }
-
-/* planetas más chicos para que quepan junto al panel */
-.arcade__consola .planetas {
-  max-width: none;
-  margin-top: auto; /* planetas y nave quedan centrados entre la barrita de arriba y la barra de abajo */
-  padding: 26px 20px 0;
-  gap: 12px;
-}
-
-.arcade__consola .planetas__item:nth-child(1) { margin-top: 22px; }
-.arcade__consola .planetas__item:nth-child(3) { margin-top: 46px; }
-
-.arcade__consola .planeta--gol { --tam: 128px; }
-.arcade__consola .planeta--cosmo { --tam: 118px; }
-.arcade__consola .planeta--bloqueado { --tam: 96px; }
 
 /* el planeta elegido se ve grande y brillante; los demás, más apagados */
 .planeta--activo .planeta__esfera {
@@ -2970,36 +2959,12 @@ html[data-tema="claro"] .habilidad:hover {
 
 /* --- Pantallas medianas y celular: el panel baja debajo de la escena --- */
 @media (max-width: 900px) {
-  .arcade__consola {
+  .arcade--js .arcade__consola {
     grid-template-columns: minmax(0, 1fr);
   }
 }
 
 @media (max-width: 768px) {
-  .arcade__consola .planetas {
-    grid-template-columns: repeat(3, minmax(0, 1fr)); /* los 3 en una fila */
-    padding: 16px 8px 0;
-    gap: 4px;
-  }
-
-  .arcade__consola .planetas__item:nth-child(1),
-  .arcade__consola .planetas__item:nth-child(3) {
-    margin-top: 0;
-    grid-column: auto;
-  }
-
-  .arcade__consola .planeta {
-    padding: 4px;
-  }
-
-  .arcade__consola .planeta--gol { --tam: 84px; }
-  .arcade__consola .planeta--cosmo { --tam: 78px; }
-  .arcade__consola .planeta--bloqueado { --tam: 64px; }
-
-  .arcade__consola .planeta__nombre {
-    font-size: 0.8rem;
-  }
-
   .arcade__consola .nave {
     order: -1;
     width: 48px;
@@ -3022,6 +2987,147 @@ html[data-tema="claro"] .habilidad:hover {
 
 @media (prefers-reduced-motion: reduce) {
   .ficha-juego--cambia > * {
+    animation: none;
+  }
+}
+
+
+/* ---------------------------------------------------------
+   13b. ARCADE EN 3D (solo con JavaScript)
+   Los planetas giran como un carrusel sobre una plataforma: el elegido
+   queda al frente y grande, y los otros atrás a los lados. El JS solo
+   cambia la clase de cada planeta (--centro, --izq, --der); aquí está
+   todo el movimiento.
+   --------------------------------------------------------- */
+.arcade--js .planetas {
+  position: relative;
+  display: block;
+  width: 100%;
+  max-width: none;
+  height: 340px;
+  margin-top: auto; /* planetas y nave quedan centrados entre la barrita de arriba y la barra de abajo */
+  padding: 0;
+  perspective: 900px;          /* la "distancia" desde la que se ve la escena */
+  perspective-origin: 50% 35%;
+}
+
+/* el piso: una cuadrícula acostada que se pierde hacia el fondo */
+.arcade--js .planetas::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -20px;
+  height: 230px;
+  background:
+    repeating-linear-gradient(90deg, rgba(41, 182, 246, 0.28) 0 1px, transparent 1px 44px),
+    repeating-linear-gradient(0deg, rgba(41, 182, 246, 0.28) 0 1px, transparent 1px 44px);
+  transform: rotateX(68deg);
+  transform-origin: 50% 100%;
+  -webkit-mask-image: radial-gradient(ellipse at 50% 100%, #000 25%, transparent 68%);
+  mask-image: radial-gradient(ellipse at 50% 100%, #000 25%, transparent 68%);
+  pointer-events: none;
+}
+
+/* el pedestal brillante bajo el planeta elegido */
+.arcade--js .planetas::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 14px;
+  width: 300px;
+  height: 76px;
+  margin-left: -150px;
+  border-radius: 50%;
+  border: 2px solid var(--espacio-acento-texto);
+  background: radial-gradient(ellipse at 50% 50%, rgba(41, 182, 246, 0.32), transparent 70%);
+  box-shadow: 0 0 34px rgba(41, 182, 246, 0.35), inset 0 0 22px rgba(41, 182, 246, 0.25);
+  pointer-events: none;
+}
+
+.arcade--js .planetas__item {
+  position: absolute;
+  top: 28px;
+  left: 50%;
+  width: 210px;
+  margin: 0 0 0 -105px;
+  animation: none;             /* el flotar ahora lo hace el planeta, no la columna */
+  transition: transform 0.65s cubic-bezier(0.3, 1.2, 0.5, 1), opacity 0.5s ease;
+}
+
+.arcade--js .planetas__item--centro {
+  z-index: 3;
+  transform: translateX(0) translateZ(50px);
+}
+
+.arcade--js .planetas__item--izq {
+  z-index: 2;
+  transform: translateX(-215px) translateZ(-150px) rotateY(34deg);
+}
+
+.arcade--js .planetas__item--der {
+  z-index: 2;
+  transform: translateX(215px) translateZ(-150px) rotateY(-34deg);
+}
+
+.arcade--js .planetas__item .planeta {
+  animation: planeta-flotar 6s ease-in-out infinite; /* flotan suavecito */
+}
+
+.arcade--js .planetas__item:nth-child(2) .planeta { animation-delay: -2s; }
+.arcade--js .planetas__item:nth-child(3) .planeta { animation-delay: -4s; }
+
+.arcade--js .planeta--gol { --tam: 132px; }
+.arcade--js .planeta--cosmo { --tam: 122px; }
+.arcade--js .planeta--bloqueado { --tam: 104px; }
+
+/* la nave va al frente, abajo del pedestal */
+.arcade--js .nave {
+  z-index: 4;
+  width: 58px;
+  margin: 2px 0 auto;
+  padding-bottom: 14px;
+}
+
+@media (max-width: 768px) {
+  .arcade--js .planetas {
+    height: 250px;
+    perspective: 700px;
+  }
+
+  .arcade--js .planetas::after {
+    width: 200px;
+    height: 54px;
+    margin-left: -100px;
+  }
+
+  .arcade--js .planetas__item {
+    top: 18px;
+    width: 130px;
+    margin-left: -65px;
+  }
+
+  .arcade--js .planetas__item--izq { transform: translateX(-124px) translateZ(-120px) rotateY(34deg); }
+  .arcade--js .planetas__item--der { transform: translateX(124px) translateZ(-120px) rotateY(-34deg); }
+
+  .arcade--js .planeta--gol { --tam: 84px; }
+  .arcade--js .planeta--cosmo { --tam: 78px; }
+  .arcade--js .planeta--bloqueado { --tam: 66px; }
+
+  .arcade--js .nave {
+    order: 0;       /* en la consola 3D la nave va al frente, abajo */
+    width: 46px;
+    margin: 0 0 auto;
+    padding-bottom: 10px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .arcade--js .planetas__item {
+    transition: none;
+  }
+
+  .arcade--js .planetas__item .planeta {
     animation: none;
   }
 }

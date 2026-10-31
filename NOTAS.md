@@ -298,6 +298,7 @@ Accesibilidad:
   - Los planetas van en un recuadro a la izquierda y a la derecha hay un panel con la descripción del juego elegido (género, jugadores, controles y botón «Despegar»).
   - Se elige con clic/toque, con las flechas ← → o con los botones ◀ ▶; **Enter** (o clic en el planeta ya elegido) despega. La nave siempre mira al planeta elegido.
   - Los textos del panel salen de los `data-descripcion`, `data-genero`, `data-jugadores` y `data-controles` de cada planeta en `juegos.html`: para un juego nuevo solo se llenan esos datos.
+  - **Vista 3D (CSS parte 13b):** los planetas son un carrusel con `perspective`: el elegido al frente (`planetas__item--centro`) y los otros atrás a los lados (`--izq`, `--der`), sobre un piso de cuadrícula y un pedestal brillante (los `::before` y `::after` de `.planetas`). El JS solo cambia esas clases. Los números `translateX/translateZ/rotateY` de cada posición están en esa parte.
   - JS parte 16 reescrita (`elegir()`, `despegarAlElegido()`); CSS parte 13 (`.arcade__consola`, `.ficha-juego`). Sin JavaScript el panel no sale y los planetas siguen siendo enlaces.
 - **2026-10-31** — **Franja del Arcade más dinámica.**
   - La franja del Arcade ahora tiene dos planetas que flotan, brillo y sube al pasar el mouse (se apaga con «reducir movimiento»).
