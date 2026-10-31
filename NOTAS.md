@@ -296,6 +296,7 @@ Accesibilidad:
 
 - **2026-10-31** — **Franja del Arcade más dinámica.**
   - La franja del Arcade ahora tiene dos planetas que flotan, brillo y sube al pasar el mouse (se apaga con «reducir movimiento»).
+  - Espaciado parejo en el inicio: la variable `--separacion-seccion` (40px, al inicio de `styles.css`) es el espacio de arriba y de abajo de cada sección, así que entre dos secciones hay 80px. Si quieres más o menos aire, cambia solo ese número.
   - Destacados quedó en 3 tarjetas (Marvel, Manual de marca y Love Market).
 - **2026-10-30** — **Proyectos destacados y una página por proyecto.**
   - Nuevos: `proyecto-*.html` (7), `video/trio-amoroso.mp4`, `img/trio-amoroso-poster.webp` e `img/revista-excelencia-*.webp` (3).

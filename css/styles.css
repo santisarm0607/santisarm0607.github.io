@@ -9,6 +9,7 @@
    todo el archivo, si quiero cambiar algo lo hago solo aquí
    --------------------------------------------------------- */
 :root {
+  --separacion-seccion: 40px; /* el espacio de arriba y de abajo de cada sección del inicio; así todo queda parejo (entre dos secciones se suman: 80px) */
   --color-azul: #3153A1;        /* el azul de mi logo, lo uso en casi todo */
   --color-azul-claro: #F1F9FE;  /* fondo suave para las secciones */
   --color-blanco: #FFFFFF;
@@ -204,7 +205,7 @@ ul {
 /* --- Sección de bienvenida con mi foto y bio --- */
 .hero {
   background-color: var(--color-azul-claro);
-  padding: 70px 0;
+  padding: 70px 0 var(--separacion-seccion);
 }
 
 .hero__contenedor {
@@ -290,7 +291,7 @@ ul {
 
 /* --- Mis habilidades en forma de etiquetas --- */
 .habilidades {
-  padding: 60px 0;
+  padding: var(--separacion-seccion) 0;
 }
 
 .habilidades__titulo {
@@ -327,7 +328,7 @@ ul {
 .contacto-rapido {
   background-color: var(--color-azul);
   color: var(--color-blanco);
-  padding: 50px 0;
+  padding: 56px 0;
   text-align: center;
 }
 
@@ -2226,7 +2227,7 @@ html[data-tema="claro"] .habilidad:hover {
 
 /* --- Proyectos destacados (index.html) --- */
 .destacados {
-  padding: 64px 0 24px;
+  padding: var(--separacion-seccion) 0;
 }
 
 .destacados .proyectos__lista {
@@ -2246,7 +2247,7 @@ html[data-tema="claro"] .habilidad:hover {
 
 /* --- Franja del Arcade (index.html) --- */
 .arcade-franja {
-  padding: 36px 0 0; /* abajo 0: el espacio hasta Habilidades lo da el padding de Habilidades */
+  padding: var(--separacion-seccion) 0;
 }
 
 .arcade-franja__caja {
