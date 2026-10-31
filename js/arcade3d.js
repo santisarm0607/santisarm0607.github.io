@@ -437,7 +437,9 @@ export function crearEscena(opciones) {
     renderizador.setSize(ancho, alto, false);
     camara.aspect = ancho / alto;
     // en pantallas angostas (celular) abro un poco más la vista para que quepan los 3 planetas
-    camara.fov = camara.aspect < 1.25 ? 48 : FOV_NORMAL; // en celular un poco más cerrada: los planetas se ven más grandes
+    // el ancho que se ve se mantiene igual aunque el recuadro sea más alto o más angosto (si no, los planetas se cortarían)
+    const mitadAncho = 0.63;
+    camara.fov = limitar(2 * Math.atan(mitadAncho / camara.aspect) * 180 / Math.PI, 40, 78);
     camara.updateProjectionMatrix();
   }
   ajustarTamano();

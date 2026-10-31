@@ -827,6 +827,17 @@ function iniciarArcade() {
     panel.querySelector('.ficha-juego__controles').textContent = planeta.dataset.controles;
     panel.querySelector('.ficha-juego__mini').className = 'ficha-juego__mini ficha-juego__mini--' + planeta.dataset.mini;
 
+    // código QR del juego (para abrirlo desde el celular); el planeta en construcción no tiene
+    const cajaQr = panel.querySelector('.ficha-juego__qr');
+    if (planeta.dataset.qr) {
+      const imagenQr = cajaQr.querySelector('.ficha-juego__qr-img');
+      imagenQr.src = planeta.dataset.qr;
+      imagenQr.alt = 'Código QR para abrir ' + planeta.querySelector('.planeta__nombre').textContent + ' en el celular';
+      cajaQr.hidden = false;
+    } else {
+      cajaQr.hidden = true;
+    }
+
     if (bloqueado) {
       despegar.removeAttribute('href');
       despegar.setAttribute('aria-disabled', 'true');

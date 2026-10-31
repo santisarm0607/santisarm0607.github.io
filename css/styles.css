@@ -3206,3 +3206,36 @@ html[data-tema="claro"] .habilidad:hover {
     padding: 2px 8px;
   }
 }
+
+
+/* --- Código QR en el panel del Arcade: se escanea con el celular para abrir el juego --- */
+.ficha-juego__qr {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 6px 0 4px;
+}
+
+.ficha-juego__qr[hidden] {
+  display: none;
+}
+
+.ficha-juego__qr-img {
+  flex: 0 0 auto;
+  width: 104px;
+  height: 104px;
+  border-radius: 12px;
+  border: 2px solid var(--espacio-acento-texto);
+  box-shadow: 0 0 22px rgba(41, 182, 246, 0.25);
+}
+
+.ficha-juego__qr-texto {
+  font-size: 0.85rem;
+  color: var(--espacio-texto-suave);
+}
+
+@media (max-width: 768px) {
+  .ficha-juego__qr {
+    display: none; /* en el celular ya estás jugando desde el celular */
+  }
+}
