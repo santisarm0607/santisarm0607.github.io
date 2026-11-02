@@ -451,6 +451,65 @@
     actualizar();
   }
 
+  /* 10b. SOBRE MÍ: LINTERNA ESPACIAL
+     El texto está casi apagado y una luz lo va revelando. Con mouse, la luz
+     sigue al cursor; en el celular (o si no tocas nada) recorre el texto sola.
+     Si la persona pidió menos movimiento, el texto se ve completo y quieto. */
+  function iniciarLinterna() {
+    const seccion = document.querySelector('.sobre');
+    const texto = seccion && seccion.querySelector('.sobre__texto');
+    if (!texto || reducido) return;
+
+    const luz = seccion.querySelector('.sobre__luz');
+    seccion.classList.add('sobre--linterna');
+    let x = 0, y = 0;          // posición de la luz dentro del texto (px)
+    let manual = false;        // true mientras el dedo o el mouse la mueven
+    let visible = false;
+    let enMarcha = false;
+
+    function poner(px, py) {
+      texto.style.setProperty('--lx', px.toFixed(0) + 'px');
+      texto.style.setProperty('--ly', py.toFixed(0) + 'px');
+      if (luz) { luz.style.setProperty('--lx', px.toFixed(0) + 'px'); luz.style.setProperty('--ly', py.toFixed(0) + 'px'); }
+    }
+
+    function cuadro(t) {
+      if (!visible) { enMarcha = false; return; }
+      if (!manual) {
+        // recorrido automático: va de lado a lado y de arriba abajo
+        const caja = texto.getBoundingClientRect();
+        const u = t / 1000;
+        x = caja.width * (0.5 + 0.5 * Math.sin(u * 0.55));
+        y = caja.height * (0.5 + 0.5 * Math.sin(u * 0.31 + 1.2));
+        poner(x, y);
+      }
+      requestAnimationFrame(cuadro);
+    }
+    function arrancar() {
+      if (enMarcha) return;
+      enMarcha = true;
+      requestAnimationFrame(cuadro);
+    }
+
+    new IntersectionObserver(function (entradas) {
+      visible = entradas[0].isIntersecting;
+      if (visible) arrancar();
+    }, { threshold: 0.05 }).observe(seccion);
+
+    let volver = 0;
+    seccion.addEventListener('pointermove', function (e) {
+      const caja = texto.getBoundingClientRect();
+      manual = true;
+      poner(e.clientX - caja.left, e.clientY - caja.top);
+      clearTimeout(volver);
+      volver = setTimeout(function () { manual = false; }, e.pointerType === 'mouse' ? 1800 : 900);
+    });
+    seccion.addEventListener('pointerleave', function () {
+      clearTimeout(volver);
+      volver = setTimeout(function () { manual = false; }, 400);
+    });
+  }
+
   /* 11. PROFUNDIDAD: el hero se mueve con el mouse (solo con mouse) */
   function iniciarProfundidad() {
     const hero = document.querySelector('.hero');
@@ -532,6 +591,92 @@
     }, { threshold: 0.3 }).observe(sec);
   }
 
+  /* 12d. PORTADA DEL PORTAFOLIO: letras que suben y reaccionan al mouse, luz que sigue al cursor, iconos que flotan con profundidad
+     y una frase que va nombrando cada área (y enciende su filtro). */
+  function iniciarPortada() {
+    const portada = document.querySelector('.portada');
+    if (!portada) return;
+    const titulo = portada.querySelector('.portada__titulo');
+    // el título se parte en letras (el texto completo queda en aria-label)
+    const letras = [];
+    if (titulo) {
+      titulo.setAttribute('aria-label', titulo.textContent.trim());
+      titulo.querySelectorAll('.portada__palabra').forEach(function (pal) {
+        const t = pal.textContent;
+        pal.textContent = '';
+        pal.setAttribute('aria-hidden', 'true');
+        Array.from(t).forEach(function (c) {
+          const l = document.createElement('span');
+          l.className = 'portada__letra';
+          l.textContent = c;
+          l.style.setProperty('--i', letras.length);
+          pal.appendChild(l);
+          letras.push(l);
+        });
+      });
+    }
+    if (reducido) return;
+    let visible = true, punto = null, esperando = false;
+
+    // luz + profundidad + letras cerca del mouse
+    function repartir() {
+      esperando = false;
+      letras.forEach(function (l) {
+        if (!punto) { l.style.setProperty('--c', 0); return; }
+        const r = l.getBoundingClientRect();
+        const d = Math.hypot(punto.x - (r.left + r.width / 2), punto.y - (r.top + r.height / 2));
+        l.style.setProperty('--c', Math.pow(Math.max(0, 1 - d / 150), 1.4).toFixed(3));
+      });
+    }
+    if (hayMouse) {
+      portada.addEventListener('pointermove', function (e) {
+        const r = portada.getBoundingClientRect();
+        portada.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+        portada.style.setProperty('--my', (e.clientY - r.top) + 'px');
+        portada.style.setProperty('--px', (((e.clientX - r.left) / r.width) * 2 - 1).toFixed(3));
+        portada.style.setProperty('--py', (((e.clientY - r.top) / r.height) * 2 - 1).toFixed(3));
+        portada.classList.add('portada--luz');
+        punto = { x: e.clientX, y: e.clientY };
+        if (!esperando) { esperando = true; requestAnimationFrame(repartir); }
+      });
+      portada.addEventListener('pointerleave', function () {
+        portada.classList.remove('portada--luz');
+        portada.style.setProperty('--px', 0); portada.style.setProperty('--py', 0);
+        punto = null; if (!esperando) { esperando = true; requestAnimationFrame(repartir); }
+      });
+    }
+
+    // frase "Aquí vas a ver …": cambia de área y enciende el filtro que corresponde
+    const area = portada.querySelector('.portada__area');
+    const lista = area ? (area.dataset.areas || '').split('|').filter(Boolean) : [];
+    const filtros = ['branding', 'diseno', 'publicidad', 'editorial', 'web'];
+    if (area && lista.length && area.animate) {
+      let i = 0;
+      area.textContent = lista[0];
+      function eco(k) {
+        const b = document.querySelector('.filtro[data-filtro="' + filtros[k] + '"]');
+        if (!b) return;
+        b.classList.add('filtro--eco');
+        setTimeout(function () { b.classList.remove('filtro--eco'); }, 1500);
+      }
+      eco(0);
+      setInterval(function () {
+        if (!visible || document.hidden) return;
+        const sale = area.animate([{ opacity: 1, transform: 'translateY(0)' }, { opacity: 0, transform: 'translateY(-12px)' }], { duration: 240, easing: 'ease-in', fill: 'forwards' });
+        sale.onfinish = function () {
+          i = (i + 1) % lista.length;
+          area.textContent = lista[i];
+          sale.cancel();
+          area.animate([{ opacity: 0, transform: 'translateY(12px)' }, { opacity: 1, transform: 'translateY(0)' }], { duration: 300, easing: 'ease-out' });
+          eco(i);
+        };
+      }, 2200);
+    }
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (items) { items.forEach(function (it) { visible = it.isIntersecting; }); }, { threshold: 0.2 }).observe(portada);
+    }
+  }
+
   /* 13. COMETAS: cada 9-16 segundos cruza uno (solo si estás arriba en la página) */
   function iniciarCometas() {
     if (reducido || !document.querySelector('.hero') || document.body.classList.contains('pagina-marca')) return; // en el look de marca no hay cometas
@@ -569,9 +714,11 @@
   iniciarSubtitulo();
   iniciarEscenas();
   iniciarProfundidad();
+  iniciarLinterna();
   iniciarTarjetas();
   iniciarFranjaArcade();
   iniciarContactoRapido();
+  iniciarPortada();
   iniciarCometas();
   iniciarPestana();
 })();

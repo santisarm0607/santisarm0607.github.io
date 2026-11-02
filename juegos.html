@@ -50,13 +50,39 @@
     </header>
 
     <main>
-        <section class="arcade" aria-labelledby="titulo-arcade">
+        <section class="contacto-hero portada" aria-labelledby="titulo-arcade">
+            <span class="contacto-rapido__orbe contacto-rapido__orbe--a" aria-hidden="true"></span>
+            <span class="contacto-rapido__orbe contacto-rapido__orbe--b" aria-hidden="true"></span>
+            <span class="contacto-rapido__estrellas" aria-hidden="true"></span>
+            <div class="portada__iconos" aria-hidden="true">
+                <svg class="portada__icono portada__icono--1" style="--prof:1.6" viewBox="0 0 24 24"><path d="M6 9h12a4 4 0 014 4v1a3 3 0 01-5.2 2L15 14H9l-1.8 2A3 3 0 012 14v-1a4 4 0 014-4z"/><path d="M7.5 11.500v3M6 13h3M16 12.500v.01M18 14v.01"/></svg>
+                <svg class="portada__icono portada__icono--2" style="--prof:0.9" viewBox="0 0 24 24"><path d="M12 2c3 2.500 4.500 6 4 10l-4 3-4-3c-.5-4 1-7.500 4-10z"/><circle cx="12" cy="9" r="1.600"/><path d="M8 13l-3 3 3 .5M16 13l3 3-3 .5M12 17v4"/></svg>
+                <svg class="portada__icono portada__icono--3" style="--prof:1.3" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><ellipse cx="12" cy="12" rx="10" ry="3.500" transform="rotate(-20 12 12)"/></svg>
+                <svg class="portada__icono portada__icono--4" style="--prof:0.7" viewBox="0 0 24 24"><circle cx="12" cy="6" r="3"/><path d="M12 9v6M6 20h12M8 15h8l1.500 5h-11z"/></svg>
+                <svg class="portada__icono portada__icono--5" style="--prof:1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8l3.500 2.500-1.300 4H9.800l-1.300-4zM12 3v5M20 9.500l-4.500 1M4 9.500l4.500 1M9.800 14.500L7 19M14.200 14.500L17 19"/></svg>
+                <svg class="portada__icono portada__icono--6" style="--prof:1.1" viewBox="0 0 24 24"><path d="M12 2l2.400 7.600L22 12l-7.600 2.400L12 22l-2.400-7.600L2 12l7.600-2.400z"/></svg>
+            </div>
+            <div class="contenedor portada__rejilla">
+                <div class="portada__texto">
+                    <span class="portada__etiqueta portada__etiqueta--viva"><span class="punto-vivo" aria-hidden="true"></span>Arcade · PC y celular</span>
+                    <p id="titulo-arcade" class="contacto-hero__titulo portada__titulo"><span class="portada__palabra">Arcade</span> <span class="portada__palabra">Santisarm</span></p>
+                    <p class="portada__rota" aria-hidden="true">Aquí vas a jugar <span class="portada__area" data-areas="fútbol alienígena|ping-pong espacial|con un amigo|en línea|desde tu celular">fútbol alienígena</span></p>
+                    <p class="contacto-hero__texto portada__lead">
+                        Juegos hechos por mí, listos para jugar sin instalar nada. Elige un planeta,
+                        mira cómo se juega y despega.
+                    </p>
+                    <ul class="portada__cifras">
+                        <li><span class="portada__num" data-contar="2">2</span><span>juegos listos</span></li>
+                        <li><span class="portada__num" data-contar="3">3</span><span>por llegar</span></li>
+                        <li><span class="portada__num">1 · 2 · <span aria-hidden="true">🌐</span></span><span>solo, con un amigo o en línea</span></li>
+                    </ul>
+                    <a href="#escena" class="portada__bajar">Elegir un planeta <span aria-hidden="true">↓</span></a>
+                </div>
+            </div>
+        </section>
+
+        <section class="arcade" id="escena" aria-label="Elige un planeta">
             <div class="contenedor">
-                <p id="titulo-arcade" class="arcade__titulo">Arcade Santisarm</p>
-                <p class="arcade__texto">
-                    Elige un planeta (con clic, toque o las flechas del teclado), lee de qué trata
-                    su juego y despega.
-                </p>
 
                 <!-- La escena: los planetas son enlaces normales (funcionan aunque no haya JavaScript).
                      js/main.js (parte 16) les agrega el viaje de la nave. -->
@@ -65,6 +91,8 @@
 
                     <!-- Barrita de progreso: una raya por planeta (la prende el JS) -->
                     <ol class="arcade__progreso" aria-hidden="true" hidden>
+                        <li class="arcade__segmento"></li>
+                        <li class="arcade__segmento"></li>
                         <li class="arcade__segmento"></li>
                         <li class="arcade__segmento"></li>
                         <li class="arcade__segmento"></li>
@@ -78,7 +106,7 @@
                         <!-- PLANETA 1: Galaxy Gol (fútbol) -->
                         <li class="planetas__item">
                             <a href="futbol.html" class="planeta planeta--gol" data-color="#3FAF4A"
-                               data-mini="gol"
+                               data-mini="gol" data-corta="Fútbol arcade 4 contra 4, ¡a meterle goles a Zorp!"
                                data-hecho="Yo puse la idea, el diseño y las pruebas. Claude (la IA de Anthropic) me ayudó a escribir el código, el modo en línea y las guías de sonidos y animaciones, mejorándolo versión por versión."
                                data-qr="img/qr-galaxy-gol.svg"
                                data-descripcion="Fútbol arcade de alienígenas, 4 contra 4. Pasa hacia donde apuntas, tira, derrapa y cambia de jugador para meterle 5 goles a Zorp y su equipo. De vez en cuando aparece una cápsula con un poder para lanzarle al rival."
@@ -103,7 +131,7 @@
                         <!-- PLANETA 2: COSMOBALL (ping-pong). Es un agujero negro, como el logo del juego -->
                         <li class="planetas__item">
                             <a href="cosmoball.html" class="planeta planeta--cosmo" data-color="#9B5CFF"
-                               data-mini="cosmo"
+                               data-mini="cosmo" data-corta="Ping-pong espacial con un agujero negro."
                                data-hecho="Yo puse la idea, el diseño y las pruebas. Claude (la IA de Anthropic) me ayudó a escribir el código y a pulirlo versión por versión."
                                data-qr="img/qr-cosmoball.svg"
                                data-descripcion="Ping-pong espacial con un agujero negro de fondo. Mueve tu nave arriba y abajo y no dejes pasar la pelota. Juega solo, con un amigo o en línea."
@@ -119,22 +147,60 @@
                             </a>
                         </li>
 
-                        <!-- PLANETA 3: en construcción (para un juego futuro) -->
+                        <!-- PLANETA 3: Galaxy Invasion (próximamente) -->
                         <li class="planetas__item">
-                            <button type="button" class="planeta planeta--bloqueado" aria-disabled="true"
-                                    data-mini="bloqueado"
-                                    data-descripcion="Este planeta todavía está en construcción. Aquí va a llegar un juego nuevo."
-                                    data-genero="Por definir"
+                            <button type="button" class="planeta planeta--bloqueado planeta--invasion" aria-disabled="true"
+                                    data-mini="invasion" data-color="#FF6B4A" data-proximo="true"
+                                    data-corta="Defiende la galaxia de oleadas de invasores."
+                                    data-descripcion="Una invasión alienígena cae sobre la galaxia. Dispara, esquiva y sobrevive a oleadas cada vez más grandes. Estoy diseñándolo."
+                                    data-genero="Shooter espacial 2D"
                                     data-jugadores="Por definir"
                                     data-controles="Por definir">
                                 <span class="planeta__esfera" aria-hidden="true">
                                     <span class="planeta__crater planeta__crater--1"></span>
                                     <span class="planeta__crater planeta__crater--2"></span>
                                     <span class="planeta__crater planeta__crater--3"></span>
-                                    <span class="planeta__candado">🔒</span>
                                 </span>
-                                <span class="planeta__nombre">Próximamente</span>
-                                <span class="planeta__info">Planeta en construcción</span>
+                                <span class="planeta__nombre">Galaxy Invasion</span>
+                                <span class="planeta__info">Próximamente · defiende la galaxia</span>
+                            </button>
+                        </li>
+
+                        <!-- PLANETA 4: Galaxy War (próximamente) -->
+                        <li class="planetas__item">
+                            <button type="button" class="planeta planeta--bloqueado planeta--war" aria-disabled="true"
+                                    data-mini="war" data-color="#FF4F8B" data-proximo="true"
+                                    data-corta="Batallas espaciales entre naves."
+                                    data-descripcion="Combates entre naves en pleno espacio: apunta, esquiva y gana la guerra de la galaxia. Estoy diseñándolo."
+                                    data-genero="Combate espacial 2D"
+                                    data-jugadores="Por definir"
+                                    data-controles="Por definir">
+                                <span class="planeta__esfera" aria-hidden="true">
+                                    <span class="planeta__crater planeta__crater--1"></span>
+                                    <span class="planeta__crater planeta__crater--2"></span>
+                                    <span class="planeta__crater planeta__crater--3"></span>
+                                </span>
+                                <span class="planeta__nombre">Galaxy War</span>
+                                <span class="planeta__info">Próximamente · batallas espaciales</span>
+                            </button>
+                        </li>
+
+                        <!-- PLANETA 5: ORBIX: Overdrive (próximamente) -->
+                        <li class="planetas__item">
+                            <button type="button" class="planeta planeta--bloqueado planeta--orbix" aria-disabled="true"
+                                    data-mini="orbix" data-color="#2EE6C8" data-proximo="true"
+                                    data-corta="Velocidad pura entre órbitas."
+                                    data-descripcion="Una carrera a toda velocidad entre órbitas y reflejos. Más rápido, más intenso: ORBIX en modo Overdrive. Estoy diseñándolo."
+                                    data-genero="Arcade de velocidad 2D"
+                                    data-jugadores="Por definir"
+                                    data-controles="Por definir">
+                                <span class="planeta__esfera" aria-hidden="true">
+                                    <span class="planeta__crater planeta__crater--1"></span>
+                                    <span class="planeta__crater planeta__crater--2"></span>
+                                    <span class="planeta__crater planeta__crater--3"></span>
+                                </span>
+                                <span class="planeta__nombre">ORBIX: Overdrive</span>
+                                <span class="planeta__info">Próximamente · velocidad pura</span>
                             </button>
                         </li>
 
@@ -187,7 +253,7 @@
                             <button type="button" class="arcade__flecha" data-paso="1" aria-label="Planeta siguiente">&#9654;</button>
                             <span class="arcade__ayuda">elegir · <kbd class="arcade__tecla">Enter</kbd> despegar</span>
                         </div>
-                        <p class="arcade__contador" aria-hidden="true"><span class="arcade__contador-actual">01</span> / 03</p>
+                        <p class="arcade__contador" aria-hidden="true"><span class="arcade__contador-actual">01</span> / 05</p>
                     </div>
 
                 </div>
@@ -195,9 +261,11 @@
                 <!-- Panel con la descripción del planeta elegido (lo llena el JS; sin JavaScript no se muestra) -->
                 <aside class="ficha-juego" aria-label="Descripción del juego elegido" aria-live="polite" hidden>
                     <div class="ficha-juego__marco">
-                        <span class="ficha-juego__mini" aria-hidden="true"></span>
+                        <span class="ficha-juego__orbita" aria-hidden="true"></span>
+                        <img class="ficha-juego__planeta" src="img/planeta-gol.webp" alt="" width="192" height="192">
+                        <span class="ficha-juego__estado">Disponible</span>
                     </div>
-                    <p class="ficha-juego__etiqueta">Planeta <span class="ficha-juego__numero">01</span> / 03</p>
+                    <p class="ficha-juego__etiqueta">Planeta <span class="ficha-juego__numero">01</span> / 05</p>
                     <p class="ficha-juego__titulo">Galaxy Gol</p>
                     <p class="ficha-juego__texto"></p>
                     <dl class="ficha-juego__datos">

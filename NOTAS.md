@@ -27,7 +27,7 @@ Bootstrap se usa solo en Contacto. **Tema espacial** (fondo azul noche con estre
 | `js/tema.js` | Pone el **modo claro u oscuro** guardado, antes de que se dibuje la página (va en el `<head>`) |
 | `img/og-*.jpg` | Imágenes de 1200 × 630 para cuando comparten un enlace (WhatsApp, LinkedIn…): `og-portada.jpg` (inicio, portafolio, contacto y juegos) y `og-proyecto-1…7.jpg` (una por página de proyecto). Se ven en las etiquetas `og:image` del `<head>` |
 | `video/` | `trio-amoroso.mp4`: el video del proyecto 6, comprimido a 720 × 1280 (unos 4 MB). Su póster es `img/trio-amoroso-poster.webp` |
-| `img/` | Logo, avatar, `proyecto1…7` y las 3 páginas de la revista (`revista-excelencia-*.webp`). `proyecto3-santisarm-marca.webp` ahora es la **portada** del manual de marca. Todo en `.webp`, máx. 800 px de ancho. Además `favicon.png` (tu muñequito en la pestaña, 96 × 96) y `apple-touch-icon.png` (el ícono si guardan la página en el celular, 180 × 180), sacados de `avatar.webp` |
+| `img/` | Logo, `proyecto1…7` y las 3 páginas de la revista (`revista-excelencia-*.webp`). `proyecto3-santisarm-marca.webp` ahora es la **portada** del manual de marca. Todo en `.webp`, máx. 800 px de ancho. Además `favicon.png` (tu muñequito en la pestaña, 96 × 96) y `apple-touch-icon.png` (el ícono si guardan la página en el celular, 180 × 180), sacados de `avatar.webp` |
 | `Manual_Tecnico_...pdf` | Informe del examen (no es parte de la página) |
 
 Cómo se conectan:
@@ -403,3 +403,12 @@ Accesibilidad:
 - **Arcade (`juegos.html`):** la ficha de cada juego tiene una fila «Cómo se hizo» (`data-hecho` en cada planeta, lo llena `js/main.js`) que cuenta qué puso Santiago (idea, diseño, pruebas) y en qué lo ayudó Claude (código y guías).
 - Todo respeta «reducir movimiento».
 - **Íconos:** `img/favicon.png` (96×96) y `img/apple-touch-icon.png` (180×180) ahora llevan el logo SS entrelazado sobre azul. Pendiente: `img/og-portada.jpg` (imagen al compartir el enlace).
+
+## 2026-11-02 (tarde) — Portafolio, Contacto, Juegos y Sobre mí renovados
+- **Portafolio (`portafolio.html`)**: portada animada con iconos flotantes y palabra que cambia (CSS 14z/14za, `iniciarPortada()` en `efectos.js`); las tarjetas ya no dejan huecos.
+- **Contacto (`contacto.html`)**: misma portada con iconos de contacto (correo, chat, avión de papel, teléfono, @, enlace). Formulario en 4 pasos (Tú, Qué buscas, Detalles, Mensaje) con opciones «Otro» que abren un cuadro de texto, presupuesto solo para freelance y subida de imágenes de referencia (`iniciarFormulario()` en `main.js`, CSS 14zb–14zc). El correo se abre con `mailto:` y **no puede adjuntar las imágenes** (hay que adjuntarlas a mano o usar un servicio como Formspree/Web3Forms).
+- **Juegos (`juegos.html`)**: portada nueva y 5 planetas: Galaxy Gol y COSMOBALL (listos) y Galaxy Invasion, Galaxy War y ORBIX: Overdrive («Próximamente», con globito de descripción al pasar el mouse). Pantalla de carga para que no se vea un instante el carrusel 2D (`arcade--cargando`), ficha dinámica con la imagen del planeta 3D (`img/planeta-*.webp`, `data-corta`, `data-proximo`), 5 rayitas de progreso. En pantallas anchas se ven los 5 planetas a la vez (la cámara solo se desplaza en celular). La nave 3D ahora es un **platillo volador alienígena** (`crearNave()` en `arcade3d.js`). CSS 14zg–14zi.
+- **Inicio — Sobre mí**: sin imágenes; el texto se revela con una «linterna» (`iniciarLinterna()` en `efectos.js`, CSS 14zh). Sin JavaScript o con «menos movimiento» se ve completo. Espacios entre secciones del Inicio parejos (80 px).
+- **Botón volver arriba**: apagado (comentada la llamada `iniciarVolverArriba()` en `main.js`).
+- **Avatar**: se borró `img/avatar.webp` (ya no se usa en ninguna página; el favicon es el logo SS).
+- `proyecto-slotnova.html`: filas «Herramientas», «Mi rol» y «El equipo».

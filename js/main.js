@@ -256,7 +256,24 @@ function iniciarVolverArriba() {
   boton.className = 'arriba';
   boton.type = 'button';
   boton.setAttribute('aria-label', 'Volver arriba');
-  boton.innerHTML = '<span aria-hidden="true">🚀</span>'; // un cohete (el CSS lo endereza)
+  boton.setAttribute('data-etiqueta', 'Volver arriba');
+  // un cohete dibujado (SVG) con su fuego y tres bolitas de humo para el despegue
+  boton.innerHTML =
+    '<span class="arriba__humo" aria-hidden="true"><i></i><i></i><i></i></span>' +
+    '<span class="arriba__cohete" aria-hidden="true">' +
+    '<svg viewBox="0 0 48 84" width="44" height="77">' +
+    '<defs>' +
+    '<linearGradient id="ar-metal" x1="0" x2="1"><stop offset="0" stop-color="#b8c8f0"/><stop offset="0.45" stop-color="#ffffff"/><stop offset="1" stop-color="#8fa3d6"/></linearGradient>' +
+    '<linearGradient id="ar-fuego" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#e8f8ff"/><stop offset="0.45" stop-color="#29b6f6"/><stop offset="1" stop-color="#9b5cff" stop-opacity="0"/></linearGradient>' +
+    '</defs>' +
+    '<g class="arriba__fuego"><path d="M16 62 Q24 98 32 62 Z" fill="url(#ar-fuego)"/><path d="M20 62 Q24 82 28 62 Z" fill="#fff"/></g>' +
+    '<path d="M13 44 L2 66 L14 59 Z" fill="#3153a1"/><path d="M35 44 L46 66 L34 59 Z" fill="#3153a1"/>' +
+    '<path d="M24 1 C35 14 38 34 36 60 L12 60 C10 34 13 14 24 1 Z" fill="url(#ar-metal)"/>' +
+    '<path d="M24 1 C28.500 6 31.500 12 32.500 18 L15.500 18 C16.500 12 19.500 6 24 1 Z" fill="#29b6f6"/>' +
+    '<rect x="11.500" y="47" width="25" height="4" fill="#3153a1"/>' +
+    '<circle cx="24" cy="33" r="6.500" fill="#29b6f6" stroke="#3153a1" stroke-width="3"/><circle cx="22" cy="31" r="2" fill="#fff" opacity="0.85"/>' +
+    '<rect x="16" y="59" width="16" height="5" rx="1.500" fill="#24346b"/>' +
+    '</svg></span>';
   document.body.appendChild(boton);
 
   boton.addEventListener('click', function () {
@@ -264,7 +281,7 @@ function iniciarVolverArriba() {
     boton.classList.remove('arriba--despegue');
     void boton.offsetWidth;
     boton.classList.add('arriba--despegue');
-    setTimeout(function () { boton.classList.remove('arriba--despegue'); }, 1000);
+    setTimeout(function () { boton.classList.remove('arriba--despegue'); }, 1100);
 
     window.scrollTo({ top: 0, behavior: movimientoReducido ? 'auto' : 'smooth' });
   });
@@ -640,15 +657,41 @@ function iniciarInclinacion() {
    - Al enviar: no recarga la página. Muestra un mensaje de gracias
      con confeti y un botón que abre el correo de la persona con
      todo ya escrito, listo para enviármelo.
+   - Va en 4 pasos (Tú, Qué buscas, Detalles, Mensaje) con revisión amable en cada uno.
    --------------------------------------------------------- */
 function iniciarFormulario() {
   const formulario = document.querySelector('.form-tarjeta');
   if (!formulario) return;
 
-  // contador de caracteres debajo del mensaje
+  // reloj de Cúcuta junto a mi ubicación (se actualiza solo)
+  const reloj = document.querySelector('[data-hora-local]');
+  if (reloj && window.Intl) {
+    const dibujarHora = function () {
+      const hora = new Intl.DateTimeFormat('es-CO', { hour: 'numeric', minute: '2-digit', timeZone: 'America/Bogota' }).format(new Date());
+      reloj.textContent = 'Aquí son las ' + hora;
+    };
+    dibujarHora();
+    setInterval(dibujarHora, 30000);
+  }
+
+  const pasos = Array.from(formulario.querySelectorAll('.paso'));
+  const nodos = Array.from(formulario.querySelectorAll('.pasos-ruta__nodo'));
+  const btnAtras = formulario.querySelector('[data-atras]');
+  const btnSig = formulario.querySelector('[data-sig]');
+  const btnEnviar = formulario.querySelector('[data-enviar]');
+  const caja = formulario.querySelector('.paso__error');
   const mensaje = formulario.querySelector('#mensaje');
+  const ultimo = pasos.length - 1;
+  let actual = 0;
+
+  formulario.style.setProperty('--max', pasos.length - 1);   // para que la ruta se llene bien con cualquier cantidad de pasos
+  formulario.noValidate = true;            // las revisiones las hago yo, paso a paso y con mensajes amables
+  formulario.classList.add('form-pasos--js');
+
+  // contador de caracteres debajo del mensaje
+  let contador = null;
   if (mensaje) {
-    const contador = document.createElement('p');
+    contador = document.createElement('p');
     contador.className = 'form-contador';
     mensaje.insertAdjacentElement('afterend', contador);
     const actualizar = function () {
@@ -659,20 +702,249 @@ function iniciarFormulario() {
     actualizar();
   }
 
-  // el navegador ya revisa que todo esté lleno ("required") antes de llegar aquí
+  // botoncitos que añaden un comienzo de frase al mensaje
+  formulario.querySelectorAll('[data-ins]').forEach(function (pista) {
+    pista.addEventListener('click', function () {
+      const texto = pista.dataset.ins;
+      if (!mensaje.value.includes(texto)) {
+        mensaje.value += (mensaje.value && !mensaje.value.endsWith('\n') ? '\n' : '') + texto;
+      }
+      pista.classList.add('pista--usada');
+      mensaje.focus();
+      mensaje.setSelectionRange(mensaje.value.length, mensaje.value.length);
+      mensaje.dispatchEvent(new Event('input'));
+    });
+  });
+
+  // imágenes de referencia: se eligen o se arrastran, se ven en miniatura y se pueden quitar
+  const zona = formulario.querySelector('.refs__zona');
+  const entrada = formulario.querySelector('.refs__input');
+  const lista = formulario.querySelector('.refs__lista');
+  const nota = formulario.querySelector('.refs__nota');
+  const MAX_IMAGENES = 4, MAX_MB = 5;
+  let imagenes = [];
+
+  function dibujarImagenes() {
+    lista.textContent = '';
+    imagenes.forEach(function (it, i) {
+      const li = document.createElement('li');
+      li.className = 'refs__item';
+      const img = document.createElement('img');
+      img.src = it.url; img.alt = ''; img.width = 56; img.height = 56;
+      const nombre = document.createElement('span');
+      nombre.className = 'refs__nombre';
+      nombre.textContent = it.archivo.name;
+      const peso = document.createElement('small');
+      peso.textContent = it.archivo.size < 1048576 ? Math.max(1, Math.round(it.archivo.size / 1024)) + ' KB' : (it.archivo.size / 1048576).toFixed(1) + ' MB';
+      const quitar = document.createElement('button');
+      quitar.type = 'button';
+      quitar.className = 'refs__quitar';
+      quitar.textContent = '✕';
+      quitar.setAttribute('aria-label', 'Quitar ' + it.archivo.name);
+      quitar.addEventListener('click', function () {
+        URL.revokeObjectURL(it.url);
+        imagenes.splice(i, 1);
+        dibujarImagenes();
+        nota.textContent = '';
+      });
+      const texto = document.createElement('span');
+      texto.className = 'refs__datos';
+      texto.append(nombre, peso);
+      li.append(img, texto, quitar);
+      lista.appendChild(li);
+    });
+    zona.classList.toggle('refs__zona--llena', imagenes.length >= MAX_IMAGENES);
+  }
+
+  function agregarImagenes(archivos) {
+    const avisos = [];
+    Array.from(archivos).forEach(function (archivo) {
+      if (!archivo.type.startsWith('image/')) { avisos.push(archivo.name + ' no es una imagen.'); return; }
+      if (archivo.size > MAX_MB * 1048576) { avisos.push(archivo.name + ' pesa más de ' + MAX_MB + ' MB.'); return; }
+      if (imagenes.length >= MAX_IMAGENES) { avisos.push('Máximo ' + MAX_IMAGENES + ' imágenes.'); return; }
+      if (imagenes.some(function (it) { return it.archivo.name === archivo.name && it.archivo.size === archivo.size; })) return;
+      imagenes.push({ archivo: archivo, url: URL.createObjectURL(archivo) });
+    });
+    nota.textContent = avisos.length ? avisos[0] : '';
+    dibujarImagenes();
+  }
+
+  function vaciarImagenes() {
+    imagenes.forEach(function (it) { URL.revokeObjectURL(it.url); });
+    imagenes = [];
+    dibujarImagenes();
+    nota.textContent = '';
+  }
+
+  if (zona && entrada) {
+    entrada.addEventListener('change', function () { agregarImagenes(entrada.files); entrada.value = ''; });
+    ['dragenter', 'dragover'].forEach(function (ev) {
+      zona.addEventListener(ev, function (e) { e.preventDefault(); zona.classList.add('refs__zona--sobre'); });
+    });
+    ['dragleave', 'drop'].forEach(function (ev) {
+      zona.addEventListener(ev, function (e) { e.preventDefault(); zona.classList.remove('refs__zona--sobre'); });
+    });
+    zona.addEventListener('drop', function (e) { agregarImagenes(e.dataTransfer.files); });
+  }
+
+  // preguntas que solo aparecen según lo que elijas (el presupuesto, si es proyecto freelance)
+  // "Otro": al marcarlo se abre una casilla para escribir (y solo entonces es obligatoria)
+  function actualizarOtros(enfocar) {
+    formulario.querySelectorAll('.otro-campo').forEach(function (bloque) {
+      const marcado = formulario.querySelector('input[name="' + bloque.dataset.otroDe + '"][data-otro]:checked');
+      const campo = bloque.querySelector('input');
+      const antes = bloque.hidden;
+      bloque.hidden = !marcado;
+      campo.required = !!marcado;
+      if (marcado && antes && enfocar) campo.focus({ preventScroll: true });
+    });
+  }
+  function actualizarExtras() {
+    const elegido = formulario.querySelector('input[name="asunto"]:checked');
+    formulario.querySelectorAll('[data-solo]').forEach(function (bloque) {
+      bloque.hidden = !(elegido && elegido.value === bloque.dataset.solo);
+    });
+  }
+  formulario.addEventListener('change', function () { actualizarExtras(); actualizarOtros(true); });
+  actualizarExtras();
+  actualizarOtros(false);
+
+  // qué decir cuando algo falta
+  function aviso(campo) {
+    if (campo.name === 'asunto_otro') return 'Cuéntame qué estás buscando en la casilla de «Otro».';
+    if (campo.name === 'area_otro') return 'Escribe cuál es esa otra área.';
+    if (campo.name === 'nombre') return 'Escribe tu nombre para saber con quién hablo.';
+    if (campo.name === 'email') return campo.validity.valueMissing ? 'Falta tu correo para poder responderte.' : 'Revisa tu correo: debería verse así, nombre@correo.com.';
+    if (campo.name === 'asunto') return 'Elige qué estás buscando.';
+    return 'Cuéntame un poquito de tu idea antes de enviar.';
+  }
+
+  function limpiarErrores() {
+    caja.hidden = true;
+    formulario.querySelectorAll('[aria-invalid]').forEach(function (c) { c.removeAttribute('aria-invalid'); });
+    formulario.querySelectorAll('.chips--error').forEach(function (c) { c.classList.remove('chips--error'); });
+  }
+
+  // devuelve true si el paso está bien; si no, marca el campo y explica
+  function validar(n, mostrar) {
+    const campos = pasos[n].querySelectorAll('input, textarea');
+    // grupo de casillas donde hay que elegir al menos una (las áreas)
+    const grupo = pasos[n].querySelector('[data-min-uno]');
+    if (grupo && !grupo.querySelector('input:checked')) {
+      if (mostrar) {
+        limpiarErrores();
+        caja.textContent = 'Elige al menos un área (o "Aún no lo sé").';
+        caja.hidden = false;
+        grupo.classList.add('chips--error');
+        grupo.querySelector('input').focus({ preventScroll: true });
+        formulario.classList.remove('form-tarjeta--sacude');
+        void formulario.offsetWidth;
+        formulario.classList.add('form-tarjeta--sacude');
+      }
+      return false;
+    }
+    for (const campo of campos) {
+      if (!campo.checkValidity()) {
+        if (mostrar) {
+          limpiarErrores();
+          caja.textContent = aviso(campo);
+          caja.hidden = false;
+          if (campo.type === 'radio') campo.closest('.chips').classList.add('chips--error');
+          else campo.setAttribute('aria-invalid', 'true');
+          campo.focus({ preventScroll: true });
+          formulario.classList.remove('form-tarjeta--sacude');
+          void formulario.offsetWidth;     // reinicia la animación
+          formulario.classList.add('form-tarjeta--sacude');
+        }
+        return false;
+      }
+    }
+    return true;
+  }
+
+  function ir(n, enfocar) {
+    actual = n;
+    limpiarErrores();
+    pasos.forEach(function (p, i) { p.hidden = i !== n; });
+    nodos.forEach(function (nodo, i) {
+      nodo.classList.toggle('pasos-ruta__nodo--hecho', i < n);
+      nodo.classList.toggle('pasos-ruta__nodo--actual', i === n);
+      if (i === n) nodo.setAttribute('aria-current', 'step'); else nodo.removeAttribute('aria-current');
+    });
+    formulario.style.setProperty('--paso', n);
+    btnAtras.hidden = n === 0;
+    btnSig.hidden = n === ultimo;
+    btnEnviar.hidden = n !== ultimo;
+    if (enfocar) {
+      const primero = pasos[n].querySelector('input:not([type="radio"]), textarea');
+      if (primero) primero.focus({ preventScroll: true });
+    }
+  }
+
+  function siguiente() {
+    if (validar(actual, true)) ir(actual + 1, true);
+  }
+
+  btnSig.addEventListener('click', siguiente);
+  btnAtras.addEventListener('click', function () { ir(actual - 1, true); });
+
+  // tocar un círculo de arriba: puedes volver, o avanzar si lo anterior está bien
+  nodos.forEach(function (nodo, i) {
+    nodo.addEventListener('click', function () {
+      if (i <= actual) { ir(i, true); return; }
+      for (let k = actual; k < i; k++) {
+        if (!validar(k, false)) { ir(k, false); validar(k, true); return; }
+      }
+      ir(i, true);
+    });
+  });
+
+  // Enter en un campo de una línea = "Siguiente" (en el mensaje es salto de línea)
+  formulario.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' && e.target.tagName === 'INPUT' && e.target.type !== 'radio' && actual < ultimo) {
+      e.preventDefault();
+      siguiente();
+    }
+  });
+
+  // al corregir un campo, se quita el aviso
+  formulario.addEventListener('input', function () { if (!caja.hidden) limpiarErrores(); });
+  formulario.addEventListener('change', function () { if (!caja.hidden) limpiarErrores(); });
+
   formulario.addEventListener('submit', function (e) {
     e.preventDefault(); // que no recargue la página ni ponga los datos en la URL
 
+    // reviso todos los pasos; si alguno falla, me lleva a él
+    for (let k = 0; k <= ultimo; k++) {
+      if (!validar(k, false)) { ir(k, false); validar(k, true); return; }
+    }
+
     const nombre = formulario.nombre.value.trim();
     const correo = formulario.email.value.trim();
-    const asunto = formulario.asunto.options[formulario.asunto.selectedIndex].text;
+    const organizacion = formulario.organizacion.value.trim();
+    const elegido = formulario.querySelector('input[name="asunto"]:checked');
+    const tipoOtro = elegido.hasAttribute('data-otro');
+    const asunto = tipoOtro ? formulario.asunto_otro.value.trim() : elegido.dataset.texto;
+    const plazo = formulario.querySelector('input[name="plazo"]:checked').value;
+    const areas = Array.from(formulario.querySelectorAll('input[name="area"]:checked')).map(function (c) {
+      return c.hasAttribute('data-otro') ? 'Otro: ' + formulario.area_otro.value.trim() : c.value;
+    });
+    const modalidad = formulario.querySelector('input[name="modalidad"]:checked').value;
+    const presupuesto = formulario.querySelector('[data-solo]').hidden ? '' : formulario.querySelector('input[name="presupuesto"]:checked').value;
     const texto = formulario.mensaje.value.trim();
     const primerNombre = nombre.split(' ')[0];
 
     // enlace que abre el programa de correo con todo escrito
     const enlaceCorreo = 'mailto:' + MI_CORREO +
-      '?subject=' + encodeURIComponent('Proyecto de ' + asunto + ' — ' + nombre) +
-      '&body=' + encodeURIComponent(texto + '\n\n— ' + nombre + ' (' + correo + ')');
+      '?subject=' + encodeURIComponent(asunto + ' — ' + nombre) +
+      '&body=' + encodeURIComponent(
+        texto + '\n\n— ' + nombre + ' (' + correo + ')' +
+        (organizacion ? '\nDesde: ' + organizacion : '') +
+        '\nÁrea: ' + areas.join(', ') +
+        '\nModalidad: ' + modalidad +
+        '\nPlazo: ' + plazo +
+        (presupuesto ? '\nPresupuesto: ' + presupuesto + ' COP' : '') +
+        (imagenes.length ? '\nImágenes de referencia (las adjunto a este correo): ' + imagenes.map(function (it) { return it.archivo.name; }).join(', ') : ''));
 
     // armo la tarjeta de gracias (uso textContent para que nadie pueda meter código raro)
     const gracias = document.createElement('div');
@@ -683,23 +955,41 @@ function iniciarFormulario() {
       '<p class="form-gracias__emoji" aria-hidden="true">🎉</p>' +
       '<p class="form-gracias__titulo"></p>' +
       '<p class="form-gracias__texto"></p>' +
+      '<div class="form-gracias__refs" hidden><p class="form-gracias__refs-texto"></p><div class="form-gracias__miniaturas"></div></div>' +
       '<div class="form-gracias__botones">' +
-      '  <a class="boton boton--primario">Enviar por mi correo</a>' +
+      '  <a class="boton boton--primario">Abrir mi correo con el mensaje</a>' +
       '  <button type="button" class="boton boton--secundario">Escribir otro mensaje</button>' +
       '</div>' +
-      '<p class="form-aviso">Este formulario es una maqueta: el botón de arriba abre tu correo con el mensaje ya escrito.</p>';
+      '<p class="form-aviso">Se abre tu programa de correo con todo listo; solo falta que pulses «enviar».</p>';
 
     gracias.querySelector('.form-gracias__titulo').textContent = '¡Gracias, ' + primerNombre + '!';
     gracias.querySelector('.form-gracias__texto').textContent =
-      'Tu mensaje sobre ' + asunto.toLowerCase() + ' quedó listo. Dale al botón para enviármelo desde tu correo y te respondo pronto.';
+      (tipoOtro ? 'Tu mensaje' : 'Tu mensaje sobre ' + asunto.toLowerCase()) + ' quedó listo. Dale al botón para enviármelo desde tu correo y te respondo pronto.';
     gracias.querySelector('a').href = enlaceCorreo;
+
+    // si elegiste imágenes: las muestro y te recuerdo adjuntarlas (un enlace de correo no puede llevar archivos)
+    if (imagenes.length) {
+      const caja = gracias.querySelector('.form-gracias__refs');
+      caja.hidden = false;
+      caja.querySelector('.form-gracias__refs-texto').textContent =
+        (imagenes.length === 1 ? 'No olvides adjuntar tu imagen de referencia en el correo:' : 'No olvides adjuntar tus ' + imagenes.length + ' imágenes de referencia en el correo:');
+      imagenes.forEach(function (it) {
+        const mini = document.createElement('img');
+        mini.src = it.url; mini.alt = it.archivo.name; mini.width = 64; mini.height = 64;
+        caja.querySelector('.form-gracias__miniaturas').appendChild(mini);
+      });
+    }
 
     gracias.querySelector('button').addEventListener('click', function () {
       formulario.reset();
+      actualizarExtras();
+      actualizarOtros(false);
+      vaciarImagenes();
       if (mensaje) mensaje.dispatchEvent(new Event('input')); // el contador vuelve a 0
+      formulario.querySelectorAll('.pista--usada').forEach(function (p) { p.classList.remove('pista--usada'); });
       gracias.remove();
       formulario.hidden = false;
-      formulario.nombre.focus();
+      ir(0, true);
     });
 
     formulario.hidden = true;
@@ -707,6 +997,8 @@ function iniciarFormulario() {
     gracias.focus();
     confetiDesde(gracias, 100);
   });
+
+  ir(0, false);
 }
 
 
@@ -767,7 +1059,11 @@ function iniciarArcade() {
   let escena3d = null; // la escena 3D (si el navegador la permite; ver js/arcade3d.js)
 
   // con JavaScript se muestran el panel, la barra de progreso y la barra de abajo
-  document.querySelector('.arcade').classList.add('arcade--js');
+  const arcade = document.querySelector('.arcade');
+  arcade.classList.add('arcade--js');
+  // mientras se carga la escena 3D se muestra una pantallita de carga (y no el carrusel 2D)
+  const hay3d = 'WebGLRenderingContext' in window && !!escena.querySelector('.arcade__lienzo');
+  if (hay3d) arcade.classList.add('arcade--cargando');
   panel.hidden = false;
   barra.hidden = false;
   progreso.hidden = false;
@@ -812,7 +1108,8 @@ function iniciarArcade() {
       const lugar = (n - activo + planetas.length) % planetas.length;
       item.classList.toggle('planetas__item--centro', lugar === 0);
       item.classList.toggle('planetas__item--der', lugar === 1);
-      item.classList.toggle('planetas__item--izq', lugar > 1);
+      item.classList.toggle('planetas__item--izq', lugar === planetas.length - 1);
+      item.classList.toggle('planetas__item--lejos', lugar > 1 && lugar < planetas.length - 1);
     });
     segmentos.forEach(function (s, n) {
       s.classList.toggle('arcade__segmento--activo', n === activo);
@@ -826,7 +1123,13 @@ function iniciarArcade() {
     panel.querySelector('.ficha-juego__jugadores').textContent = planeta.dataset.jugadores;
     panel.querySelector('.ficha-juego__controles').textContent = planeta.dataset.controles;
     panel.querySelector('.ficha-juego__hecho').textContent = planeta.dataset.hecho || 'Todavía por hacer.';
-    panel.querySelector('.ficha-juego__mini').className = 'ficha-juego__mini ficha-juego__mini--' + planeta.dataset.mini;
+    // el planeta de la ficha es una imagen sacada de la escena 3D, y el panel toma el color del planeta
+    const imagenPlaneta = panel.querySelector('.ficha-juego__planeta');
+    imagenPlaneta.src = 'img/planeta-' + planeta.dataset.mini + '.webp';
+    panel.style.setProperty('--color', planeta.dataset.color || '#29B6F6');
+    const proximo = planeta.dataset.proximo === 'true';
+    panel.classList.toggle('ficha-juego--proximo', proximo);
+    panel.querySelector('.ficha-juego__estado').textContent = proximo ? 'Próximamente' : 'Disponible';
 
     // código QR del juego (para abrirlo desde el celular); el planeta en construcción no tiene
     const cajaQr = panel.querySelector('.ficha-juego__qr');
@@ -842,7 +1145,7 @@ function iniciarArcade() {
     if (bloqueado) {
       despegar.removeAttribute('href');
       despegar.setAttribute('aria-disabled', 'true');
-      despegar.textContent = 'En construcción';
+      despegar.textContent = 'Próximamente';
     } else {
       despegar.setAttribute('href', planeta.getAttribute('href'));
       despegar.removeAttribute('aria-disabled');
@@ -868,7 +1171,7 @@ function iniciarArcade() {
     planeta.classList.remove('planeta--sacudir');
     void planeta.offsetWidth;
     planeta.classList.add('planeta--sacudir');
-    mostrarAviso('🛠️ Este planeta está en construcción. ¡Pronto habrá un juego nuevo!');
+    mostrarAviso('🛠️ ' + planeta.querySelector('.planeta__nombre').textContent + ' llega pronto. ¡Estoy trabajando en él!');
   }
 
   // despega hacia el planeta elegido (o avisa si está en construcción)
@@ -1005,6 +1308,8 @@ function iniciarArcade() {
   // escena 3D con Three.js: se carga aparte; si falla (sin WebGL, sin internet...) se queda el carrusel de CSS
   const lienzo = escena.querySelector('.arcade__lienzo');
   if (lienzo && 'WebGLRenderingContext' in window) {
+    // si tarda demasiado, se enseña el carrusel de CSS y listo
+    const plazo = setTimeout(function () { document.querySelector('.arcade').classList.remove('arcade--cargando'); }, 6000);
     import('./arcade3d.js').then(function (modulo) {
       lienzo.hidden = false;
       document.querySelector('.arcade').classList.add('arcade--3d');
@@ -1013,7 +1318,13 @@ function iniciarArcade() {
           contenedor: lienzo,
           reducido: movimientoReducido,
           planetas: planetas.map(function (p) {
-            return { id: p.dataset.mini, nombre: p.querySelector('.planeta__nombre').textContent, color: p.dataset.color || '#9DB8FF' };
+            return {
+              id: p.dataset.mini,
+              nombre: p.querySelector('.planeta__nombre').textContent,
+              color: p.dataset.color || '#9DB8FF',
+              corta: p.dataset.corta || '',
+              proximo: p.dataset.proximo === 'true'
+            };
           }),
           alClic: function (i) {
             if (viajando) return;
@@ -1022,13 +1333,17 @@ function iniciarArcade() {
           }
         });
         escena3d.elegir(activo, true);
+        clearTimeout(plazo);
+        document.querySelector('.arcade').classList.remove('arcade--cargando');
       } catch (error) {
+        clearTimeout(plazo);
+        document.querySelector('.arcade').classList.remove('arcade--cargando');
         escena3d = null;
         lienzo.hidden = true;
         lienzo.textContent = '';
         document.querySelector('.arcade').classList.remove('arcade--3d');
       }
-    }).catch(function () { /* sin escena 3D: sigue el carrusel de CSS */ });
+    }).catch(function () { clearTimeout(plazo); document.querySelector('.arcade').classList.remove('arcade--cargando'); /* sin escena 3D: sigue el carrusel de CSS */ });
   }
 
   // si vuelven con el botón "atrás", el navegador puede mostrar la página congelada
@@ -1160,7 +1475,7 @@ function iniciarFicha() {
 prepararAviso();
 iniciarAparecer();
 iniciarHeaderCompacto();
-iniciarVolverArriba();
+// iniciarVolverArriba(); // apagado: ya no hay botón de volver arriba
 // iniciarEscritura(); // apagado: ahora el subtítulo lo anima js/efectos.js (letras que se juntan)
 iniciarAvatar();
 iniciarHabilidades();

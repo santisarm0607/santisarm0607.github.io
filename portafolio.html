@@ -50,17 +50,38 @@
     </header>
 
     <main>
-        <section class="portafolio-intro" aria-labelledby="titulo-portafolio">
-            <div class="contenedor">
-                <p id="titulo-portafolio" class="portafolio-intro__titulo">Mi Portafolio</p>
-                <p class="portafolio-intro__texto">
-                    Una selección de proyectos de diseño gráfico, branding, animación y diseño editorial
-                    en los que he trabajado durante mi formación como Ingeniero Multimedia.
-                </p>
+        <section class="portafolio-intro portada" aria-labelledby="titulo-portafolio">
+            <span class="contacto-rapido__orbe contacto-rapido__orbe--a" aria-hidden="true"></span>
+            <span class="contacto-rapido__orbe contacto-rapido__orbe--b" aria-hidden="true"></span>
+            <span class="contacto-rapido__estrellas" aria-hidden="true"></span>
+            <div class="portada__iconos" aria-hidden="true">
+                <svg class="portada__icono portada__icono--1" style="--prof:1.6" viewBox="0 0 24 24"><path d="M12 2l5 8-5 12-5-12z M12 10v5"/></svg>
+                <svg class="portada__icono portada__icono--2" style="--prof:0.9" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M10 8l6 4-6 4z"/></svg>
+                <svg class="portada__icono portada__icono--3" style="--prof:1.3" viewBox="0 0 24 24"><path d="M3 20C8 2 16 22 21 4"/><circle cx="3" cy="20" r="1.6"/><circle cx="21" cy="4" r="1.6"/></svg>
+                <svg class="portada__icono portada__icono--4" style="--prof:0.7" viewBox="0 0 24 24"><path d="M12 3l9 5-9 5-9-5z M3 13l9 5 9-5"/></svg>
+                <svg class="portada__icono portada__icono--5" style="--prof:1.8" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 17l5-5 4 4 3-3 6 6"/></svg>
+                <svg class="portada__icono portada__icono--6" style="--prof:1.1" viewBox="0 0 24 24"><path d="M12 2l2.4 7.6L22 12l-7.6 2.4L12 22l-2.4-7.6L2 12l7.6-2.4z"/></svg>
+            </div>
+            <div class="contenedor portada__rejilla">
+                <div class="portada__texto">
+                    <span class="portada__etiqueta">Portafolio · 2026</span>
+                    <p id="titulo-portafolio" class="portafolio-intro__titulo portada__titulo"><span class="portada__palabra">Mi</span> <span class="portada__palabra">Portafolio</span></p>
+                    <p class="portada__rota" aria-hidden="true">Aquí vas a ver <span class="portada__area" data-areas="branding|diseño gráfico|publicidad|diseño editorial|desarrollo web">diseño</span></p>
+                    <p class="portafolio-intro__texto portada__lead">
+                        Una selección de proyectos de diseño gráfico, branding, animación y diseño editorial
+                        en los que he trabajado durante mi formación como Ingeniero Multimedia.
+                    </p>
+                    <ul class="portada__cifras">
+                        <li><span class="portada__num" data-contar="8">8</span><span>proyectos</span></li>
+                        <li><span class="portada__num" data-contar="5">5</span><span>áreas de diseño</span></li>
+                        <li><span class="portada__num"><span aria-hidden="true">🏆</span> 3.º</span><span>puesto en Colombia 5.0</span></li>
+                    </ul>
+                    <a href="#proyectos" class="portada__bajar">Explorar proyectos <span aria-hidden="true">↓</span></a>
+                </div>
             </div>
         </section>
 
-        <section class="proyectos" aria-label="Lista de proyectos">
+        <section class="proyectos" id="proyectos" aria-label="Lista de proyectos">
             <div class="contenedor">
                 <!-- Filtros: los activa js/main.js. Cada tarjeta dice sus filtros en data-filtro="..." -->
                 <div class="filtros" role="group" aria-label="Filtrar proyectos por tipo" hidden>
@@ -75,6 +96,7 @@
                 <ul class="proyectos__lista">
 
                     <li class="proyecto proyecto--premio" data-filtro="web">
+                        <span class="proyecto__destacado"><span aria-hidden="true">★</span> Proyecto destacado</span>
                         <img class="proyecto__imagen" src="img/proyecto8-slotnova.webp" alt="Logo de SlotNova, planificación inteligente, sobre fondo azul oscuro" width="360" height="210" loading="lazy">
                         <div class="proyecto__contenido">
                             <span class="proyecto__categoria">Hackatón · Aplicación web</span>
@@ -83,6 +105,8 @@
                             <p class="proyecto__descripcion">
                                 Página web que genera horarios escolares de forma automática, optimizando la distribución de clases y evitando conflictos entre grados, cursos y docentes.
                             </p>
+                            <p class="proyecto__rol"><strong>Mi rol:</strong> Ayudé a programar y a plantear mejoras, y con Cielo hice el logo.</p>
+                            <ul class="proyecto__etiquetas" aria-label="Herramientas y tipo de trabajo"><li>Página web</li><li>VS Code</li><li>Claude (IA)</li><li>Illustrator</li></ul>
                             <p class="proyecto__colaboracion">En equipo con Cielo Caicedo y Santiago Colmenares</p>
                             <a class="proyecto__ver" href="proyecto-slotnova.html">Ver proyecto <span class="proyecto__flecha" aria-hidden="true">→</span></a>
                         </div>
@@ -97,6 +121,8 @@
                                 Etiqueta de vino con estilo de grabado (engraving), creada como una metáfora
                                 de las amistades profundas: construidas con calma y compartidas sin prisa.
                             </p>
+                            <p class="proyecto__rol"><strong>Mi rol:</strong> Bocetos, concepto, paleta, tipografía y mood board.</p>
+                            <ul class="proyecto__etiquetas" aria-label="Herramientas y tipo de trabajo"><li>Illustrator</li></ul>
                             <a class="proyecto__ver" href="proyecto-feu-doux.html">Ver proyecto <span class="proyecto__flecha" aria-hidden="true">→</span></a>
                         </div>
                     </li>
@@ -110,6 +136,8 @@
                                 Pendón de tema libre con estilo visual tipo cómic, explicando la historia y
                                 curiosidades del universo Marvel, con una identidad visual clara y consistente.
                             </p>
+                            <p class="proyecto__rol"><strong>Mi rol:</strong> Todo el proyecto: boceto, idea, información y pendón completo.</p>
+                            <ul class="proyecto__etiquetas" aria-label="Herramientas y tipo de trabajo"><li>Illustrator</li></ul>
                             <a class="proyecto__ver" href="proyecto-marvel.html">Ver proyecto <span class="proyecto__flecha" aria-hidden="true">→</span></a>
                         </div>
                     </li>
@@ -122,6 +150,8 @@
                             <p class="proyecto__descripcion">
                                 Manual de marca de un estudio de animación ficticio: logo y sus variantes, usos correctos e incorrectos, versiones en positivo y negativo, tipografías, paleta de colores y mockups. Se imprimió al final.
                             </p>
+                            <p class="proyecto__rol"><strong>Mi rol:</strong> Todo: logo, manual, mockups y envío a impresión.</p>
+                            <ul class="proyecto__etiquetas" aria-label="Herramientas y tipo de trabajo"><li>Illustrator</li></ul>
                             <a class="proyecto__ver" href="proyecto-santisarm-animation.html">Ver proyecto <span class="proyecto__flecha" aria-hidden="true">→</span></a>
                         </div>
                     </li>
@@ -135,6 +165,8 @@
                                 Diagramación y diseño de 3 páginas para una revista digital institucional,
                                 presentada en el Showroom semestral de la Universidad Simón Bolívar.
                             </p>
+                            <p class="proyecto__rol"><strong>Mi rol:</strong> La página de Excelencia Académica y parte de la Cultural.</p>
+                            <ul class="proyecto__etiquetas" aria-label="Herramientas y tipo de trabajo"><li>Illustrator</li><li>Photoshop</li></ul>
                             <p class="proyecto__colaboracion">En conjunto con Santiago Daniel Colmenares</p>
                             <a class="proyecto__ver" href="proyecto-revista-up-date.html">Ver proyecto <span class="proyecto__flecha" aria-hidden="true">→</span></a>
                         </div>
@@ -149,6 +181,8 @@
                                 Pieza gráfica promocional para MacondoLab Cúcuta, creada para el evento que
                                 conecta emprendimientos con la comunidad de la Universidad Simón Bolívar.
                             </p>
+                            <p class="proyecto__rol"><strong>Mi rol:</strong> Enfoque retro, pieza gráfica completa y logo.</p>
+                            <ul class="proyecto__etiquetas" aria-label="Herramientas y tipo de trabajo"><li>Illustrator</li></ul>
                             <p class="proyecto__colaboracion">En conjunto con Cielo Caicedo</p>
                             <a class="proyecto__ver" href="proyecto-love-market.html">Ver proyecto <span class="proyecto__flecha" aria-hidden="true">→</span></a>
                         </div>
@@ -162,6 +196,8 @@
                             <p class="proyecto__descripcion">
                                 Campaña del Día del Amor y la Amistad para una perfumería: 5 piezas gráficas para redes y un video promocional, con la idea de que una compra trae tres perfumes.
                             </p>
+                            <p class="proyecto__rol"><strong>Mi rol:</strong> Diagramación de las piezas y el video, en conjunto.</p>
+                            <ul class="proyecto__etiquetas" aria-label="Herramientas y tipo de trabajo"><li>Illustrator</li><li>Photoshop</li><li>CapCut</li></ul>
                             <p class="proyecto__colaboracion">En conjunto con Cielo Caicedo</p>
                             <a class="proyecto__ver" href="proyecto-trio-amoroso.html">Ver proyecto <span class="proyecto__flecha" aria-hidden="true">→</span></a>
                         </div>
@@ -176,11 +212,31 @@
                                 Rebranding de Flama, escuela de liderazgo: nuevo logotipo y diseño de camiseta
                                 oficial con la frase "Chispa que inspira, fuego que permanece".
                             </p>
+                            <p class="proyecto__rol"><strong>Mi rol:</strong> Todo: logo, camisetas, mockups y aprobación.</p>
+                            <ul class="proyecto__etiquetas" aria-label="Herramientas y tipo de trabajo"><li>Illustrator</li></ul>
                             <a class="proyecto__ver" href="proyecto-flama.html">Ver proyecto <span class="proyecto__flecha" aria-hidden="true">→</span></a>
                         </div>
                     </li>
 
                 </ul>
+            </div>
+        </section>
+
+        <section class="contacto-rapido" aria-labelledby="titulo-contacto-rapido">
+            <span class="contacto-rapido__orbe contacto-rapido__orbe--a" aria-hidden="true"></span>
+            <span class="contacto-rapido__orbe contacto-rapido__orbe--b" aria-hidden="true"></span>
+            <span class="contacto-rapido__estrellas" aria-hidden="true"></span>
+            <div class="contenedor">
+                <span class="contacto-rapido__chip"><span class="contacto-rapido__punto" aria-hidden="true"></span>Abierto a oportunidades, prácticas y proyectos</span>
+                <p id="titulo-contacto-rapido" class="contacto-rapido__titulo">¿Te gustó mi trabajo?</p>
+                <p class="contacto-rapido__subtitulo">Cuéntame qué necesitas. Me encantaría sumarme a tu equipo o ayudarte a sacar tu proyecto adelante.</p>
+                <div class="contacto-rapido__acciones">
+                    <a href="contacto.html" class="boton boton--primario">Contáctame</a>
+                    <a href="https://www.linkedin.com/in/david-santiago-sarmiento-salguero-2a3740448" class="boton contacto-rapido__ghost" target="_blank" rel="noopener noreferrer">Ver mi LinkedIn</a>
+                </div>
+                <p class="contacto-rapido__correo">
+                    <a href="mailto:santisarm.multimedia@gmail.com">santisarm.multimedia@gmail.com</a>
+                </p>
             </div>
         </section>
     </main>

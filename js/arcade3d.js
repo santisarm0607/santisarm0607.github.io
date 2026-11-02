@@ -53,104 +53,99 @@ function limitar(valor, min, max) {
 }
 
 /* ---------------------------------------------------------
-   La nave (la misma del dibujo 2D, pero en 3D). La punta mira hacia +Z.
+   La nave: un platillo volador alienígena (OVNI). El "frente" mira hacia +Z
+   (hacia ahí se inclina para apuntar al planeta) y la cúpula queda arriba.
    --------------------------------------------------------- */
 function crearNave() {
   const nave = new THREE.Group();
   const modelo = new THREE.Group(); // lo que flota y se balancea
   nave.add(modelo);
 
-  const metal = new THREE.MeshStandardMaterial({ color: 0xe9efff, metalness: 0.55, roughness: 0.28 });
-  const azul = new THREE.MeshStandardMaterial({ color: 0x3153a1, metalness: 0.4, roughness: 0.4, side: THREE.DoubleSide });
-  const celeste = new THREE.MeshStandardMaterial({ color: 0x29b6f6, metalness: 0.2, roughness: 0.3, emissive: 0x0a5f8c, emissiveIntensity: 0.5 });
+  const metal = new THREE.MeshStandardMaterial({ color: 0xcfd8f5, metalness: 0.75, roughness: 0.25 });
+  const oscuro = new THREE.MeshStandardMaterial({ color: 0x2b3f86, metalness: 0.6, roughness: 0.35 });
+  const verde = new THREE.MeshStandardMaterial({ color: 0x6be58a, metalness: 0.1, roughness: 0.45, emissive: 0x1e8a3c, emissiveIntensity: 0.55 });
 
-  // cuerpo: una figura de revolución (como torneada)
+  // casco: dos conos achatados pegados (la forma clásica de platillo), torneados
   const perfil = new THREE.SplineCurve([
-    new THREE.Vector2(0.01, -1.6), new THREE.Vector2(0.55, -1.6), new THREE.Vector2(0.78, -1.2),
-    new THREE.Vector2(0.82, -0.2), new THREE.Vector2(0.78, 0.9), new THREE.Vector2(0.6, 1.7),
-    new THREE.Vector2(0.3, 2.3), new THREE.Vector2(0.01, 2.7)
-  ]).getPoints(40);
-  const cuerpoGeo = new THREE.LatheGeometry(perfil, 36);
-  cuerpoGeo.rotateX(Math.PI / 2); // el eje Y pasa a ser Z: la punta queda hacia +Z
-  modelo.add(new THREE.Mesh(cuerpoGeo, metal));
+    new THREE.Vector2(0.01, -0.55), new THREE.Vector2(0.7, -0.5), new THREE.Vector2(1.45, -0.28),
+    new THREE.Vector2(2.05, -0.02), new THREE.Vector2(1.5, 0.2), new THREE.Vector2(0.8, 0.32),
+    new THREE.Vector2(0.01, 0.34)
+  ]).getPoints(48);
+  modelo.add(new THREE.Mesh(new THREE.LatheGeometry(perfil, 48), metal));
 
-  // punta celeste
-  const puntaPerfil = new THREE.SplineCurve([
-    new THREE.Vector2(0.612, 1.7), new THREE.Vector2(0.31, 2.32), new THREE.Vector2(0.01, 2.72)
-  ]).getPoints(16);
-  const puntaGeo = new THREE.LatheGeometry(puntaPerfil, 36);
-  puntaGeo.rotateX(Math.PI / 2);
-  modelo.add(new THREE.Mesh(puntaGeo, celeste));
+  // franja oscura alrededor del borde
+  const borde = new THREE.Mesh(new THREE.TorusGeometry(2.0, 0.09, 12, 64), oscuro);
+  borde.rotation.x = Math.PI / 2;
+  borde.position.y = -0.03;
+  modelo.add(borde);
 
-  // aletas: dos a los lados y una arriba
-  const forma = new THREE.Shape();
-  forma.moveTo(0.7, 0.8);
-  forma.lineTo(2.2, -1.1);
-  forma.lineTo(2.2, -1.7);
-  forma.lineTo(0.7, -1.4);
-  forma.closePath();
-  const aletaGeo = new THREE.ExtrudeGeometry(forma, { depth: 0.12, bevelEnabled: false });
-  aletaGeo.translate(0, 0, -0.06);
-  aletaGeo.rotateX(Math.PI / 2); // la aleta "acostada" queda a lo largo de la nave
-  const derecha = new THREE.Mesh(aletaGeo, azul);
-  const izquierda = new THREE.Mesh(aletaGeo, azul);
-  izquierda.scale.x = -1;
-  const arriba = new THREE.Mesh(aletaGeo, azul);
-  arriba.rotation.z = Math.PI / 2;
-  arriba.scale.set(0.8, 0.8, 1);
-  modelo.add(derecha, izquierda, arriba);
+  // cúpula de vidrio (celeste, medio transparente)
+  const cupula = new THREE.Mesh(
+    new THREE.SphereGeometry(0.86, 32, 20, 0, Math.PI * 2, 0, Math.PI / 2),
+    new THREE.MeshStandardMaterial({ color: 0x8fdbff, metalness: 0.1, roughness: 0.08, transparent: true, opacity: 0.55, emissive: 0x0a5f8c, emissiveIntensity: 0.35 })
+  );
+  cupula.position.y = 0.3;
+  modelo.add(cupula);
 
-  // franja azul y motor
-  const franja = new THREE.Mesh(new THREE.TorusGeometry(0.815, 0.09, 12, 48), azul);
-  franja.position.z = -0.35;
-  modelo.add(franja);
+  // el alienígena que va adentro: cabecita verde con dos ojos grandes
+  const cabeza = new THREE.Mesh(new THREE.SphereGeometry(0.36, 24, 18), verde);
+  cabeza.scale.set(1, 1.12, 1);
+  cabeza.position.set(0, 0.62, 0);
+  modelo.add(cabeza);
+  const ojoMaterial = new THREE.MeshBasicMaterial({ color: 0x0b1030 });
+  [-0.14, 0.14].forEach(function (x) {
+    const ojo = new THREE.Mesh(new THREE.SphereGeometry(0.075, 12, 10), ojoMaterial);
+    ojo.scale.set(0.8, 1.35, 0.5);
+    ojo.position.set(x, 0.68, 0.31);
+    ojo.rotation.z = x < 0 ? 0.35 : -0.35;
+    modelo.add(ojo);
+  });
 
-  const toberaGeo = new THREE.CylinderGeometry(0.42, 0.62, 0.55, 28);
-  toberaGeo.rotateX(Math.PI / 2);
-  const tobera = new THREE.Mesh(toberaGeo, new THREE.MeshStandardMaterial({ color: 0x24346b, metalness: 0.7, roughness: 0.35 }));
-  tobera.position.z = -1.85;
-  modelo.add(tobera);
+  // lucecitas que giran alrededor del borde
+  const anillo = new THREE.Group();
+  const colores = [0x29b6f6, 0xb9a4ff, 0x6be58a, 0xffffff];
+  for (let i = 0; i < 12; i++) {
+    const ang = (i / 12) * Math.PI * 2;
+    const luzPunto = new THREE.Mesh(
+      new THREE.SphereGeometry(0.085, 10, 8),
+      new THREE.MeshBasicMaterial({ color: colores[i % colores.length] })
+    );
+    luzPunto.position.set(Math.cos(ang) * 1.78, -0.12, Math.sin(ang) * 1.78);
+    anillo.add(luzPunto);
+  }
+  modelo.add(anillo);
 
-  // ventana arriba, para que se vea desde atrás
-  const ventana = new THREE.Mesh(new THREE.SphereGeometry(0.36, 24, 18), celeste);
-  ventana.scale.set(1, 1, 1.35);
-  ventana.position.set(0, 0.62, 0.95);
-  modelo.add(ventana);
-  const reflejo = new THREE.Mesh(new THREE.SphereGeometry(0.1, 12, 10), new THREE.MeshBasicMaterial({ color: 0xffffff }));
-  reflejo.position.set(-0.12, 0.88, 1.15);
-  modelo.add(reflejo);
-
-  // fuego del motor: dos conos que apuntan hacia atrás (-Z) y titilan
+  // fuego (rayo propulsor) hacia atrás (-Z): ahora en celeste y morado, y titila
   const fuego = new THREE.Group();
-  fuego.position.z = -2.1;
-  const conoGeo = new THREE.ConeGeometry(0.46, 2.6, 20, 1, true);
-  conoGeo.translate(0, -1.3, 0); // la base queda en el origen y la punta apunta hacia -Y
-  conoGeo.rotateX(-Math.PI / 2); // ... y ahora hacia -Z
+  fuego.position.z = -1.9;
+  const conoGeo = new THREE.ConeGeometry(0.5, 2.4, 20, 1, true);
+  conoGeo.translate(0, -1.2, 0);
+  conoGeo.rotateX(-Math.PI / 2);
   const fuegoExterior = new THREE.Mesh(conoGeo, new THREE.MeshBasicMaterial({
-    color: 0xffb53d, transparent: true, opacity: 0.75, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide
+    color: 0x6d5cff, transparent: true, opacity: 0.65, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide
   }));
   const interior = new THREE.Mesh(conoGeo, new THREE.MeshBasicMaterial({
-    color: 0xffffff, transparent: true, opacity: 0.9, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide
+    color: 0x9ff0ff, transparent: true, opacity: 0.9, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide
   }));
   interior.scale.set(0.5, 0.5, 0.6);
   fuego.add(fuegoExterior, interior);
   modelo.add(fuego);
 
-  // luz del motor sobre la nave
-  const luz = new THREE.PointLight(0xffa23c, 8, 9, 2);
-  luz.position.z = -2.6;
+  // luz del motor
+  const luz = new THREE.PointLight(0x7aa8ff, 8, 9, 2);
+  luz.position.z = -2.4;
   modelo.add(luz);
 
-  return { nave: nave, modelo: modelo, fuego: fuego, luz: luz };
+  return { nave: nave, modelo: modelo, fuego: fuego, luz: luz, anillo: anillo };
 }
 
 /* ---------------------------------------------------------
    Los planetas
    --------------------------------------------------------- */
-const PLANETAS = {
+export const PLANETAS = {
   // Galaxy Gol: un planeta-cancha de fútbol
   gol: {
-    radio: 3.3,
+    radio: 2.7,
     crear: function (grupo, brillo) {
       const textura = texturaDibujada(1024, 512, function (c, w, h) {
         // franjas de pasto
@@ -194,7 +189,7 @@ const PLANETAS = {
 
   // COSMOBALL: un agujero negro con su disco de gas brillante
   cosmo: {
-    radio: 2.7,
+    radio: 2.0,
     crear: function (grupo, brillo) {
       const hueco = new THREE.Mesh(
         new THREE.SphereGeometry(1, 48, 32),
@@ -248,6 +243,148 @@ const PLANETAS = {
       const pelota = new THREE.Mesh(new THREE.SphereGeometry(0.13, 18, 14), new THREE.MeshBasicMaterial({ color: 0x9ff1ff }));
       grupo.add(pelota);
       return { girar: disco, girarEje: 'z', luna: pelota, lunaRadio: 1.9, lunaVel: 1.3 };
+    }
+  },
+
+  // Galaxy Invasion: un planeta rojo de lava con un OVNI dándole vueltas
+  invasion: {
+    radio: 2.6,
+    crear: function (grupo, brillo) {
+      const textura = texturaDibujada(1024, 512, function (c, w, h) {
+        const g = c.createLinearGradient(0, 0, 0, h);
+        g.addColorStop(0, '#5a1d1a'); g.addColorStop(0.5, '#8f3324'); g.addColorStop(1, '#4a1614');
+        c.fillStyle = g; c.fillRect(0, 0, w, h);
+        for (let i = 0; i < 700; i++) { // manchas de roca
+          c.fillStyle = 'rgba(' + (40 + Math.random() * 90) + ',' + (10 + Math.random() * 30) + ',10,0.16)';
+          c.beginPath(); c.arc(Math.random() * w, Math.random() * h, 2 + Math.random() * 16, 0, 6.28); c.fill();
+        }
+        c.shadowColor = '#ff7a1a'; c.shadowBlur = 14; // grietas de lava
+        c.strokeStyle = 'rgba(255,176,64,0.95)'; c.lineCap = 'round';
+        for (let i = 0; i < 30; i++) {
+          let x = Math.random() * w, y = Math.random() * h;
+          c.lineWidth = 2 + Math.random() * 3;
+          c.beginPath(); c.moveTo(x, y);
+          for (let k = 0; k < 9; k++) { x += (Math.random() - 0.5) * 80; y += (Math.random() - 0.5) * 60; c.lineTo(x, y); }
+          c.stroke();
+        }
+        c.shadowBlur = 0;
+        for (let i = 0; i < 22; i++) { // cráteres
+          const x = Math.random() * w, y = h * (0.15 + Math.random() * 0.7), r = 12 + Math.random() * 40;
+          c.fillStyle = 'rgba(25,6,4,0.55)'; c.beginPath(); c.arc(x, y, r, 0, 6.28); c.fill();
+        }
+      });
+      const esfera = new THREE.Mesh(
+        new THREE.SphereGeometry(1, 64, 40),
+        new THREE.MeshStandardMaterial({ map: textura, roughness: 0.9, metalness: 0, emissive: 0xff5a1a, emissiveMap: textura, emissiveIntensity: 0.28 })
+      );
+      grupo.add(esfera);
+
+      // el OVNI: plato metálico, cúpula verde y lucecitas
+      const ovni = new THREE.Group();
+      const plato = new THREE.Mesh(new THREE.SphereGeometry(1, 28, 14), new THREE.MeshStandardMaterial({ color: 0xc2cce0, metalness: 0.85, roughness: 0.28 }));
+      plato.scale.set(0.34, 0.085, 0.34);
+      const cupula = new THREE.Mesh(
+        new THREE.SphereGeometry(1, 20, 12, 0, Math.PI * 2, 0, Math.PI / 2),
+        new THREE.MeshStandardMaterial({ color: 0x7dffa0, emissive: 0x2cff6b, emissiveIntensity: 0.9, transparent: true, opacity: 0.88 })
+      );
+      cupula.scale.set(0.16, 0.15, 0.16); cupula.position.y = 0.045;
+      ovni.add(plato, cupula);
+      for (let i = 0; i < 6; i++) {
+        const a = i / 6 * Math.PI * 2;
+        const luz = new THREE.Mesh(new THREE.SphereGeometry(0.018, 8, 6), new THREE.MeshBasicMaterial({ color: i % 2 ? 0x9dffb0 : 0xfff2a0 }));
+        luz.position.set(Math.cos(a) * 0.3, -0.005, Math.sin(a) * 0.3);
+        ovni.add(luz);
+      }
+      grupo.add(ovni);
+      return { girar: esfera, luna: ovni, lunaRadio: 1.7, lunaVel: 1.1 };
+    }
+  },
+
+  // Galaxy War: un planeta partido en dos bandos (azul y rojo) con un anillo y dos naves
+  war: {
+    radio: 2.4,
+    crear: function (grupo, brillo) {
+      const textura = texturaDibujada(1024, 512, function (c, w, h) {
+        const g1 = c.createLinearGradient(0, 0, 0, h);
+        g1.addColorStop(0, '#2c63d8'); g1.addColorStop(1, '#183a8f');
+        c.fillStyle = g1; c.fillRect(0, 0, w / 2, h);
+        const g2 = c.createLinearGradient(0, 0, 0, h);
+        g2.addColorStop(0, '#c9374a'); g2.addColorStop(1, '#7c1a2a');
+        c.fillStyle = g2; c.fillRect(w / 2, 0, w / 2, h);
+        c.strokeStyle = 'rgba(255,255,255,0.16)'; c.lineWidth = 2; // paneles
+        for (let x = 0; x <= w; x += 64) { c.beginPath(); c.moveTo(x, 0); c.lineTo(x, h); c.stroke(); }
+        for (let y = 0; y <= h; y += 64) { c.beginPath(); c.moveTo(0, y); c.lineTo(w, y); c.stroke(); }
+        for (let i = 0; i < 160; i++) { // luces de las bases
+          c.fillStyle = Math.random() < 0.5 ? 'rgba(190,225,255,0.85)' : 'rgba(255,235,160,0.85)';
+          c.fillRect(Math.random() * w, Math.random() * h, 3, 3);
+        }
+        c.fillStyle = 'rgba(255,255,255,0.55)'; // la línea del frente de batalla
+        c.fillRect(w / 2 - 3, 0, 6, h); c.fillRect(0, 0, 4, h);
+      });
+      const esfera = new THREE.Mesh(new THREE.SphereGeometry(1, 64, 40), new THREE.MeshStandardMaterial({ map: textura, roughness: 0.5, metalness: 0.35 }));
+      esfera.rotation.y = -Math.PI / 2 + 0.5;
+      grupo.add(esfera);
+
+      const inclinado = new THREE.Group(); // anillo metálico inclinado
+      inclinado.rotation.set(-1.18, 0, 0.28);
+      inclinado.add(new THREE.Mesh(
+        new THREE.RingGeometry(1.3, 1.66, 96, 1),
+        new THREE.MeshStandardMaterial({ color: 0xaab6d6, metalness: 0.7, roughness: 0.3, side: THREE.DoubleSide, transparent: true, opacity: 0.8 })
+      ));
+      grupo.add(inclinado);
+
+      // dos naves en formación (una azul y una roja)
+      const naves = new THREE.Group();
+      [[0x4fa3ff, -0.16], [0xff5a6e, 0.16]].forEach(function (par) {
+        const nave = new THREE.Mesh(new THREE.ConeGeometry(0.06, 0.26, 8), new THREE.MeshStandardMaterial({ color: par[0], emissive: par[0], emissiveIntensity: 0.7, metalness: 0.4, roughness: 0.4 }));
+        nave.rotation.z = -Math.PI / 2;
+        nave.position.z = par[1];
+        naves.add(nave);
+      });
+      grupo.add(naves);
+      return { girar: esfera, luna: naves, lunaRadio: 1.55, lunaVel: 1.5 };
+    }
+  },
+
+  // ORBIX: Overdrive: un balón de baloncesto con anillos de neón
+  orbix: {
+    radio: 2.5,
+    crear: function (grupo, brillo) {
+      const textura = texturaDibujada(1024, 512, function (c, w, h) {
+        const g = c.createLinearGradient(0, 0, 0, h);
+        g.addColorStop(0, '#f08a3a'); g.addColorStop(0.5, '#e2762b'); g.addColorStop(1, '#bb5a1c');
+        c.fillStyle = g; c.fillRect(0, 0, w, h);
+        for (let i = 0; i < 3000; i++) { // textura rugosa del balón
+          c.fillStyle = 'rgba(0,0,0,' + (Math.random() * 0.12) + ')';
+          c.fillRect(Math.random() * w, Math.random() * h, 2, 2);
+        }
+        c.strokeStyle = '#1a0f0a'; c.lineWidth = 9; c.lineCap = 'round';
+        c.beginPath(); c.moveTo(0, h / 2); c.lineTo(w, h / 2); c.stroke();                     // costura del ecuador
+        [0.25, 0.75].forEach(function (k) { c.beginPath(); c.moveTo(w * k, 0); c.lineTo(w * k, h); c.stroke(); }); // costuras verticales
+        [0.5, 1.0, 0.0].forEach(function (k) {                                                     // costuras curvas
+          [-1, 1].forEach(function (lado) {
+            c.beginPath();
+            for (let y = 0; y <= h; y += 8) {
+              const x = w * k + lado * Math.sin(Math.PI * y / h) * w * 0.085 + lado * w * 0.01;
+              if (y === 0) c.moveTo(x, y); else c.lineTo(x, y);
+            }
+            c.stroke();
+          });
+        });
+      });
+      const esfera = new THREE.Mesh(new THREE.SphereGeometry(1, 64, 40), new THREE.MeshStandardMaterial({ map: textura, roughness: 0.72, metalness: 0.02 }));
+      esfera.rotation.y = 0.4;
+      grupo.add(esfera);
+
+      // anillos de neón ("Overdrive")
+      [[1.25, 0.3, 0x5ff0ff], [-0.5, -0.9, 0xff7bd8]].forEach(function (a) {
+        const aro = new THREE.Mesh(new THREE.TorusGeometry(1.5, 0.022, 12, 140), new THREE.MeshBasicMaterial({ color: a[2], transparent: true, opacity: 0.95 }));
+        aro.rotation.set(a[0], a[1], 0);
+        grupo.add(aro);
+      });
+      const orbe = new THREE.Mesh(new THREE.SphereGeometry(0.1, 16, 12), new THREE.MeshBasicMaterial({ color: 0xfff07a }));
+      grupo.add(orbe);
+      return { girar: esfera, luna: orbe, lunaRadio: 1.5, lunaVel: 1.7 };
     }
   },
 
@@ -347,16 +484,18 @@ export function crearEscena(opciones) {
   // la nave
   const miNave = crearNave();
   miNave.nave.position.set(0, -1.5, 0);
-  miNave.nave.scale.setScalar(0.62);
+  miNave.nave.scale.setScalar(1.0);
   escena.add(miNave.nave);
   const mirada = new THREE.Object3D(); // ayudante para calcular hacia dónde debe mirar la nave
   mirada.position.copy(miNave.nave.position);
 
-  // los planetas, en arco: izquierda, centro (más lejos) y derecha
+  // los 5 planetas, en arco (en V): los de las orillas más cerca, el del centro más lejos
   const POSICIONES = [
-    new THREE.Vector3(-9, 0.8, -19),
-    new THREE.Vector3(0, 2.2, -27),
-    new THREE.Vector3(9, 0.2, -19)
+    new THREE.Vector3(-16, 0.6, -19),
+    new THREE.Vector3(-8, 1.6, -23),
+    new THREE.Vector3(0, 2.4, -27),
+    new THREE.Vector3(8, 1.6, -23),
+    new THREE.Vector3(16, 0.6, -19)
   ];
   const textoBrillo = texturaBrillo();
   const mundos = infos.map(function (info, i) {
@@ -389,8 +528,24 @@ export function crearEscena(opciones) {
   capaEtiquetas.setAttribute('aria-hidden', 'true');
   const etiquetas = infos.map(function (info) {
     const e = document.createElement('span');
-    e.className = 'arcade__etiqueta';
-    e.textContent = info.nombre;
+    e.className = 'arcade__etiqueta' + (info.proximo ? ' arcade__etiqueta--proximo' : '');
+    e.style.setProperty('--color', info.color);
+    const nombre = document.createElement('span');
+    nombre.className = 'arcade__etiqueta-nombre';
+    nombre.textContent = info.nombre;
+    e.appendChild(nombre);
+    if (info.proximo) {
+      const chip = document.createElement('span');
+      chip.className = 'arcade__etiqueta-chip';
+      chip.textContent = 'Próximamente';
+      e.appendChild(chip);
+    }
+    if (info.corta) {
+      const tip = document.createElement('span');
+      tip.className = 'arcade__etiqueta-tip';
+      tip.textContent = info.corta;
+      e.appendChild(tip);
+    }
     capaEtiquetas.appendChild(e);
     return e;
   });
@@ -431,6 +586,9 @@ export function crearEscena(opciones) {
   camara.position.copy(camPos);
   const vector = new THREE.Vector3();
 
+  // cuánto se desplaza la cámara hacia el planeta elegido (0 = quieta, se ven los 5 a la vez)
+  let PANEO = 0.65;
+
   function ajustarTamano() {
     ancho = Math.max(1, contenedor.clientWidth);
     alto = Math.max(1, contenedor.clientHeight);
@@ -438,7 +596,10 @@ export function crearEscena(opciones) {
     camara.aspect = ancho / alto;
     // en pantallas angostas (celular) abro un poco más la vista para que quepan los 3 planetas
     // el ancho que se ve se mantiene igual aunque el recuadro sea más alto o más angosto (si no, los planetas se cortarían)
-    const mitadAncho = 0.63;
+    // en pantallas anchas (PC, pantalla completa) caben los 5 planetas a la vez: la cámara no se desplaza
+    const ancha = ancho >= 560;
+    const mitadAncho = ancha ? 0.86 : 0.62;
+    PANEO = ancha ? 0 : 0.65;
     camara.fov = limitar(2 * Math.atan(mitadAncho / camara.aspect) * 180 / Math.PI, 40, 78);
     camara.updateProjectionMatrix();
   }
@@ -449,18 +610,34 @@ export function crearEscena(opciones) {
   // la nave gira hacia el planeta elegido
   const adelante = new THREE.Vector3(0, 0, -1);
   const haciaPlaneta = new THREE.Vector3();
+  let apuntaCompleto = false;
+  // con 5 planetas, la cámara (y la nave) se desplazan de lado hacia el elegido para que siempre se vea bien
+  let panX = 0;
+  let panMeta = 0;
+
+  // hacia dónde debe mirar la nave (se recalcula cada cuadro porque la nave se desplaza)
+  function calcularMeta() {
+    // mientras se elige, la nave solo se inclina un poco hacia el planeta (65 %); al despegar apunta de lleno
+    haciaPlaneta.copy(mundos[elegido].grupo.position).sub(miNave.nave.position).normalize();
+    haciaPlaneta.lerpVectors(adelante, haciaPlaneta, apuntaCompleto ? 1 : 0.65).normalize();
+    mirada.position.copy(miNave.nave.position);
+    mirada.lookAt(haciaPlaneta.multiplyScalar(10).add(miNave.nave.position)); // en un objeto normal, lookAt apunta su eje +Z (donde está la punta)
+    quatMeta.copy(mirada.quaternion);
+  }
+
   function apuntar(i, instante, completo) {
     elegido = i;
+    apuntaCompleto = !!completo;
+    panMeta = mundos[i].grupo.position.x * PANEO;
     mundos.forEach(function (m, n) {
       m.escalaMeta = n === i ? 1.22 : 1;
       etiquetas[n].classList.toggle('arcade__etiqueta--activa', n === i);
     });
-    // mientras se elige, la nave solo se inclina un poco hacia el planeta (65 %); al despegar apunta de lleno
-    haciaPlaneta.copy(mundos[i].grupo.position).sub(miNave.nave.position).normalize();
-    haciaPlaneta.lerpVectors(adelante, haciaPlaneta, completo ? 1 : 0.65).normalize();
-    mirada.position.copy(miNave.nave.position);
-    mirada.lookAt(haciaPlaneta.multiplyScalar(10).add(miNave.nave.position)); // en un objeto normal, lookAt apunta su eje +Z (donde está la punta)
-    quatMeta.copy(mirada.quaternion);
+    if (instante) {
+      panX = panMeta;
+      miNave.nave.position.x = panX * 0.9;
+    }
+    calcularMeta();
     if (instante) {
       miNave.nave.quaternion.copy(quatMeta);
       mundos.forEach(function (m) { m.escala = m.escalaMeta; });
@@ -494,8 +671,12 @@ export function crearEscena(opciones) {
     if (salto) return;
     sobre = planetaEn(e);
     renderizador.domElement.style.cursor = sobre >= 0 ? 'pointer' : '';
+    etiquetas.forEach(function (et, n) { et.classList.toggle('arcade__etiqueta--sobre', n === sobre); });
   });
-  renderizador.domElement.addEventListener('pointerleave', function () { sobre = -1; });
+  renderizador.domElement.addEventListener('pointerleave', function () {
+    sobre = -1;
+    etiquetas.forEach(function (et) { et.classList.remove('arcade__etiqueta--sobre'); });
+  });
   renderizador.domElement.addEventListener('click', function (e) {
     if (salto) return;
     const n = planetaEn(e);
@@ -531,11 +712,16 @@ export function crearEscena(opciones) {
     // la nave flota y gira suavecito hacia el planeta elegido
     const nave = miNave.nave;
     if (!salto) {
+      panMeta = mundos[elegido].grupo.position.x * PANEO;
+      panX += (panMeta - panX) * Math.min(1, dt * 3);
+      nave.position.x = panX * 0.9;
+      calcularMeta();
       nave.quaternion.slerp(quatMeta, Math.min(1, dt * 4.5));
       miNave.modelo.position.y = Math.sin(tiempo * 1.6) * 0.14;
       miNave.modelo.rotation.z = Math.sin(tiempo * 1.1) * 0.05;
     }
 
+    miNave.anillo.rotation.y += dt * 2.2; // las lucecitas del borde giran
     // fuego del motor titilando (más largo durante el salto)
     const fuerza = salto ? 1.4 + salto.velocidad * 1.6 : 1;
     const parpadeo = 0.85 + Math.random() * 0.3;
@@ -547,9 +733,9 @@ export function crearEscena(opciones) {
 
     // la cámara va un poquito hacia donde apunta la nave
     if (!salto) {
-      camMeta.set(vectorMirada().x * 0.9, camPos.y - vectorMirada().y * 0.25, camPos.z);
+      camMeta.set(panX + vectorMirada().x * 0.9, camPos.y - vectorMirada().y * 0.25, camPos.z);
       camara.position.lerp(camMeta, Math.min(1, dt * 2.5));
-      camara.lookAt(vectorMirada().x * 2.2, 0.8, -12);
+      camara.lookAt(panX + vectorMirada().x * 2.2, 0.8, -12);
     }
 
     posicionarEtiquetas();
@@ -570,6 +756,10 @@ export function crearEscena(opciones) {
       const x = (vector.x * 0.5 + 0.5) * ancho;
       const y = (-vector.y * 0.5 + 0.5) * alto;
       etiquetas[n].style.transform = 'translate(' + x.toFixed(1) + 'px, ' + y.toFixed(1) + 'px) translate(-50%, 0)';
+      // que el globito con la descripción no se salga del recuadro
+      const mitad = 112;
+      const dx = x - mitad < 6 ? 6 - (x - mitad) : (x + mitad > ancho - 6 ? (ancho - 6) - (x + mitad) : 0);
+      etiquetas[n].style.setProperty('--dx', dx.toFixed(0) + 'px');
       etiquetas[n].style.opacity = salto ? String(Math.max(0, 1 - salto.t * 3)) : '1';
     });
   }

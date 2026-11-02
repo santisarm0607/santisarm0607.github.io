@@ -3333,7 +3333,7 @@ html[data-tema="claro"] .hero__titulo {
 
 /* --- Cifras --- */
 .cifras {
-  padding: 0 0 var(--separacion-seccion);
+  padding: var(--separacion-seccion) 0;
 }
 
 .cifras__lista {
@@ -4581,7 +4581,7 @@ html[data-tema="claro"] .hero--nombre .hero__titulo {
 
 /* --- Sobre mí --- */
 .sobre {
-  padding: var(--separacion-seccion) 0 0;
+  padding: var(--separacion-seccion) 0;
 }
 
 .sobre__texto {
@@ -5168,7 +5168,8 @@ html[data-tema="claro"] .arcade-pantalla { box-shadow: 0 0 0 5px rgba(27, 47, 11
 /* ===========================================================
    14v. FRANJA DE CONTACTO DEL INICIO: invita a escribir (empleo, prácticas, proyectos)
    =========================================================== */
-.contacto-rapido { padding: 72px 0 64px; }
+.contacto-rapido { padding: 72px 0; }
+.arcade-franja + .contacto-rapido { margin-top: var(--separacion-seccion); } /* en el Inicio, la franja queda a 80px del bloque de arriba, igual que las demás secciones */
 .contacto-rapido .contenedor { display: grid; justify-items: center; gap: 14px; }
 .contacto-rapido__chip {
   display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; border-radius: 999px;
@@ -5220,3 +5221,690 @@ html[data-tema="claro"] .arcade-pantalla { box-shadow: 0 0 0 5px rgba(27, 47, 11
 @keyframes orbe-a { to { translate: 180px 70px; scale: 1.25; } }
 @keyframes orbe-b { to { translate: -200px -60px; scale: 1.2; } }
 @keyframes brillo-boton { 0%, 55% { left: -60%; } 100% { left: 130%; } }
+
+/* ===========================================================
+   14x. PORTAFOLIO: proyecto estrella, herramientas y rol en cada tarjeta, tarjetas más vivas
+   =========================================================== */
+.proyecto__rol { margin: 0; font-size: 0.84rem; color: var(--espacio-texto-suave); }
+.proyecto__rol strong { color: var(--espacio-texto); }
+.proyecto__etiquetas { display: flex; flex-wrap: wrap; gap: 6px; margin: 2px 0 0; padding: 0; list-style: none; }
+.proyecto__etiquetas li {
+  padding: 3px 10px; border: 1px solid rgba(143, 219, 255, 0.35); border-radius: 999px;
+  font-size: 0.72rem; font-weight: 600; letter-spacing: 0.02em; color: var(--espacio-acento-texto);
+  transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+}
+.proyecto:hover .proyecto__etiquetas li { background: rgba(41, 182, 246, 0.16); border-color: var(--espacio-acento-texto); }
+.proyectos__lista .proyecto { transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease; }
+.proyectos__lista .proyecto:hover { border-color: var(--espacio-acento-texto); box-shadow: 0 14px 36px rgba(41, 182, 246, 0.22); }
+.proyectos__lista .proyecto__ver { margin-top: auto; }
+
+/* el proyecto estrella: ancho completo, imagen grande a la izquierda */
+.proyecto--estrella { position: relative; flex: 1 1 100%; max-width: 100%; flex-direction: row; align-items: stretch; }
+.proyecto--estrella .proyecto__imagen { flex: 0 0 44%; width: 44%; height: auto; min-height: 330px; }
+.proyecto--estrella .proyecto__contenido { padding: 34px 38px; justify-content: center; gap: 12px; }
+.proyecto--estrella .proyecto__titulo { font-size: clamp(1.4rem, 3vw, 1.9rem); line-height: 1.2; }
+.proyecto--estrella .proyecto__descripcion { flex: 0 1 auto; font-size: 1rem; max-width: 56ch; }
+.proyecto--estrella .proyecto__ver { margin-top: 6px; align-self: flex-start; padding: 10px 22px; border-radius: 999px; background: #29b6f6; color: #06142e; text-decoration: none; }
+.proyecto--estrella .proyecto__ver:hover { background: #fff; color: #06142e; }
+.proyecto__destacado {
+  position: absolute; top: 14px; left: 14px; z-index: 2; padding: 5px 14px; border-radius: 999px;
+  background: #ffd23f; color: #3a2a00; font-size: 0.74rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .proyecto--estrella .proyecto__destacado { animation: destello-estrella 3.2s ease-in-out infinite; }
+}
+@keyframes destello-estrella { 50% { box-shadow: 0 0 0 6px rgba(255, 210, 63, 0.18), 0 4px 14px rgba(0, 0, 0, 0.3); } }
+@media (max-width: 820px) {
+  .proyecto--estrella { flex-direction: column; }
+  .proyecto--estrella .proyecto__imagen { flex: none; width: 100%; height: 220px; min-height: 0; }
+  .proyecto--estrella .proyecto__contenido { padding: 24px 22px; }
+}
+html[data-tema="claro"] .proyecto__etiquetas li { color: #3153a1; border-color: rgba(49, 83, 161, 0.4); }
+html[data-tema="claro"] .proyecto:hover .proyecto__etiquetas li { background: rgba(49, 83, 161, 0.1); border-color: #3153a1; }
+.proyecto--estrella .proyecto__imagen { object-fit: contain; padding: 28px; background: radial-gradient(circle at 50% 40%, #243f93 0, #14246a 70%); }
+/* mientras las tarjetas entran con el scroll se desplazan de lado: que eso nunca ensanche la página en el celular */
+.proyectos { overflow-x: clip; }
+
+/* el proyecto destacado ya no es más grande: tiene el mismo tamaño que los demás, solo lleva su etiqueta dorada */
+.proyecto--premio { position: relative; }
+.proyecto--premio .proyecto__destacado { animation: destello-estrella 3.2s ease-in-out infinite; }
+
+/* ===========================================================
+   14y. PORTADA DEL PORTAFOLIO: título que entra y cifras
+   =========================================================== */
+.portada { position: relative; overflow: hidden; padding: 70px 0 54px; text-align: left; }
+.portada::before { /* resplandor detrás del título */
+  content: ""; position: absolute; right: -8%; top: 0; width: 62%; height: 100%; pointer-events: none;
+  background: radial-gradient(ellipse at 55% 50%, rgba(41, 182, 246, 0.22), transparent 62%);
+}
+.portada__rejilla { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); align-items: center; gap: 24px 40px; }
+.portada__texto { display: grid; justify-items: start; gap: 18px; }
+.portada__etiqueta { padding: 5px 14px; border: 1px solid var(--espacio-borde); border-radius: 999px; font-size: 0.74rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--espacio-acento-texto); }
+.portada__titulo { margin: 0; font-size: clamp(2.8rem, 6.4vw, 5rem); font-weight: 600; line-height: 1.02; letter-spacing: -0.02em; text-wrap: balance; }
+.portada__palabra { display: inline-block; }
+.portada__lead { margin: 0; max-width: 46ch; font-size: 1.05rem; line-height: 1.65; }
+.portada__cifras { display: flex; flex-wrap: wrap; gap: 14px 30px; margin: 4px 0 0; padding: 0; list-style: none; }
+.portada__cifras li { display: grid; gap: 2px; }
+.portada__num { font-size: 2rem; font-weight: 700; line-height: 1; color: var(--espacio-texto); }
+.portada__cifras li > span:last-child { font-size: 0.8rem; color: var(--espacio-texto-suave); }
+.portada__bajar { display: inline-flex; align-items: center; gap: 8px; margin-top: 6px; padding: 12px 24px; border-radius: 999px; background: #29b6f6; color: #06142e; font-weight: 700; text-decoration: none; transition: background 0.25s ease, translate 0.25s ease; }
+.portada__bajar:hover { background: #fff; translate: 0 3px; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .portada__palabra { animation: portada-sube 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) backwards; }
+  .portada__palabra:nth-child(2) { animation-delay: 0.14s; }
+  .portada__etiqueta, .portada__lead, .portada__cifras, .portada__bajar { animation: portada-sube 0.8s ease backwards; }
+  .portada__lead { animation-delay: 0.3s; } .portada__cifras { animation-delay: 0.42s; } .portada__bajar { animation-delay: 0.54s; }
+}
+@keyframes portada-sube { from { opacity: 0; transform: translateY(34px); } }
+
+@media (max-width: 900px) {
+  .portada { padding: 46px 0 30px; }
+  .portada__rejilla { grid-template-columns: minmax(0, 1fr); }
+}
+html[data-tema="claro"] .portada__etiqueta, html[data-tema="claro"] .portada__titulo { color: #1b2f73; }
+
+/* los filtros: una sola fila centrada; en celular se desliza de lado */
+.filtros { gap: 8px; }
+.filtro { padding-inline: 16px; }
+@media (max-width: 760px) {
+  .filtros { flex-wrap: nowrap; justify-content: flex-start; overflow-x: auto; scroll-snap-type: x proximity; padding: 4px 2px 10px; margin-inline: -2px; scrollbar-width: none; }
+  .filtros::-webkit-scrollbar { display: none; }
+  .filtro { flex: none; scroll-snap-align: start; }
+}
+
+/* portada centrada */
+.portada { text-align: center; padding: 84px 0 56px; }
+.portada::before { right: 0; left: 0; width: 100%; background: radial-gradient(ellipse at 50% 30%, rgba(41, 182, 246, 0.2), transparent 60%); }
+.portada__rejilla { grid-template-columns: minmax(0, 1fr); justify-items: center; }
+.portada__texto { justify-items: center; }
+.portada__lead { max-width: 56ch; }
+.portada__cifras { justify-content: center; gap: 14px 44px; }
+.portada__cifras li { justify-items: center; }
+@media (max-width: 900px) { .portada { padding: 52px 0 36px; } }
+
+/* ===========================================================
+   14z. PORTADA DEL PORTAFOLIO, más viva: letras, luz, iconos flotantes y frase que cambia
+   =========================================================== */
+.portada__rejilla { position: relative; z-index: 1; }
+.portada::after { /* luz que sigue al mouse */
+  content: ""; position: absolute; inset: 0; pointer-events: none; opacity: 0; transition: opacity 0.4s ease;
+  background: radial-gradient(300px circle at var(--mx, 50%) var(--my, 50%), rgba(143, 219, 255, 0.16), transparent 70%);
+}
+.portada--luz::after { opacity: 1; }
+.portada .contacto-rapido__orbe--a { opacity: 0.75; }
+.portada .contacto-rapido__orbe--b { opacity: 0.7; }
+
+.portada__letra { display: inline-block; translate: 0 calc(var(--c, 0) * -9px); scale: calc(1 + var(--c, 0) * 0.14); color: color-mix(in srgb, var(--espacio-texto) calc(100% - var(--c, 0) * 15%), #29b6f6); transition: translate 0.2s ease-out, scale 0.2s ease-out; }
+.portada__rota { margin: -4px 0 0; font-size: clamp(1.05rem, 2.4vw, 1.4rem); color: var(--espacio-texto-suave); }
+.portada__area { display: inline-block; font-weight: 700; color: var(--espacio-texto); border-bottom: 3px solid #29b6f6; padding-bottom: 1px; }
+
+.portada__iconos { position: absolute; inset: 0; pointer-events: none; }
+.portada__icono {
+  position: absolute; width: var(--tam, 40px); height: var(--tam, 40px); fill: none; stroke: #8fdbff; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; opacity: 0.45;
+  translate: calc(var(--px, 0) * var(--prof, 1) * -18px) calc(var(--py, 0) * var(--prof, 1) * -14px); transition: translate 0.3s ease-out;
+}
+.portada__icono--1 { left: 7%; top: 22%; --tam: 46px; rotate: -18deg; }
+.portada__icono--2 { left: 16%; bottom: 14%; --tam: 38px; }
+.portada__icono--3 { left: 3%; top: 58%; --tam: 44px; rotate: 12deg; }
+.portada__icono--4 { right: 8%; top: 18%; --tam: 44px; }
+.portada__icono--5 { right: 15%; bottom: 12%; --tam: 52px; rotate: 8deg; }
+.portada__icono--6 { right: 4%; top: 52%; --tam: 34px; stroke: #b9a8ff; }
+@media (max-width: 760px) { .portada__icono--3, .portada__icono--6, .portada__icono--4 { display: none; } .portada__icono { --tam: 30px; opacity: 0.35; } }
+
+.portada__bajar { position: relative; overflow: hidden; }
+.portada__bajar::after { content: ""; position: absolute; top: 0; bottom: 0; left: -60%; width: 40%; background: linear-gradient(100deg, transparent, rgba(255,255,255,.65), transparent); transform: skewX(-20deg); }
+.filtro--eco { box-shadow: 0 0 0 3px rgba(41, 182, 246, 0.35), 0 0 22px rgba(41, 182, 246, 0.55); border-color: #29b6f6; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .portada__letra { animation: letra-sube 0.8s cubic-bezier(0.2, 0.9, 0.25, 1.15) calc(var(--i) * 0.045s + 0.1s) backwards; }
+  .portada__palabra { animation: none; }
+  .portada__rota { animation: portada-sube 0.8s ease 0.45s backwards; }
+  .portada__icono { animation: icono-flota 7s ease-in-out infinite alternate, icono-entra 1s ease backwards; }
+  .portada__icono--2 { animation-duration: 8s, 1s; animation-delay: -2s, 0.2s; }
+  .portada__icono--3 { animation-duration: 6s, 1s; animation-delay: -1s, 0.3s; }
+  .portada__icono--4 { animation-duration: 9s, 1s; animation-delay: -4s, 0.4s; }
+  .portada__icono--5 { animation-duration: 7.5s, 1s; animation-delay: -3s, 0.5s; }
+  .portada__icono--6 { animation-duration: 6.5s, 1s; animation-delay: -5s, 0.6s; }
+  .portada__bajar::after { animation: brillo-boton 3.8s ease-in-out 1.4s infinite; }
+  .portada__cifras li { animation: portada-sube 0.7s ease backwards; }
+  .portada__cifras li:nth-child(2) { animation-delay: 0.55s; } .portada__cifras li:nth-child(3) { animation-delay: 0.68s; } .portada__cifras li:nth-child(1) { animation-delay: 0.42s; }
+  .portada__cifras li:nth-child(3) .portada__num span { display: inline-block; animation: trofeo 2.6s ease-in-out 1.4s infinite; }
+}
+@keyframes letra-sube { from { opacity: 0; transform: translateY(0.7em) rotate(6deg); } }
+@keyframes icono-flota { to { transform: translateY(-16px) rotate(6deg); } }
+@keyframes icono-entra { from { opacity: 0; scale: 0.3; } }
+@keyframes trofeo { 0%, 70%, 100% { transform: rotate(0); } 78% { transform: rotate(-14deg) scale(1.15); } 86% { transform: rotate(12deg) scale(1.15); } 94% { transform: rotate(-6deg); } }
+html[data-tema="claro"] .portada__icono { stroke: #3153a1; opacity: 0.35; }
+html[data-tema="claro"] .portada__area { color: #1b2f73; }
+html[data-tema="claro"] .portada__letra { color: color-mix(in srgb, #1b2f73 calc(100% - var(--c, 0) * 20%), #29b6f6); }
+
+/* filtros: un poco más compactos para que quepan en una fila en pantallas medianas */
+@media (max-width: 1000px) { .filtro { font-size: 0.82rem; padding-inline: 12px; } .filtros { gap: 6px; } }
+
+/* ===========================================================
+   14za. Tarjetas del Portafolio sin huecos: si una tarjeta queda más alta que su vecina,
+   la imagen crece (en vez de dejar un vacío entre el texto y "Mi rol")
+   =========================================================== */
+.proyecto__imagen { flex: 1 0 210px; height: auto; min-height: 210px; }
+.proyecto__contenido { flex: 0 0 auto; }
+.proyecto__descripcion { flex: 0 0 auto; }
+
+/* ===========================================================
+   14zb. CONTACTO: portada viva, formulario en 3 pasos y "Línea directa"
+   =========================================================== */
+.punto-vivo { position: relative; display: inline-block; width: 9px; height: 9px; border-radius: 50%; background: #4ade80; flex: none; }
+.punto-vivo::after { content: ""; position: absolute; inset: -4px; border-radius: 50%; border: 2px solid #4ade80; opacity: 0; }
+.portada__etiqueta--viva { display: inline-flex; align-items: center; gap: 9px; }
+@media (prefers-reduced-motion: no-preference) { .punto-vivo::after { animation: latido 2s ease-out infinite; } }
+@keyframes latido { 0% { transform: scale(0.6); opacity: 0.9; } 100% { transform: scale(1.6); opacity: 0; } }
+.contacto-hero.portada { padding: 70px 0 34px; }
+.contacto-hero .portada__bajar { margin-top: 8px; }
+
+.contacto-form-seccion { padding: 26px 0 80px; }
+.contacto-rejilla > aside { align-self: flex-start; }
+@media (min-width: 992px) { .contacto-rejilla > aside { position: sticky; top: 96px; } }
+
+/* --- formulario --- */
+.form-tarjeta.form-pasos { max-width: none; margin: 0; padding: 30px 34px 28px; position: relative; overflow: hidden; }
+.form-tarjeta[hidden] { display: none; }
+.form-tarjeta.form-gracias { max-width: none; margin: 0; }
+.form-pasos fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }
+.form-pasos:not(.form-pasos--js) [data-atras], .form-pasos:not(.form-pasos--js) [data-sig], .form-pasos:not(.form-pasos--js) .pasos-ruta { display: none; }
+.form-pasos:not(.form-pasos--js) .paso { margin-bottom: 26px; }
+.form-pasos .paso[hidden] { display: none; }
+.paso__titulo { float: none; width: 100%; margin: 0 0 18px; padding: 0; font-size: clamp(1.3rem, 3vw, 1.65rem); font-weight: 600; line-height: 1.2; color: var(--espacio-texto); display: grid; gap: 4px; }
+.paso__num { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--espacio-acento-texto); }
+.paso__sub { margin: 22px 0 10px; display: block; }
+.form-opcional { font-weight: 400; font-size: 0.85em; color: var(--espacio-texto-suave); }
+
+/* ruta de 3 nodos que se va llenando */
+.pasos-ruta { position: relative; display: flex; justify-content: space-between; margin: 0 0 28px; padding: 0; list-style: none; }
+.pasos-ruta::before, .pasos-ruta::after { content: ""; position: absolute; top: 17px; left: 17px; height: 3px; border-radius: 3px; }
+.pasos-ruta::before { right: 17px; background: var(--espacio-borde); }
+.pasos-ruta::after { width: calc((100% - 34px) * var(--paso, 0) / var(--max, 2)); background: linear-gradient(90deg, #29b6f6, #8fdbff); transition: width 0.5s cubic-bezier(0.3, 0.8, 0.3, 1); }
+.pasos-ruta li { position: relative; z-index: 1; }
+.pasos-ruta__nodo { display: grid; justify-items: center; gap: 6px; padding: 0; border: 0; background: none; color: var(--espacio-texto-suave); font: inherit; cursor: pointer; }
+.pasos-ruta__nodo span { display: grid; place-items: center; width: 37px; height: 37px; margin: -1px; border-radius: 50%; border: 2px solid var(--espacio-borde); background: var(--espacio-panel); font-weight: 700; transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease, scale 0.3s ease; }
+.pasos-ruta__nodo em { font-style: normal; font-size: 0.76rem; font-weight: 600; letter-spacing: 0.04em; }
+.pasos-ruta li:first-child .pasos-ruta__nodo { justify-items: start; }
+.pasos-ruta li:last-child .pasos-ruta__nodo { justify-items: end; }
+.pasos-ruta__nodo--actual span { border-color: #29b6f6; color: #29b6f6; scale: 1.1; box-shadow: 0 0 0 5px rgba(41, 182, 246, 0.18); }
+.pasos-ruta__nodo--actual { color: var(--espacio-texto); }
+.pasos-ruta__nodo--hecho span { background: #29b6f6; border-color: #29b6f6; color: #06142e; font-size: 0; }
+.pasos-ruta__nodo--hecho span::before { content: "✓"; font-size: 1rem; }
+.pasos-ruta__nodo:focus-visible { outline: 2px solid #8fdbff; outline-offset: 4px; border-radius: 10px; }
+
+/* opciones en botoncitos */
+.chips { display: flex; flex-wrap: wrap; gap: 9px; border-radius: 14px; }
+.chips--error { outline: 2px solid #ff8a8a; outline-offset: 6px; }
+.chip { position: relative; cursor: pointer; }
+.chip input { position: absolute; opacity: 0; inset: 0; width: 100%; height: 100%; margin: 0; cursor: pointer; }
+.chip span { display: inline-block; padding: 9px 17px; border: 1px solid var(--espacio-borde); border-radius: 999px; font-size: 0.93rem; font-weight: 500; color: var(--espacio-texto); background: rgba(255, 255, 255, 0.03); transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease, translate 0.2s ease; }
+.chip:hover span { border-color: #29b6f6; translate: 0 -2px; }
+.chip input:checked + span { background: #29b6f6; border-color: #29b6f6; color: #06142e; font-weight: 700; }
+.chip input:focus-visible + span { outline: 2px solid #8fdbff; outline-offset: 3px; }
+
+.pistas { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 10px; }
+.pistas__titulo { font-size: 0.82rem; color: var(--espacio-texto-suave); margin-right: 2px; }
+.pista { padding: 5px 13px; border: 1px dashed var(--espacio-borde); border-radius: 999px; background: none; color: var(--espacio-texto-suave); font: inherit; font-size: 0.82rem; cursor: pointer; transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease; }
+.pista:hover, .pista:focus-visible { color: var(--espacio-texto); border-color: #29b6f6; }
+.pista--usada { border-style: solid; border-color: #29b6f6; color: #29b6f6; }
+.form-pasos .form-contador { text-align: right; margin: 6px 0 0; }
+
+.paso__error { margin: 18px 0 0; padding: 10px 14px; border-radius: 12px; background: rgba(255, 120, 120, 0.12); border: 1px solid rgba(255, 138, 138, 0.55); color: #ffb3b3; font-size: 0.92rem; }
+.form-pasos [aria-invalid="true"] { border-color: #ff8a8a !important; }
+.paso__nav { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-top: 26px; }
+.paso__nav [hidden] { display: none; }
+.paso__nav [data-sig], .paso__nav [data-enviar] { margin-left: auto; }
+.form-pasos .form-aviso { margin-top: 18px; text-align: left; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .form-pasos--js .paso:not([hidden]) { animation: paso-entra 0.45s cubic-bezier(0.2, 0.8, 0.2, 1); }
+  .form-tarjeta--sacude { animation: sacude 0.4s ease; }
+  .canal { transition: translate 0.25s ease, border-color 0.25s ease, background 0.25s ease; }
+  .canales > li { animation: portada-sube 0.7s ease backwards; }
+  .canales > li:nth-child(1) { animation-delay: 0.3s; } .canales > li:nth-child(2) { animation-delay: 0.4s; } .canales > li:nth-child(3) { animation-delay: 0.5s; } .canales > li:nth-child(4) { animation-delay: 0.6s; }
+}
+@keyframes paso-entra { from { opacity: 0; transform: translateX(26px); } }
+@keyframes sacude { 20%, 60% { translate: -6px 0; } 40%, 80% { translate: 6px 0; } }
+
+/* --- línea directa --- */
+.directa { display: grid; gap: 14px; padding: 24px; border: 1px solid var(--espacio-borde); border-radius: var(--radio-borde); background: var(--espacio-panel); box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3); }
+.directa__estado { display: flex; align-items: center; gap: 14px; padding-bottom: 14px; border-bottom: 1px solid var(--espacio-borde); }
+.directa__tit { margin: 0; font-size: 1.15rem; font-weight: 700; color: var(--espacio-lavanda); }
+.directa__sub { margin: 0; font-size: 0.86rem; color: var(--espacio-texto-suave); }
+.canales { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; }
+.canal { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 14px; padding: 12px 14px; border: 1px solid var(--espacio-borde); border-radius: 14px; color: var(--espacio-texto); text-decoration: none; background: rgba(255, 255, 255, 0.02); }
+a.canal:hover { translate: 4px 0; border-color: #29b6f6; background: rgba(41, 182, 246, 0.08); }
+.canal__icono { display: grid; place-items: center; width: 42px; height: 42px; border-radius: 12px; background: rgba(41, 182, 246, 0.14); flex: none; }
+.canal__icono svg, .directa__lugar svg { width: 22px; height: 22px; fill: none; stroke: #8fdbff; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.canal__texto { display: grid; min-width: 0; }
+.canal__tit { font-weight: 700; font-size: 0.95rem; }
+.canal__valor { margin: 0; font-size: 0.84rem; color: var(--espacio-texto-suave); overflow-wrap: anywhere; }
+.canal__ir { font-size: 0.84rem; font-weight: 700; color: var(--espacio-acento-texto); text-decoration: none; white-space: nowrap; }
+.canal--correo .canal__valor { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; }
+.canal--correo .boton-copiar, .canal .contacto-dato__valor .boton-copiar { display: inline-block; margin: 0; }
+.canal--correo .canal__ir:hover { text-decoration: underline; }
+.directa__lugar { display: flex; align-items: center; gap: 14px; padding-top: 14px; border-top: 1px solid var(--espacio-borde); }
+.directa__lugar p { margin: 0; font-weight: 600; color: var(--espacio-texto); line-height: 1.4; }
+.directa__hora { font-weight: 400; font-size: 0.86rem; color: var(--espacio-texto-suave); }
+@media (max-width: 520px) {
+  .form-tarjeta.form-pasos { padding: 24px 20px 22px; }
+  .canal { grid-template-columns: auto minmax(0, 1fr); }
+  .canal > .canal__ir { grid-column: 2; }
+  .directa { padding: 18px; }
+}
+html[data-tema="claro"] .paso__error { color: #a02020; background: rgba(255, 90, 90, 0.1); }
+html[data-tema="claro"] .chip span { background: rgba(49, 83, 161, 0.04); }
+html[data-tema="claro"] .chip input:checked + span { color: #fff; background: #3153a1; border-color: #3153a1; }
+html[data-tema="claro"] .pasos-ruta__nodo--actual span { color: #3153a1; border-color: #3153a1; box-shadow: 0 0 0 5px rgba(49, 83, 161, 0.16); }
+html[data-tema="claro"] .pasos-ruta__nodo--hecho span { background: #3153a1; border-color: #3153a1; color: #fff; }
+html[data-tema="claro"] .pasos-ruta::after { background: #3153a1; }
+html[data-tema="claro"] .canal__icono svg, html[data-tema="claro"] .directa__lugar svg { stroke: #3153a1; }
+html[data-tema="claro"] .pista--usada, html[data-tema="claro"] .pista:hover { color: #3153a1; border-color: #3153a1; }
+.form-tarjeta.form-pasos, .directa { text-align: left; }
+.pasos-ruta { justify-content: space-between; }
+.form-pasos fieldset, .form-pasos legend { text-align: left; }
+.paso__titulo { justify-items: start; }
+
+/* ===========================================================
+   14zc. CONTACTO: imágenes de referencia
+   =========================================================== */
+.refs__zona { position: relative; display: grid; justify-items: center; gap: 4px; padding: 20px 16px; border: 2px dashed var(--espacio-borde); border-radius: 16px; text-align: center; cursor: pointer; color: var(--espacio-texto); transition: border-color 0.25s ease, background 0.25s ease, translate 0.25s ease; }
+.refs__zona:hover, .refs__zona:focus-within, .refs__zona--sobre { border-color: #29b6f6; background: rgba(41, 182, 246, 0.08); }
+.refs__zona--sobre { translate: 0 -3px; }
+.refs__zona--llena { opacity: 0.55; }
+.refs__input { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
+.refs__icono { width: 30px; height: 30px; fill: none; stroke: #8fdbff; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.refs__texto { font-size: 0.95rem; }
+.refs__zona small { color: var(--espacio-texto-suave); font-size: 0.78rem; }
+.refs__lista { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 10px; margin: 12px 0 0; padding: 0; list-style: none; }
+.refs__lista:empty { display: none; }
+.refs__item { display: flex; align-items: center; gap: 10px; padding: 6px 8px 6px 6px; border: 1px solid var(--espacio-borde); border-radius: 12px; background: rgba(255, 255, 255, 0.03); }
+.refs__item img { width: 56px; height: 56px; object-fit: cover; border-radius: 8px; flex: none; }
+.refs__datos { display: grid; min-width: 0; flex: 1; }
+.refs__nombre { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 0.85rem; font-weight: 600; }
+.refs__datos small { color: var(--espacio-texto-suave); }
+.refs__quitar { flex: none; width: 28px; height: 28px; border: 0; border-radius: 50%; background: rgba(255, 255, 255, 0.08); color: var(--espacio-texto); cursor: pointer; font: inherit; font-size: 0.8rem; }
+.refs__quitar:hover, .refs__quitar:focus-visible { background: #ff8a8a; color: #2b0a0a; }
+.refs__nota { margin: 8px 0 0; font-size: 0.85rem; color: #ffb3b3; }
+.refs__nota:empty { display: none; }
+@media (prefers-reduced-motion: no-preference) { .refs__item { animation: paso-entra 0.35s ease; } }
+.form-gracias__refs { margin: 4px 0 18px; text-align: center; }
+.form-gracias__refs-texto { margin: 0 0 10px; font-size: 0.9rem; color: var(--espacio-texto-suave); }
+.form-gracias__miniaturas { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+.form-gracias__miniaturas img { width: 64px; height: 64px; object-fit: cover; border-radius: 10px; border: 1px solid var(--espacio-borde); }
+html[data-tema="claro"] .refs__icono { stroke: #3153a1; }
+html[data-tema="claro"] .refs__zona:hover, html[data-tema="claro"] .refs__zona:focus-within, html[data-tema="claro"] .refs__zona--sobre { border-color: #3153a1; background: rgba(49, 83, 161, 0.06); }
+html[data-tema="claro"] .refs__nota { color: #a02020; }
+.paso__nav .boton { white-space: nowrap; }
+@media (max-width: 520px) { .paso__nav .boton { padding-inline: 18px; } }
+
+.paso__sub--primero { margin-top: 0; }
+.paso__sub .form-opcional { margin-left: 4px; }
+.pregunta-extra[hidden] { display: none; }
+@media (prefers-reduced-motion: no-preference) { .pregunta-extra:not([hidden]) { animation: paso-entra 0.4s ease; } }
+@media (max-width: 520px) { .pasos-ruta__nodo em { font-size: 0.68rem; } }
+.form-pasos .paso__sub { margin: 26px 0 11px; } .form-pasos .paso__sub--primero { margin-top: 0; }
+
+.otro-campo { margin-top: 12px; }
+.otro-campo[hidden] { display: none; }
+@media (prefers-reduced-motion: no-preference) { .otro-campo:not([hidden]) { animation: paso-entra 0.35s ease; } }
+.arcade { padding-top: 24px; }
+
+/* ===========================================================
+   14zf. Botón "Volver arriba": un cohete dibujado, sin círculo azul
+   =========================================================== */
+.arriba { width: 52px; height: 84px; right: 16px; bottom: 16px; padding: 0; border-radius: 0; background: none !important; box-shadow: none; color: inherit; display: grid; place-items: end center; overflow: visible; transition: opacity 0.3s ease, transform 0.35s cubic-bezier(0.2, 0.9, 0.3, 1.2), visibility 0.3s; transform: translateY(60px); }
+.arriba--visible { transform: none; }
+.arriba:hover { background: none; color: inherit; }
+.arriba__cohete { position: relative; display: block; filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.45)) drop-shadow(0 0 14px rgba(143, 219, 255, 0.35)); transform-origin: 50% 80%; }
+.arriba__cohete svg { display: block; overflow: visible; }
+.arriba__fuego { transform-origin: 24px 62px; }
+.arriba::before { content: attr(data-etiqueta); position: absolute; right: 100%; top: 38%; margin-right: 8px; padding: 5px 11px; border-radius: 999px; background: var(--espacio-panel, #121c4a); border: 1px solid var(--espacio-borde, rgba(143, 219, 255, 0.3)); color: var(--espacio-texto, #fff); font-size: 0.78rem; font-weight: 600; white-space: nowrap; opacity: 0; translate: 8px 0; pointer-events: none; transition: opacity 0.2s ease, translate 0.2s ease; }
+.arriba:hover::before, .arriba:focus-visible::before { opacity: 1; translate: 0 0; }
+.arriba:focus-visible { outline: 2px solid #8fdbff; outline-offset: 4px; border-radius: 14px; }
+.arriba__humo { position: absolute; left: 50%; bottom: 4px; width: 0; height: 0; pointer-events: none; }
+.arriba__humo i { position: absolute; left: -9px; bottom: 0; width: 18px; height: 18px; border-radius: 50%; background: radial-gradient(circle, rgba(255, 255, 255, 0.9), rgba(190, 205, 240, 0.5) 60%, transparent 72%); opacity: 0; }
+.arriba span.arriba__cohete { transform: none; }
+@media (prefers-reduced-motion: no-preference) {
+  .arriba--visible .arriba__cohete { animation: cohete-flota 3.2s ease-in-out infinite; }
+  .arriba__fuego { animation: fuego-late 0.18s ease-in-out infinite alternate; }
+  .arriba:hover .arriba__cohete { animation: cohete-tiembla 0.35s linear infinite; }
+  .arriba:hover .arriba__fuego { animation: fuego-late 0.1s ease-in-out infinite alternate; scale: 1 1.5; }
+  .arriba--despegue .arriba__cohete { animation: cohete-sube 1s cubic-bezier(0.5, 0, 0.9, 0.35) forwards; }
+  .arriba--despegue .arriba__fuego { scale: 1 2.1; }
+  .arriba--despegue .arriba__humo i { animation: humo 0.9s ease-out forwards; }
+  .arriba--despegue .arriba__humo i:nth-child(2) { animation-delay: 0.08s; left: -22px; }
+  .arriba--despegue .arriba__humo i:nth-child(3) { animation-delay: 0.14s; left: 4px; }
+}
+@keyframes cohete-flota { 0%, 100% { translate: 0 0; } 50% { translate: 0 -5px; } }
+@keyframes cohete-tiembla { 0%, 100% { translate: -1px 0; } 25% { translate: 1px -1px; } 50% { translate: -1px -1px; } 75% { translate: 1px 0; } }
+@keyframes fuego-late { from { transform: scaleY(0.85) scaleX(0.95); } to { transform: scaleY(1.15) scaleX(1.05); } }
+@keyframes cohete-sube { 0% { translate: 0 0; } 18% { translate: 0 8px; } 100% { translate: 0 -118vh; } }
+@keyframes humo { 0% { opacity: 0.9; transform: translateY(0) scale(0.4); } 100% { opacity: 0; transform: translateY(-46px) scale(2.2); } }
+html[data-tema="claro"] .arriba__cohete { filter: drop-shadow(0 6px 10px rgba(30, 50, 110, 0.35)); }
+html[data-tema="claro"] .arriba::before { background: #fff; color: #1b2f73; border-color: rgba(49, 83, 161, 0.3); }
+@media (max-width: 520px) { .arriba::before { display: none; } }
+.arriba--despegue span.arriba__humo { animation: none; }
+.arriba span.arriba__humo { transform: none; }
+
+
+/* ===========================================================
+   14zg. ARCADE CON 5 PLANETAS: carga, globitos y ficha dinámica
+   =========================================================== */
+
+/* --- Planetas "próximamente" del carrusel de CSS: usan la imagen del planeta 3D --- */
+.planeta--invasion .planeta__esfera,
+.planeta--war .planeta__esfera,
+.planeta--orbix .planeta__esfera {
+  background: center / cover no-repeat;
+  box-shadow: 0 0 34px var(--halo);
+  opacity: 0.9;
+}
+.planeta--invasion { --halo: rgba(255, 107, 74, 0.4); }
+.planeta--war { --halo: rgba(255, 79, 139, 0.4); }
+.planeta--orbix { --halo: rgba(46, 230, 200, 0.4); }
+.planeta--invasion .planeta__esfera { background-image: url("../img/planeta-invasion.webp"); }
+.planeta--war .planeta__esfera { background-image: url("../img/planeta-war.webp"); }
+.planeta--orbix .planeta__esfera { background-image: url("../img/planeta-orbix.webp"); }
+.planeta--invasion .planeta__crater,
+.planeta--war .planeta__crater,
+.planeta--orbix .planeta__crater { display: none; }
+.arcade--js .planeta--invasion,
+.arcade--js .planeta--war,
+.arcade--js .planeta--orbix { --tam: 112px; }
+
+/* los que no están al lado del elegido se esconden (el carrusel de CSS solo enseña 3) */
+.arcade--js .planetas__item--lejos {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(0) translateZ(-300px);
+}
+
+/* --- Cargando la escena 3D: nada de carrusel 2D, solo una órbita girando --- */
+.arcade--cargando .planetas,
+.arcade--cargando .nave {
+  visibility: hidden;
+}
+.arcade--cargando .arcade__escena {
+  position: relative;
+  min-height: 430px;
+}
+.arcade--cargando .arcade__escena::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 64px;
+  height: 64px;
+  margin: -32px 0 0 -32px;
+  border-radius: 50%;
+  border: 3px solid rgba(157, 184, 255, 0.18);
+  border-top-color: var(--espacio-acento-texto);
+  animation: arcade-carga 0.9s linear infinite;
+}
+@keyframes arcade-carga { to { transform: rotate(360deg); } }
+
+/* el lienzo 3D aparece con un fundido suave */
+.arcade--3d .arcade__lienzo { animation: arcade-aparece 0.8s ease-out both; }
+@keyframes arcade-aparece { from { opacity: 0; } to { opacity: 1; } }
+
+/* --- Etiquetas de la escena 3D: nombre + globito con la descripción --- */
+.arcade__etiqueta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 0;
+  background: none;
+  border-radius: 0;
+}
+.arcade__etiqueta-nombre {
+  padding: 3px 12px;
+  border-radius: 999px;
+  background-color: rgba(10, 14, 38, 0.6);
+  border: 1px solid transparent;
+  transition: color 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
+}
+.arcade__etiqueta--activa { background: none; }
+.arcade__etiqueta--activa .arcade__etiqueta-nombre {
+  background-color: rgba(41, 182, 246, 0.22);
+  border-color: var(--color, var(--espacio-acento-texto));
+  color: var(--espacio-acento-texto);
+}
+.arcade__etiqueta-chip {
+  padding: 2px 9px;
+  border-radius: 999px;
+  background: var(--color, #29B6F6);
+  color: #0a0e26;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.arcade__etiqueta-tip {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  width: 224px;
+  margin-top: 6px;
+  padding: 8px 12px;
+  border-radius: 12px;
+  background: rgba(10, 14, 38, 0.92);
+  border: 1px solid var(--color, var(--espacio-borde));
+  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.45);
+  color: var(--espacio-texto);
+  font-size: 0.8rem;
+  font-weight: 500;
+  line-height: 1.35;
+  text-align: center;
+  white-space: normal;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(calc(-50% + var(--dx, 0px)), -6px);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  z-index: 5;
+}
+.arcade__etiqueta--sobre,
+.arcade__etiqueta--activa { z-index: 4; }
+.arcade__etiqueta--sobre .arcade__etiqueta-tip,
+.arcade__etiqueta--activa .arcade__etiqueta-tip {
+  opacity: 1;
+  transform: translate(calc(-50% + var(--dx, 0px)), 0);
+}
+/* con el ratón, el globito solo sale al pasar por encima; en pantalla táctil, en el elegido */
+@media (hover: hover) {
+  .arcade__etiqueta--activa:not(.arcade__etiqueta--sobre) .arcade__etiqueta-tip { opacity: 0; }
+}
+
+/* --- Ficha dinámica: el planeta 3D gira dentro de su órbita y el panel toma su color --- */
+.ficha-juego {
+  --color: #29B6F6;
+  position: relative;
+  overflow: hidden;
+  border-color: color-mix(in srgb, var(--color) 45%, var(--espacio-borde));
+  transition: border-color 0.5s ease, box-shadow 0.5s ease;
+}
+.ficha-juego::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--color), transparent);
+  transition: background 0.5s ease;
+}
+.ficha-juego__marco {
+  position: relative;
+  overflow: hidden;
+  height: 190px;
+  background:
+    radial-gradient(circle at 50% 50%, color-mix(in srgb, var(--color) 30%, transparent), transparent 68%),
+    var(--espacio-fondo);
+  transition: background 0.5s ease;
+}
+.ficha-juego__planeta {
+  position: relative;
+  z-index: 1;
+  width: 128px;
+  height: 128px;
+  object-fit: contain;
+  filter: drop-shadow(0 0 22px color-mix(in srgb, var(--color) 60%, transparent));
+  animation: ficha-flota 6s ease-in-out infinite;
+}
+.ficha-juego--cambia .ficha-juego__planeta { animation: ficha-llega 0.6s cubic-bezier(0.3, 1.4, 0.5, 1) both, ficha-flota 6s 0.6s ease-in-out infinite; }
+@keyframes ficha-flota { 0%, 100% { transform: translateY(-4px) rotate(-2deg); } 50% { transform: translateY(5px) rotate(3deg); } }
+@keyframes ficha-llega { from { opacity: 0; transform: scale(0.4) rotate(-40deg); } to { opacity: 1; transform: none; } }
+.ficha-juego__orbita {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 190px;
+  height: 64px;
+  margin: -32px 0 0 -95px;
+  border: 1.5px dashed color-mix(in srgb, var(--color) 70%, transparent);
+  border-radius: 50%;
+  transform: rotate(-16deg);
+  animation: ficha-orbita 14s linear infinite;
+}
+.ficha-juego__orbita::after {
+  content: "";
+  position: absolute;
+  top: -4px;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color);
+  box-shadow: 0 0 10px var(--color);
+}
+@keyframes ficha-orbita { to { transform: rotate(344deg); } }
+.ficha-juego__estado {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 2;
+  padding: 3px 11px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--color) 24%, transparent);
+  border: 1px solid var(--color);
+  color: var(--espacio-texto);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.ficha-juego--proximo .ficha-juego__estado { background: var(--color); color: #0a0e26; }
+.ficha-juego--proximo .ficha-juego__estado::before { content: "⏳ "; }
+.ficha-juego__etiqueta { color: var(--color); }
+.ficha-juego__datos dt { color: var(--color); }
+.ficha-juego--proximo .ficha-juego__despegar { background: transparent; border: 1px dashed var(--color); color: var(--espacio-texto); box-shadow: none; }
+
+html[data-tema="claro"] .arcade__etiqueta-tip { background: rgba(255, 255, 255, 0.96); color: #1b2f73; }
+html[data-tema="claro"] .ficha-juego__estado { color: #1b2f73; }
+html[data-tema="claro"] .ficha-juego--proximo .ficha-juego__estado { color: #fff; }
+
+@media (max-width: 768px) {
+  .ficha-juego__marco { height: 160px; }
+  .ficha-juego__planeta { width: 108px; height: 108px; }
+  /* en pantallas angostas solo se escribe el nombre del planeta elegido, para que no se amontonen */
+  .arcade__etiqueta:not(.arcade__etiqueta--activa) { visibility: hidden; }
+  .arcade__etiqueta-tip { width: 190px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ficha-juego__planeta, .ficha-juego__orbita, .arcade--3d .arcade__lienzo { animation: none !important; }
+}
+html[data-tema="claro"] .arcade__etiqueta-nombre { background-color: rgba(255, 255, 255, 0.85); color: #1b2f73; }
+html[data-tema="claro"] .arcade__etiqueta--activa .arcade__etiqueta-nombre { background-color: #e3f3ff; color: #1b2f73; }
+
+
+/* ===========================================================
+   14zh. SOBRE MÍ (Inicio): linterna espacial (la mueve js/efectos.js, parte 10b)
+   Sin JavaScript, o con "menos movimiento", el texto se ve completo.
+   =========================================================== */
+.sobre .habilidades__titulo { font-size: clamp(2.2rem, 6vw, 3.4rem); text-align: center; }
+.sobre .sobre__texto {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 8px 0 16px;
+  text-align: center;
+  font-size: clamp(1.5rem, 3.6vw, 2.5rem);
+  font-weight: 600;
+  line-height: 1.38;
+  text-wrap: balance;
+}
+.sobre { --apagado: rgba(157, 184, 255, 0.2); --prendido: #ffffff; --aro: rgba(41, 182, 246, 0.9); }
+html[data-tema="claro"] .sobre { --apagado: rgba(27, 47, 115, 0.16); --prendido: #1b2f73; --aro: rgba(41, 182, 246, 0.95); }
+
+.sobre--linterna .sobre__texto {
+  --lx: 50%;
+  --ly: 50%;
+  color: transparent;
+  background-image:
+    radial-gradient(circle 210px at var(--lx) var(--ly), var(--prendido) 0%, var(--prendido) 45%, var(--aro) 72%, transparent 100%),
+    linear-gradient(var(--apagado), var(--apagado));
+  background-repeat: no-repeat;
+  -webkit-background-clip: text;
+  background-clip: text;
+  text-shadow: none;
+}
+
+/* la luz que se ve: un halo y un puntito brillante donde está la linterna */
+.sobre__caja { position: relative; max-width: 900px; margin: 0 auto; }
+.sobre__luz { display: none; }
+.sobre--linterna .sobre__luz {
+  display: block;
+  position: absolute;
+  top: var(--ly, 50%);
+  left: var(--lx, 50%);
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+.sobre--linterna .sobre__luz::before {
+  content: "";
+  position: absolute;
+  width: 440px;
+  height: 440px;
+  margin: -220px 0 0 -220px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(41, 182, 246, 0.2) 0%, rgba(155, 92, 255, 0.1) 40%, transparent 70%);
+}
+html[data-tema="claro"] .sobre--linterna .sobre__luz::before { background: radial-gradient(circle, rgba(41, 182, 246, 0.4) 0%, rgba(155, 92, 255, 0.16) 40%, transparent 70%); }
+@media (max-width: 640px) { .sobre--linterna .sobre__luz::before { width: 300px; height: 300px; margin: -150px 0 0 -150px; } }
+
+/* --- Cohete más discreto: chiquito, apagado y quieto; se enciende al pasar el mouse --- */
+.arriba { width: 36px; height: 56px; right: 14px; bottom: 14px; }
+.arriba__cohete { scale: 0.62; transform-origin: 50% 100%; opacity: 0.55; filter: none; transition: opacity 0.3s ease, scale 0.3s ease; }
+.arriba:hover .arriba__cohete, .arriba:focus-visible .arriba__cohete { opacity: 1; scale: 0.7; }
+.arriba--despegue .arriba__cohete { opacity: 1; }
+.arriba__fuego { opacity: 0.8; }
+@media (prefers-reduced-motion: no-preference) {
+  .arriba--visible .arriba__cohete { animation: none; }
+}
+html[data-tema="claro"] .arriba__cohete { filter: none; }
+
+/* ===========================================================
+   14zi. ARCADE EN PANTALLA GRANDE: que se vea todo completo
+   Las 5 rayitas de progreso, y la ficha más compacta para que
+   la escena y la descripción quepan juntas en la pantalla.
+   =========================================================== */
+.arcade__progreso { grid-template-columns: repeat(5, 1fr); }
+
+@media (min-width: 901px) {
+  .ficha-juego { padding: 16px 20px; gap: 6px; }
+  .ficha-juego__marco { height: 104px; margin-bottom: 0; }
+  .ficha-juego__planeta { width: 80px; height: 80px; }
+  .ficha-juego__orbita { width: 132px; height: 44px; margin: -22px 0 0 -66px; }
+  .ficha-juego__titulo { font-size: 1.45rem; }
+  .ficha-juego__texto { font-size: 0.9rem; line-height: 1.45; }
+  .ficha-juego__datos { gap: 4px 12px; margin-top: 2px; font-size: 0.82rem; }
+  .ficha-juego__datos dd { line-height: 1.35; }
+  .ficha-juego__qr { gap: 12px; margin: 2px 0; }
+  .ficha-juego__qr-img { width: 68px; height: 68px; }
+  .ficha-juego__qr-texto { font-size: 0.8rem; }
+  .ficha-juego__despegar { padding: 9px 22px; }
+  .arcade__lienzo { min-height: 480px; }
+}

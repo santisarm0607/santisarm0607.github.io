@@ -52,70 +52,206 @@
     </header>
 
     <main>
-        <section class="contacto-hero" aria-labelledby="titulo-contacto">
-            <div class="contenedor">
-                <p id="titulo-contacto" class="contacto-hero__titulo">Hablemos de tu proyecto</p>
-                <p class="contacto-hero__texto">
-                    Completa el formulario y con gusto te responderé. Esta es una vista de demostración
-                    del formulario (maqueta), aún sin conexión a un servicio de envío real.
-                </p>
+        <section class="contacto-hero portada" aria-labelledby="titulo-contacto">
+            <span class="contacto-rapido__orbe contacto-rapido__orbe--a" aria-hidden="true"></span>
+            <span class="contacto-rapido__orbe contacto-rapido__orbe--b" aria-hidden="true"></span>
+            <span class="contacto-rapido__estrellas" aria-hidden="true"></span>
+            <div class="portada__iconos" aria-hidden="true">
+                <svg class="portada__icono portada__icono--1" style="--prof:1.6" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
+                <svg class="portada__icono portada__icono--2" style="--prof:0.9" viewBox="0 0 24 24"><path d="M4 5h16a1 1 0 011 1v10a1 1 0 01-1 1h-9l-5 4v-4H4a1 1 0 01-1-1V6a1 1 0 011-1z"/><path d="M8 10h8M8 13h5"/></svg>
+                <svg class="portada__icono portada__icono--3" style="--prof:1.3" viewBox="0 0 24 24"><path d="M21 3L3 10.500l6.500 2.500L12 20z M21 3l-11.500 10"/></svg>
+                <svg class="portada__icono portada__icono--4" style="--prof:0.7" viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.500 1.500a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A15 15 0 013 6a2 2 0 012-2z"/></svg>
+                <svg class="portada__icono portada__icono--5" style="--prof:1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M16 12v1.500a2.500 2.500 0 005 0V12a9 9 0 10-3.500 7.100"/></svg>
+                <svg class="portada__icono portada__icono--6" style="--prof:1.1" viewBox="0 0 24 24"><path d="M10 14a4 4 0 005.700 0l3-3a4 4 0 00-5.700-5.700l-1 1M14 10a4 4 0 00-5.700 0l-3 3a4 4 0 005.700 5.700l1-1"/></svg>
+            </div>
+            <div class="contenedor portada__rejilla">
+                <div class="portada__texto">
+                    <span class="portada__etiqueta portada__etiqueta--viva"><span class="punto-vivo" aria-hidden="true"></span>Disponible · prácticas y primer empleo</span>
+                    <p id="titulo-contacto" class="contacto-hero__titulo portada__titulo"><span class="portada__palabra">Hablemos</span></p>
+                    <p class="portada__rota" aria-hidden="true">Escríbeme si buscas <span class="portada__area" data-areas="un practicante|un diseñador gráfico|ayuda con tu marca|una página web|una idea nueva">un practicante</span></p>
+                    <p class="contacto-hero__texto portada__lead">
+                        Cuéntame qué necesitas en cuatro pasos cortos. Lo que escribas se prepara en tu correo
+                        y yo te respondo en uno o dos días hábiles.
+                    </p>
+                    <a href="#escribir" class="portada__bajar">Empezar <span aria-hidden="true">↓</span></a>
+                </div>
             </div>
         </section>
 
-        <section class="contacto-form-seccion">
+        <section class="contacto-form-seccion" id="escribir">
             <div class="contenedor">
+                <div class="row g-4 contacto-rejilla">
 
-                <!-- Formulario con rejilla Bootstrap de 12 columnas (col-12 en móvil, col-md-6 en escritorio) -->
-                <form class="form-tarjeta row g-3" aria-describedby="aviso-formulario">
+                    <!-- Formulario en 3 pasos (la rejilla de Bootstrap sigue organizando columnas y campos) -->
+                    <div class="col-12 col-lg-7">
+                        <form class="form-tarjeta form-pasos" aria-describedby="aviso-formulario">
 
-                    <div class="col-12 col-md-6">
-                        <label for="nombre" class="form-etiqueta">Nombre completo</label>
-                        <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Escribe tu nombre" required>
+                            <ol class="pasos-ruta" aria-label="Pasos del formulario">
+                                <li><button type="button" class="pasos-ruta__nodo" aria-label="Paso 1: quién eres"><span>1</span><em>Tú</em></button></li>
+                                <li><button type="button" class="pasos-ruta__nodo" aria-label="Paso 2: qué buscas"><span>2</span><em>Qué buscas</em></button></li>
+                                <li><button type="button" class="pasos-ruta__nodo" aria-label="Paso 3: detalles"><span>3</span><em>Detalles</em></button></li>
+                                <li><button type="button" class="pasos-ruta__nodo" aria-label="Paso 4: tu mensaje"><span>4</span><em>Mensaje</em></button></li>
+                            </ol>
+
+                            <fieldset class="paso">
+                                <legend class="paso__titulo"><span class="paso__num">Paso 1 de 4</span>¿Con quién hablo?</legend>
+                                <div class="row g-3">
+                                    <div class="col-12 col-md-6">
+                                        <label for="nombre" class="form-etiqueta">Nombre completo</label>
+                                        <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Escribe tu nombre" autocomplete="name" required>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <label for="email" class="form-etiqueta">Correo electrónico</label>
+                                        <input type="email" class="form-control" id="email" name="email" placeholder="tucorreo@ejemplo.com" autocomplete="email" required>
+                                    </div>
+                                    <div class="col-12">
+                                        <label for="organizacion" class="form-etiqueta">Empresa o institución <span class="form-opcional">(opcional)</span></label>
+                                        <input type="text" class="form-control" id="organizacion" name="organizacion" placeholder="¿Desde dónde me escribes?" autocomplete="organization">
+                                    </div>
+                                </div>
+                            </fieldset>
+
+                            <fieldset class="paso">
+                                <legend class="paso__titulo"><span class="paso__num">Paso 2 de 4</span>¿Qué estás buscando?</legend>
+                                <div class="chips" role="group" aria-label="Tipo de contacto">
+                                    <label class="chip"><input type="radio" name="asunto" value="laboral" data-texto="Oportunidad laboral" required><span>Oportunidad laboral</span></label>
+                                    <label class="chip"><input type="radio" name="asunto" value="practica" data-texto="Práctica profesional" required><span>Práctica profesional</span></label>
+                                    <label class="chip"><input type="radio" name="asunto" value="freelance" data-texto="Proyecto freelance" required><span>Proyecto freelance</span></label>
+                                    <label class="chip"><input type="radio" name="asunto" value="colab" data-texto="Colaboración" required><span>Colaboración</span></label>
+                                    <label class="chip"><input type="radio" name="asunto" value="otro" data-texto="Otro" data-otro required><span>Otro</span></label>
+                                </div>
+                                <div class="otro-campo" data-otro-de="asunto" hidden>
+                                    <input type="text" class="form-control" id="asunto-otro" name="asunto_otro" maxlength="80" placeholder="Cuéntame qué estás buscando" aria-label="Escribe qué estás buscando">
+                                </div>
+                                <p class="form-etiqueta paso__sub" id="areas-titulo">¿De qué área? <span class="form-opcional">(puedes elegir varias)</span></p>
+                                <div class="chips" role="group" aria-labelledby="areas-titulo" data-min-uno>
+                                    <label class="chip"><input type="checkbox" name="area" value="Branding" data-texto="Branding"><span>Branding</span></label>
+                                    <label class="chip"><input type="checkbox" name="area" value="Diseño gráfico" data-texto="Diseño gráfico"><span>Diseño gráfico</span></label>
+                                    <label class="chip"><input type="checkbox" name="area" value="Publicidad" data-texto="Publicidad"><span>Publicidad</span></label>
+                                    <label class="chip"><input type="checkbox" name="area" value="Diseño editorial" data-texto="Diseño editorial"><span>Diseño editorial</span></label>
+                                    <label class="chip"><input type="checkbox" name="area" value="Desarrollo web" data-texto="Desarrollo web"><span>Desarrollo web</span></label>
+                                    <label class="chip"><input type="checkbox" name="area" value="Animación" data-texto="Animación"><span>Animación</span></label>
+                                    <label class="chip"><input type="checkbox" name="area" value="Otro" data-texto="Otro" data-otro><span>Otro</span></label>
+                                    <label class="chip"><input type="checkbox" name="area" value="Aún no lo sé" data-texto="Aún no lo sé"><span>Aún no lo sé</span></label>
+                                </div>
+                                <div class="otro-campo" data-otro-de="area" hidden>
+                                    <input type="text" class="form-control" id="area-otro" name="area_otro" maxlength="80" placeholder="¿Qué otra área? (ej. fotografía, ilustración, video…)" aria-label="Escribe qué otra área">
+                                </div>
+                            </fieldset>
+
+                            <fieldset class="paso">
+                                <legend class="paso__titulo"><span class="paso__num">Paso 3 de 4</span>Cuéntame los detalles</legend>
+                                <p class="form-etiqueta paso__sub paso__sub--primero" id="mod-titulo">¿Cómo sería el trabajo?</p>
+                                <div class="chips" role="group" aria-labelledby="mod-titulo">
+                                    <label class="chip"><input type="radio" name="modalidad" value="Presencial en Cúcuta" data-texto="Presencial en Cúcuta"><span>Presencial en Cúcuta</span></label>
+                                    <label class="chip"><input type="radio" name="modalidad" value="Remoto" data-texto="Remoto"><span>Remoto</span></label>
+                                    <label class="chip"><input type="radio" name="modalidad" value="Híbrido" data-texto="Híbrido"><span>Híbrido</span></label>
+                                    <label class="chip"><input type="radio" name="modalidad" value="Me adapto" data-texto="Me adapto" checked><span>Me adapto</span></label>
+                                </div>
+                                <p class="form-etiqueta paso__sub" id="plazo-titulo">¿Para cuándo lo necesitas?</p>
+                                <div class="chips" role="group" aria-labelledby="plazo-titulo">
+                                    <label class="chip"><input type="radio" name="plazo" value="Sin afán" data-texto="Sin afán" checked><span>Sin afán</span></label>
+                                    <label class="chip"><input type="radio" name="plazo" value="Este mes" data-texto="Este mes"><span>Este mes</span></label>
+                                    <label class="chip"><input type="radio" name="plazo" value="Urgente" data-texto="Urgente"><span>Urgente</span></label>
+                                </div>
+                                <div class="pregunta-extra" data-solo="freelance" hidden>
+                                    <p class="form-etiqueta paso__sub" id="pres-titulo">Presupuesto aproximado <span class="form-opcional">(COP, opcional)</span></p>
+                                    <div class="chips" role="group" aria-labelledby="pres-titulo">
+                                      <label class="chip"><input type="radio" name="presupuesto" value="Aún por definir" data-texto="Aún por definir" checked><span>Aún por definir</span></label>
+                                      <label class="chip"><input type="radio" name="presupuesto" value="Hasta $500.000" data-texto="Hasta $500.000"><span>Hasta $500.000</span></label>
+                                      <label class="chip"><input type="radio" name="presupuesto" value="$500.000 – $1.500.000" data-texto="$500.000 – $1.500.000"><span>$500.000 – $1.500.000</span></label>
+                                      <label class="chip"><input type="radio" name="presupuesto" value="Más de $1.500.000" data-texto="Más de $1.500.000"><span>Más de $1.500.000</span></label>
+                                    </div>
+                                </div>
+                            </fieldset>
+
+                            <fieldset class="paso">
+                                <legend class="paso__titulo"><span class="paso__num">Paso 4 de 4</span>Cuéntame tu idea</legend>
+                                <label for="mensaje" class="form-etiqueta">Mensaje</label>
+                                <textarea class="form-control" id="mensaje" name="mensaje" rows="6" placeholder="Cuéntame sobre tu proyecto, tu equipo o la oportunidad..." required></textarea>
+                                <div class="pistas" role="group" aria-label="Ideas para empezar tu mensaje">
+                                    <span class="pistas__titulo">Toca para añadir:</span>
+                                    <button type="button" class="pista" data-ins="Es para: ">Para qué es</button>
+                                    <button type="button" class="pista" data-ins="Se usará en: ">Dónde se usará</button>
+                                    <button type="button" class="pista" data-ins="Mis referencias: ">Referencias</button>
+                                    <button type="button" class="pista" data-ins="Fecha límite: ">Fecha límite</button>
+                                </div>
+
+                                <div class="refs">
+                                    <p class="form-etiqueta paso__sub">Imágenes de referencia <span class="form-opcional">(opcional)</span></p>
+                                    <label class="refs__zona" for="referencias">
+                                        <input type="file" id="referencias" name="referencias" class="refs__input" accept="image/*" multiple>
+                                        <svg class="refs__icono" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V5m0 0l-4 4m4-4l4 4M4 15v3a2 2 0 002 2h12a2 2 0 002-2v-3"/></svg>
+                                        <span class="refs__texto"><strong>Arrastra tus imágenes</strong> o toca para elegirlas</span>
+                                        <small>Hasta 4 · JPG, PNG o WebP · máx. 5 MB cada una</small>
+                                    </label>
+                                    <ul class="refs__lista" aria-label="Imágenes elegidas"></ul>
+                                    <p class="refs__nota" role="status"></p>
+                                </div>
+                            </fieldset>
+
+                            <p class="paso__error" role="alert" hidden></p>
+
+                            <div class="paso__nav">
+                                <button type="button" class="boton boton--secundario" data-atras>← Atrás</button>
+                                <button type="button" class="boton boton--primario" data-sig>Siguiente →</button>
+                                <button type="submit" class="boton boton--primario" data-enviar>Enviar mensaje</button>
+                            </div>
+                            <p id="aviso-formulario" class="form-aviso">
+                                Al enviar se abre tu programa de correo con el mensaje ya escrito; solo falta que pulses «enviar».
+                            </p>
+                        </form>
                     </div>
 
-                    <div class="col-12 col-md-6">
-                        <label for="email" class="form-etiqueta">Correo electrónico</label>
-                        <input type="email" class="form-control" id="email" name="email" placeholder="tucorreo@ejemplo.com" required>
-                    </div>
+                    <!-- Línea directa: otras formas de encontrarme -->
+                    <aside class="col-12 col-lg-5" aria-label="Otras formas de contactarme">
+                        <div class="directa">
+                            <div class="directa__estado">
+                                <span class="punto-vivo" aria-hidden="true"></span>
+                                <div>
+                                    <p class="directa__tit">Línea directa</p>
+                                    <p class="directa__sub">Respondo en 1 o 2 días hábiles</p>
+                                </div>
+                            </div>
+                            <ul class="canales">
+                                <li class="canal canal--correo">
+                                    <span class="canal__icono" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></span>
+                                    <div class="canal__texto">
+                                        <span class="canal__tit">Correo</span>
+                                        <p class="canal__valor contacto-dato__valor">santisarm.multimedia@gmail.com</p>
+                                    </div>
+                                    <a class="canal__ir" href="mailto:santisarm.multimedia@gmail.com">Escribir <span aria-hidden="true">→</span></a>
+                                </li>
+                                <li>
+                                    <a class="canal" href="https://www.linkedin.com/in/david-santiago-sarmiento-salguero-2a3740448" target="_blank" rel="noopener noreferrer">
+                                        <span class="canal__icono" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 11v5M8 8v.01M12 16v-5m0 2c0-1.7 1-2 2-2s2 .6 2 2.2V16"/></svg></span>
+                                        <span class="canal__texto"><span class="canal__tit">LinkedIn</span><span class="canal__valor">Conectemos profesionalmente</span></span>
+                                        <span class="canal__ir" aria-hidden="true">Ver perfil →</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="canal" href="https://www.behance.net/davidssarmien1" target="_blank" rel="noopener noreferrer">
+                                        <span class="canal__icono" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 6h5a3 3 0 010 6H3zm0 6h6a3 3 0 010 6H3zM14 9h7M15 15a3 3 0 006 0c0-2-1.4-3-3-3s-3 1-3 3z"/></svg></span>
+                                        <span class="canal__texto"><span class="canal__tit">Behance</span><span class="canal__valor">Mis proyectos de diseño</span></span>
+                                        <span class="canal__ir" aria-hidden="true">Ver perfil →</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="canal" href="https://www.instagram.com/santisarmstudio" target="_blank" rel="noopener noreferrer">
+                                        <span class="canal__icono" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><path d="M17.5 6.5v.01"/></svg></span>
+                                        <span class="canal__texto"><span class="canal__tit">Instagram</span><span class="canal__valor">Lo que voy creando</span></span>
+                                        <span class="canal__ir" aria-hidden="true">Ver perfil →</span>
+                                    </a>
+                                </li>
+                            </ul>
+                            <div class="directa__lugar">
+                                <span class="canal__icono" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 21s7-6.2 7-11.5A7 7 0 005 9.5C5 14.800 12 21 12 21z"/><circle cx="12" cy="9.500" r="2.500"/></svg></span>
+                                <p>Cúcuta, Colombia<br><span class="directa__hora" data-hora-local>Aquí es hora de conectar</span></p>
+                            </div>
+                        </div>
+                    </aside>
 
-                    <div class="col-12">
-                        <label for="asunto" class="form-etiqueta">Asunto / Servicio de interés</label>
-                        <select class="form-select" id="asunto" name="asunto" required>
-                            <option value="" selected disabled>Selecciona una opción</option>
-                            <option value="branding">Branding</option>
-                            <option value="uiux">UI/UX</option>
-                            <option value="animacion">Animación</option>
-                            <option value="diseno-grafico">Diseño Gráfico</option>
-                            <option value="desarrollo-web">Desarrollo Web</option>
-                            <option value="otro">Otro</option>
-                        </select>
-                    </div>
-
-                    <div class="col-12">
-                        <label for="mensaje" class="form-etiqueta">Mensaje</label>
-                        <textarea class="form-control" id="mensaje" name="mensaje" rows="5" placeholder="Cuéntame sobre tu proyecto..." required></textarea>
-                    </div>
-
-                    <div class="col-12 text-center">
-                        <button type="submit" class="boton boton--primario">Enviar mensaje</button>
-                        <p id="aviso-formulario" class="form-aviso">
-                            Este formulario es una maqueta de demostración y actualmente no envía datos a ningún servidor.
-                        </p>
-                    </div>
-
-                </form>
-
-                <div class="contacto-datos">
-                    <div class="contacto-dato">
-                        <p class="contacto-dato__titulo">Correo</p>
-                        <p class="contacto-dato__valor">santisarm.multimedia@gmail.com</p>
-                    </div>
-                    <div class="contacto-dato">
-                        <p class="contacto-dato__titulo">Ubicación</p>
-                        <p class="contacto-dato__valor">Cúcuta, Colombia</p>
-                    </div>
                 </div>
-
             </div>
         </section>
     </main>
