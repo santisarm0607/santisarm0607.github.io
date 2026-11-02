@@ -422,3 +422,6 @@ Accesibilidad:
 
 ## Descripciones reales de los juegos
 - Galaxy Invasion, Galaxy War y ORBIX: Overdrive ahora usan la información real del proyecto (historia, bandos y jefes, 3v3). Géneros corregidos a 3D.
+
+## SlotNova
+- Botón "Probar SlotNova" en `proyecto-slotnova.html`, enlaza a https://santisarm0607.github.io/slotnova/
