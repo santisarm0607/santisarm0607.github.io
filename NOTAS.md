@@ -415,3 +415,7 @@ Accesibilidad:
 - **Arreglos (13:30):** en pantalla ancha la cámara 3D ya no se mueve de lado (la escena del Arcade queda centrada). En celular (sin mouse) «Sobre mí» muestra el texto completo, sin linterna. Todas las páginas llevan `<meta name="color-scheme" content="dark light">` para que el navegador del celular no oscurezca el modo claro por su cuenta.
 - **Portadas y Arcade (13:40):** las portadas de Portafolio, Juegos y Contacto llenan toda la pantalla bajo el menú (`.portada` con `min-height` y `--alto-header`, que mide `iniciarAltoHeader()` en `efectos.js`; CSS 14zj). En la escena 3D los nombres de los planetas (con «Próximamente» y la descripción corta) solo salen al pasar el mouse; en pantalla táctil se muestra el del planeta elegido.
 - **Transición a los juegos (13:40):** al despegar, la pantalla se llena siempre del celeste de la página (`COLOR_TRANSICION` en `main.js`), no del color del planeta. La ficha de cada planeta sí conserva el color de su juego.
+
+## Limpieza de código muerto
+- Quitado el avatar del hero (`.hero__foto`: planeta, órbita, keyframes `orbita` y `gota`), el botón del cohete (`.arriba`) y `iniciarAvatar()`/`iniciarVolverArriba()`. Sin cambios visuales (capturas antes/después idénticas).
+- `blog.html` se queda: solo redirige a Portafolio para enlaces viejos.

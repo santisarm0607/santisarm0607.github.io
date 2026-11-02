@@ -181,7 +181,7 @@ function mostrarAviso(texto) {
    Para que algo nuevo también aparezca así, agrego su clase a la lista.
    --------------------------------------------------------- */
 const ELEMENTOS_QUE_APARECEN = [
-  '.hero__foto', '.hero__texto',
+  '.hero__texto',
   '.habilidades__titulo', '.habilidad',
   '.contacto-rapido .contenedor',
   '.portafolio-intro .contenedor', '.filtros', '.proyecto',
@@ -248,51 +248,6 @@ function iniciarHeaderCompacto() {
 
 
 /* ---------------------------------------------------------
-   5. BOTÓN "VOLVER ARRIBA"
-   Aparece abajo a la derecha cuando ya bajé bastante.
-   --------------------------------------------------------- */
-function iniciarVolverArriba() {
-  const boton = document.createElement('button');
-  boton.className = 'arriba';
-  boton.type = 'button';
-  boton.setAttribute('aria-label', 'Volver arriba');
-  boton.setAttribute('data-etiqueta', 'Volver arriba');
-  // un cohete dibujado (SVG) con su fuego y tres bolitas de humo para el despegue
-  boton.innerHTML =
-    '<span class="arriba__humo" aria-hidden="true"><i></i><i></i><i></i></span>' +
-    '<span class="arriba__cohete" aria-hidden="true">' +
-    '<svg viewBox="0 0 48 84" width="44" height="77">' +
-    '<defs>' +
-    '<linearGradient id="ar-metal" x1="0" x2="1"><stop offset="0" stop-color="#b8c8f0"/><stop offset="0.45" stop-color="#ffffff"/><stop offset="1" stop-color="#8fa3d6"/></linearGradient>' +
-    '<linearGradient id="ar-fuego" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#e8f8ff"/><stop offset="0.45" stop-color="#29b6f6"/><stop offset="1" stop-color="#9b5cff" stop-opacity="0"/></linearGradient>' +
-    '</defs>' +
-    '<g class="arriba__fuego"><path d="M16 62 Q24 98 32 62 Z" fill="url(#ar-fuego)"/><path d="M20 62 Q24 82 28 62 Z" fill="#fff"/></g>' +
-    '<path d="M13 44 L2 66 L14 59 Z" fill="#3153a1"/><path d="M35 44 L46 66 L34 59 Z" fill="#3153a1"/>' +
-    '<path d="M24 1 C35 14 38 34 36 60 L12 60 C10 34 13 14 24 1 Z" fill="url(#ar-metal)"/>' +
-    '<path d="M24 1 C28.500 6 31.500 12 32.500 18 L15.500 18 C16.500 12 19.500 6 24 1 Z" fill="#29b6f6"/>' +
-    '<rect x="11.500" y="47" width="25" height="4" fill="#3153a1"/>' +
-    '<circle cx="24" cy="33" r="6.500" fill="#29b6f6" stroke="#3153a1" stroke-width="3"/><circle cx="22" cy="31" r="2" fill="#fff" opacity="0.85"/>' +
-    '<rect x="16" y="59" width="16" height="5" rx="1.500" fill="#24346b"/>' +
-    '</svg></span>';
-  document.body.appendChild(boton);
-
-  boton.addEventListener('click', function () {
-    // el cohete despega (parte 10 del CSS) y la página sube con él
-    boton.classList.remove('arriba--despegue');
-    void boton.offsetWidth;
-    boton.classList.add('arriba--despegue');
-    setTimeout(function () { boton.classList.remove('arriba--despegue'); }, 1100);
-
-    window.scrollTo({ top: 0, behavior: movimientoReducido ? 'auto' : 'smooth' });
-  });
-
-  window.addEventListener('scroll', function () {
-    boton.classList.toggle('arriba--visible', window.scrollY > 500);
-  }, { passive: true });
-}
-
-
-/* ---------------------------------------------------------
    6. TEXTO QUE SE ESCRIBE SOLO (index.html)
    Debajo de mi nombre se escriben y borran mis roles (MIS_ROLES).
    --------------------------------------------------------- */
@@ -338,51 +293,6 @@ function iniciarEscritura() {
   }
 
   setTimeout(paso, 2500);
-}
-
-
-/* ---------------------------------------------------------
-   7. AVATAR CON SORPRESA (index.html)
-   Clic en mi avatar = salta y suelta confeti.
-   5 clics seguidos = da una vuelta y sale un mensaje secreto.
-   --------------------------------------------------------- */
-function iniciarAvatar() {
-  const avatar = document.querySelector('.hero__foto img');
-  if (!avatar) return;
-
-  // para que también se pueda usar con el teclado (Tab + Enter)
-  avatar.tabIndex = 0;
-  avatar.setAttribute('role', 'button');
-  avatar.setAttribute('aria-label', 'Avatar de Santiago. Haz clic para saludar');
-
-  let clics = 0;
-  let temporizador = null;
-
-  function saludar() {
-    clics++;
-    clearTimeout(temporizador);
-    temporizador = setTimeout(function () { clics = 0; }, 1500); // si paro de dar clic, se reinicia
-
-    // reinicio la animación quitando y poniendo la clase
-    avatar.classList.remove('avatar--salto', 'avatar--giro');
-    void avatar.offsetWidth;
-
-    if (clics >= 5) {
-      clics = 0;
-      avatar.classList.add('avatar--giro');
-      confetiDesde(avatar, 120);
-      mostrarAviso('¡Encontraste el secreto! 🚀 Bienvenido a la galaxia Santisarm');
-    } else {
-      avatar.classList.add('avatar--salto');
-      confetiDesde(avatar, 18);
-      if (clics === 1) mostrarAviso('¡Hola! 👋 Sigue dando clic…');
-    }
-  }
-
-  avatar.addEventListener('click', saludar);
-  avatar.addEventListener('keydown', function (e) {
-    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); saludar(); }
-  });
 }
 
 
@@ -1478,9 +1388,7 @@ function iniciarFicha() {
 prepararAviso();
 iniciarAparecer();
 iniciarHeaderCompacto();
-// iniciarVolverArriba(); // apagado: ya no hay botón de volver arriba
 // iniciarEscritura(); // apagado: ahora el subtítulo lo anima js/efectos.js (letras que se juntan)
-iniciarAvatar();
 iniciarHabilidades();
 iniciarCopiarCorreo();
 iniciarFiltros();

@@ -217,19 +217,6 @@ ul {
   text-align: left;
 }
 
-.hero__foto {
-  flex: 0 0 220px; /* ancho fijo para que no se achique la columna de la foto */
-}
-
-.hero__foto img {
-  width: 220px;      /* tamaño de mi foto de perfil, la puedo agrandar o achicar aquí */
-  height: 220px;
-  object-fit: cover;
-  border-radius: 50%; /* la deja circular, si la quiero cuadrada solo pongo 0 */
-  border: 6px solid var(--color-blanco);
-  box-shadow: 0 8px 24px rgba(49, 83, 161, 0.25);
-}
-
 .hero__texto {
   flex: 1 1 420px;
   max-width: 560px;
@@ -598,9 +585,7 @@ ul {
 }
 
 /* Borde celeste cuando se navega con el teclado (Tab) */
-.hero__foto img[role="button"]:focus-visible,
 .filtro:focus-visible,
-.arriba:focus-visible,
 .boton-copiar:focus-visible,
 .visor button:focus-visible {
   outline: 3px solid var(--color-acento);
@@ -659,35 +644,6 @@ ul {
   50% { opacity: 0; }
 }
 
-/* --- Avatar con sorpresa --- */
-.hero__foto img[role="button"] {
-  cursor: pointer;
-  transition: transform 0.25s ease;
-}
-
-.hero__foto img[role="button"]:hover {
-  transform: scale(1.04) rotate(-3deg);
-}
-
-.avatar--salto {
-  animation: avatar-salto 0.5s ease;
-}
-
-@keyframes avatar-salto {
-  0%, 100% { transform: translateY(0); }
-  30%      { transform: translateY(-22px) scale(1.05); }
-  55%      { transform: translateY(0) scale(1.03, 0.97); }
-  75%      { transform: translateY(-6px); }
-}
-
-.avatar--giro {
-  animation: avatar-giro 0.9s cubic-bezier(0.5, -0.3, 0.4, 1.3);
-}
-
-@keyframes avatar-giro {
-  from { transform: rotate(0); }
-  to   { transform: rotate(360deg); }
-}
 
 /* --- Habilidades que rebotan --- */
 .habilidad {
@@ -740,40 +696,6 @@ ul {
 .contacto-dato__valor .boton-copiar {
   display: block;
   margin: 10px auto 0; /* en la tarjeta de contacto va debajo del correo */
-}
-
-/* --- Botón "Volver arriba" --- */
-.arriba {
-  position: fixed;
-  right: 20px;
-  bottom: 20px;
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  border: none;
-  background-color: var(--color-azul);
-  color: var(--color-blanco);
-  font-family: inherit;
-  font-size: 1.3rem;
-  font-weight: 700;
-  cursor: pointer;
-  box-shadow: 0 6px 18px rgba(49, 83, 161, 0.35);
-  z-index: 90;
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(20px);
-  transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s, background-color 0.25s ease;
-}
-
-.arriba--visible {
-  opacity: 1;
-  visibility: visible;
-  transform: none;
-}
-
-.arriba:hover {
-  background-color: var(--color-acento);
-  color: var(--color-texto);
 }
 
 /* --- Aviso flotante (mensajito abajo) --- */
@@ -1108,8 +1030,6 @@ ul {
 
 /* --- Si la persona pidió "reducir movimiento", se quitan las animaciones --- */
 @media (prefers-reduced-motion: reduce) {
-  .avatar--salto,
-  .avatar--giro,
   .habilidad--rebote,
   .visor[open],
   .visor__imagen--entra,
@@ -1308,52 +1228,8 @@ body::after {
   color: var(--espacio-texto-suave);
 }
 
-/* Mi avatar como un planeta con órbita y una lunita dando vueltas */
-.hero__foto {
-  position: relative;
-}
-
-.hero__foto img {
-  /* detrás de mi avatar va un disco claro, como una luna, para que se vea bien en lo oscuro */
-  background: radial-gradient(circle at 35% 30%, #FFFFFF, #DCEBFF 60%, #B8CFFF);
-  border-color: var(--espacio-panel);
-  box-shadow:
-    0 0 0 2px var(--espacio-borde),
-    0 0 50px rgba(41, 182, 246, 0.35);
-}
-
-.hero__foto::before {
-  content: "";
-  position: absolute;
-  inset: -22px; /* la órbita queda 22px por fuera de la foto */
-  border: 1px dashed rgba(157, 184, 255, 0.4);
-  border-radius: 50%;
-  pointer-events: none;
-  animation: girar 60s linear infinite;
-}
-
-.hero__foto::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 14px;
-  height: 14px;
-  margin: -7px 0 0 -7px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 35% 35%, #FFFFFF, var(--espacio-celeste-claro) 60%, var(--color-acento));
-  box-shadow: 0 0 12px var(--color-acento);
-  pointer-events: none;
-  animation: orbita 9s linear infinite;
-}
-
 @keyframes girar {
   to { transform: rotate(360deg); }
-}
-
-@keyframes orbita {
-  from { transform: rotate(0deg) translateX(132px); }   /* 132px = radio de la foto (110) + 22 */
-  to   { transform: rotate(360deg) translateX(132px); }
 }
 
 /* --- INICIO: habilidades --- */
@@ -1560,27 +1436,6 @@ body::after {
   color: var(--color-blanco);
 }
 
-/* --- Botón volver arriba = cohete 🚀 --- */
-.arriba {
-  box-shadow: 0 0 22px var(--espacio-brillo);
-  font-size: 1.35rem;
-}
-
-.arriba span {
-  display: inline-block;
-  transform: rotate(-45deg); /* el emoji viene en diagonal, así apunta hacia arriba */
-}
-
-.arriba--despegue span {
-  animation: despegue 0.9s ease-in forwards;
-}
-
-@keyframes despegue {
-  0%   { transform: translateY(0) rotate(-45deg); }
-  20%  { transform: translateY(6px) rotate(-45deg); }  /* toma impulso */
-  100% { transform: translateY(-110vh) rotate(-45deg); }
-}
-
 /* --- Celular --- */
 @media (max-width: 768px) {
 
@@ -1601,16 +1456,10 @@ body::after {
 
 /* --- Reducir movimiento: el cielo queda quieto --- */
 @media (prefers-reduced-motion: reduce) {
-  body::after,
-  .hero__foto::before,
-  .hero__foto::after,
-  .arriba--despegue span {
+  body::after {
     animation: none;
   }
 
-  .hero__foto::after {
-    transform: rotate(-40deg) translateX(132px); /* la lunita queda quieta sobre la órbita */
-  }
 }
 
 /* --- Botón del modo claro / oscuro (lo crea js/main.js, parte 19) --- */
@@ -3691,11 +3540,6 @@ button.habilidad:focus-visible {
     translate: 0 calc(var(--salida, 0) * -50px);
     opacity: calc(1 - var(--salida, 0) * 0.6);
   }
-  .hero__foto {
-    translate: 0 calc(var(--salida, 0) * 40px);
-    scale: calc(1 - var(--salida, 0) * 0.18);
-    rotate: calc(var(--salida, 0) * 20deg);
-  }
 
   /* los proyectos destacados llegan girando desde los lados y se acomodan */
   .proyecto {
@@ -3792,11 +3636,6 @@ button.habilidad:focus-visible {
   .hero::after {
     translate: calc(var(--hx, 0) * -36px) calc(var(--hy, 0) * -24px);
     transition: translate 0.35s ease-out;
-  }
-  .hero__foto img,
-  .hero__foto img[role="button"] {
-    translate: calc(var(--hx, 0) * 12px) calc(var(--hy, 0) * 9px);
-    transition: transform 0.25s ease, translate 0.3s ease-out;
   }
 
   /* las nebulosas del cielo "respiran" despacio */
@@ -4130,10 +3969,6 @@ body.pagina-marca .estrella-fugaz {
   display: none; /* sin estrellas que titilan ni fugaces: aquí manda el trabajo */
 }
 
-.hero__foto {
-  position: relative;
-}
-
 @media (prefers-reduced-motion: no-preference) {
   /* el nombre se acerca y se desenfoca un poco al bajar */
   .hero__titulo {
@@ -4266,41 +4101,6 @@ html[data-tema="claro"] .letra {
 html[data-tema="claro"].pagina-inicio .hero::before,
 html[data-tema="claro"] .pagina-inicio .hero::before { opacity: 0.55; }
 html[data-tema="claro"] .pagina-inicio .hero::after  { opacity: 0.5; }
-
-/* --- Avatar: una gota que respira y un aro de color que gira (sin lunas ni planetas) --- */
-.pagina-inicio .hero__foto::after {
-  display: none;
-}
-
-.pagina-inicio .hero__foto::before {
-  inset: -10px;
-  border: 0;
-  border-radius: 50%;
-  background: conic-gradient(from 0deg, #29b6f6, #b9a8ff, #3153a1, #29b6f6);
-  opacity: 0.85;
-  filter: blur(7px);
-  z-index: 0;
-}
-
-.pagina-inicio .hero__foto img {
-  position: relative;
-  z-index: 1;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .pagina-inicio .hero__foto img {
-    animation: gota 9s ease-in-out infinite;
-  }
-  .pagina-inicio .hero__foto::before {
-    animation: girar 14s linear infinite;
-  }
-}
-
-@keyframes gota {
-  0%, 100% { border-radius: 50% 50% 50% 50% / 50% 50% 50% 50%; }
-  33%      { border-radius: 46% 54% 52% 48% / 52% 46% 54% 48%; }
-  66%      { border-radius: 53% 47% 46% 54% / 47% 53% 47% 53%; }
-}
 
 /* --- Subrayados que se dibujan en la bio --- */
 .subrayar {
@@ -4962,9 +4762,6 @@ html[data-tema="claro"] .proyecto__premio { color: #7a5600; background: rgba(255
 .footer__redes a:hover,
 .footer__redes a:focus-visible { border-bottom-color: currentColor; text-decoration: none; }
 .footer__copy { margin: 0; font-size: 0.82rem; opacity: 0.75; }
-@media (max-width: 680px) {
-  .footer { padding-bottom: 76px; } /* deja libre la esquina donde flota el cohete */
-}
 
 /* ===========================================================
    14o. CONSTELACIÓN VIVA: entrada, conexiones que se iluminan y estrellas que reaccionan
@@ -5555,44 +5352,6 @@ html[data-tema="claro"] .refs__nota { color: #a02020; }
 .arcade { padding-top: 24px; }
 
 /* ===========================================================
-   14zf. Botón "Volver arriba": un cohete dibujado, sin círculo azul
-   =========================================================== */
-.arriba { width: 52px; height: 84px; right: 16px; bottom: 16px; padding: 0; border-radius: 0; background: none !important; box-shadow: none; color: inherit; display: grid; place-items: end center; overflow: visible; transition: opacity 0.3s ease, transform 0.35s cubic-bezier(0.2, 0.9, 0.3, 1.2), visibility 0.3s; transform: translateY(60px); }
-.arriba--visible { transform: none; }
-.arriba:hover { background: none; color: inherit; }
-.arriba__cohete { position: relative; display: block; filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.45)) drop-shadow(0 0 14px rgba(143, 219, 255, 0.35)); transform-origin: 50% 80%; }
-.arriba__cohete svg { display: block; overflow: visible; }
-.arriba__fuego { transform-origin: 24px 62px; }
-.arriba::before { content: attr(data-etiqueta); position: absolute; right: 100%; top: 38%; margin-right: 8px; padding: 5px 11px; border-radius: 999px; background: var(--espacio-panel, #121c4a); border: 1px solid var(--espacio-borde, rgba(143, 219, 255, 0.3)); color: var(--espacio-texto, #fff); font-size: 0.78rem; font-weight: 600; white-space: nowrap; opacity: 0; translate: 8px 0; pointer-events: none; transition: opacity 0.2s ease, translate 0.2s ease; }
-.arriba:hover::before, .arriba:focus-visible::before { opacity: 1; translate: 0 0; }
-.arriba:focus-visible { outline: 2px solid #8fdbff; outline-offset: 4px; border-radius: 14px; }
-.arriba__humo { position: absolute; left: 50%; bottom: 4px; width: 0; height: 0; pointer-events: none; }
-.arriba__humo i { position: absolute; left: -9px; bottom: 0; width: 18px; height: 18px; border-radius: 50%; background: radial-gradient(circle, rgba(255, 255, 255, 0.9), rgba(190, 205, 240, 0.5) 60%, transparent 72%); opacity: 0; }
-.arriba span.arriba__cohete { transform: none; }
-@media (prefers-reduced-motion: no-preference) {
-  .arriba--visible .arriba__cohete { animation: cohete-flota 3.2s ease-in-out infinite; }
-  .arriba__fuego { animation: fuego-late 0.18s ease-in-out infinite alternate; }
-  .arriba:hover .arriba__cohete { animation: cohete-tiembla 0.35s linear infinite; }
-  .arriba:hover .arriba__fuego { animation: fuego-late 0.1s ease-in-out infinite alternate; scale: 1 1.5; }
-  .arriba--despegue .arriba__cohete { animation: cohete-sube 1s cubic-bezier(0.5, 0, 0.9, 0.35) forwards; }
-  .arriba--despegue .arriba__fuego { scale: 1 2.1; }
-  .arriba--despegue .arriba__humo i { animation: humo 0.9s ease-out forwards; }
-  .arriba--despegue .arriba__humo i:nth-child(2) { animation-delay: 0.08s; left: -22px; }
-  .arriba--despegue .arriba__humo i:nth-child(3) { animation-delay: 0.14s; left: 4px; }
-}
-@keyframes cohete-flota { 0%, 100% { translate: 0 0; } 50% { translate: 0 -5px; } }
-@keyframes cohete-tiembla { 0%, 100% { translate: -1px 0; } 25% { translate: 1px -1px; } 50% { translate: -1px -1px; } 75% { translate: 1px 0; } }
-@keyframes fuego-late { from { transform: scaleY(0.85) scaleX(0.95); } to { transform: scaleY(1.15) scaleX(1.05); } }
-@keyframes cohete-sube { 0% { translate: 0 0; } 18% { translate: 0 8px; } 100% { translate: 0 -118vh; } }
-@keyframes humo { 0% { opacity: 0.9; transform: translateY(0) scale(0.4); } 100% { opacity: 0; transform: translateY(-46px) scale(2.2); } }
-html[data-tema="claro"] .arriba__cohete { filter: drop-shadow(0 6px 10px rgba(30, 50, 110, 0.35)); }
-html[data-tema="claro"] .arriba::before { background: #fff; color: #1b2f73; border-color: rgba(49, 83, 161, 0.3); }
-@media (max-width: 520px) { .arriba::before { display: none; } }
-.arriba--despegue span.arriba__humo { animation: none; }
-.arriba span.arriba__humo { transform: none; }
-
-
-/* ===========================================================
    14zg. ARCADE CON 5 PLANETAS: carga, globitos y ficha dinámica
    =========================================================== */
 
@@ -5874,17 +5633,6 @@ html[data-tema="claro"] .sobre { --apagado: rgba(27, 47, 115, 0.16); --prendido:
 }
 html[data-tema="claro"] .sobre--linterna .sobre__luz::before { background: radial-gradient(circle, rgba(41, 182, 246, 0.4) 0%, rgba(155, 92, 255, 0.16) 40%, transparent 70%); }
 @media (max-width: 640px) { .sobre--linterna .sobre__luz::before { width: 300px; height: 300px; margin: -150px 0 0 -150px; } }
-
-/* --- Cohete más discreto: chiquito, apagado y quieto; se enciende al pasar el mouse --- */
-.arriba { width: 36px; height: 56px; right: 14px; bottom: 14px; }
-.arriba__cohete { scale: 0.62; transform-origin: 50% 100%; opacity: 0.55; filter: none; transition: opacity 0.3s ease, scale 0.3s ease; }
-.arriba:hover .arriba__cohete, .arriba:focus-visible .arriba__cohete { opacity: 1; scale: 0.7; }
-.arriba--despegue .arriba__cohete { opacity: 1; }
-.arriba__fuego { opacity: 0.8; }
-@media (prefers-reduced-motion: no-preference) {
-  .arriba--visible .arriba__cohete { animation: none; }
-}
-html[data-tema="claro"] .arriba__cohete { filter: none; }
 
 /* ===========================================================
    14zi. ARCADE EN PANTALLA GRANDE: que se vea todo completo

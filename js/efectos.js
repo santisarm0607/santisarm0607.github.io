@@ -396,7 +396,7 @@
   function iniciarEscenas() {
     if (reducido) return;
     const entrada = Array.from(document.querySelectorAll('.proyecto, .cifra, .arcade-franja__caja, .constelacion, .contacto-dato, .form-tarjeta, .ficha__bloque, .ficha__datos, .ficha__img, .ficha__otros, .contacto-rapido .contenedor, .paso, .linea__item'));
-    const salida = Array.from(document.querySelectorAll('.hero__texto, .hero__foto, .portafolio-intro .contenedor, .contacto-hero .contenedor, .ficha__cab'));
+    const salida = Array.from(document.querySelectorAll('.hero__texto, .portafolio-intro .contenedor, .contacto-hero .contenedor, .ficha__cab'));
     const frases = Array.from(document.querySelectorAll('[data-iluminar]')).map(function (el) {
       const texto = el.textContent.trim();
       el.setAttribute('aria-label', texto);
