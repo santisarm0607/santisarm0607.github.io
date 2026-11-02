@@ -419,3 +419,6 @@ Accesibilidad:
 ## Limpieza de código muerto
 - Quitado el avatar del hero (`.hero__foto`: planeta, órbita, keyframes `orbita` y `gota`), el botón del cohete (`.arriba`) y `iniciarAvatar()`/`iniciarVolverArriba()`. Sin cambios visuales (capturas antes/después idénticas).
 - `blog.html` se queda: solo redirige a Portafolio para enlaces viejos.
+
+## Descripciones reales de los juegos
+- Galaxy Invasion, Galaxy War y ORBIX: Overdrive ahora usan la información real del proyecto (historia, bandos y jefes, 3v3). Géneros corregidos a 3D.
