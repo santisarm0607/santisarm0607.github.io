@@ -5908,3 +5908,23 @@ html[data-tema="claro"] .arriba__cohete { filter: none; }
   .ficha-juego__despegar { padding: 9px 22px; }
   .arcade__lienzo { min-height: 480px; }
 }
+
+/* ===========================================================
+   14zj. Portadas a pantalla completa y nombres de planetas solo al pasar el mouse
+   =========================================================== */
+/* Portafolio, Arcade y Contacto abren con su portada ocupando toda la pantalla (como el nombre del Inicio) */
+.portada {
+  min-height: max(480px, calc(100svh - var(--alto-header, 84px))); /* --alto-header la mide js/efectos.js; así la portada llena justo lo que queda de la pantalla */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.portada > .contenedor { width: 100%; }
+
+/* En la escena 3D, con mouse el nombre (y la descripción) del planeta solo salen al pasar por encima.
+   En pantalla táctil no hay "pasar por encima", así que se muestra el del planeta elegido. */
+@media (hover: hover) {
+  .arcade__etiqueta { opacity: 0; transition: opacity 0.25s ease; }
+  .arcade__etiqueta--sobre { opacity: 1; }
+  .arcade__etiqueta--activa:not(.arcade__etiqueta--sobre) .arcade__etiqueta-chip { opacity: 0; }
+}

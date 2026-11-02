@@ -761,7 +761,7 @@ export function crearEscena(opciones) {
       const mitad = 112;
       const dx = x - mitad < 6 ? 6 - (x - mitad) : (x + mitad > ancho - 6 ? (ancho - 6) - (x + mitad) : 0);
       etiquetas[n].style.setProperty('--dx', dx.toFixed(0) + 'px');
-      etiquetas[n].style.opacity = salto ? String(Math.max(0, 1 - salto.t * 3)) : '1';
+      etiquetas[n].style.opacity = salto ? String(Math.max(0, 1 - salto.t * 3)) : '';
     });
   }
 

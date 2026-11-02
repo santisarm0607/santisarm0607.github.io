@@ -511,6 +511,24 @@
     });
   }
 
+  /* 10c. ALTO DEL MENÚ: guarda en --alto-header lo que mide el menú de arriba,
+     para que las portadas llenen justo el resto de la pantalla (sin franja abajo). */
+  function iniciarAltoHeader() {
+    const header = document.querySelector('.header');
+    if (!header) return;
+    function medir() {
+      const alto = header.offsetHeight;
+      // el menú se encoge al hacer scroll; para la portada cuenta su alto "de arriba" (sin encoger)
+      if (!header.classList.contains('header--compacto') && alto > 0) {
+        document.documentElement.style.setProperty('--alto-header', alto + 'px');
+      }
+    }
+    medir();
+    window.addEventListener('resize', medir);
+    window.addEventListener('load', medir);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(medir);
+  }
+
   /* 11. PROFUNDIDAD: el hero se mueve con el mouse (solo con mouse) */
   function iniciarProfundidad() {
     const hero = document.querySelector('.hero');
@@ -716,6 +734,7 @@
   iniciarEscenas();
   iniciarProfundidad();
   iniciarLinterna();
+  iniciarAltoHeader();
   iniciarTarjetas();
   iniciarFranjaArcade();
   iniciarContactoRapido();
