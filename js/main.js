@@ -1041,6 +1041,9 @@ function iniciarEstrellasFugaces() {
      y entra al juego.
    - Los planetas son enlaces normales: sin JavaScript igual funcionan.
    --------------------------------------------------------- */
+// color de la transición al entrar a un juego: siempre el celeste de la página (no el color de cada planeta)
+const COLOR_TRANSICION = '#29B6F6';
+
 function iniciarArcade() {
   const escena = document.querySelector('.arcade__escena');
   if (!escena) return;
@@ -1203,7 +1206,7 @@ function iniciarArcade() {
       const velo = document.createElement('div');
       velo.className = 'warp warp--hiper';
       velo.setAttribute('aria-hidden', 'true');
-      velo.style.setProperty('--color', planeta.dataset.color || '#29B6F6');
+      velo.style.setProperty('--color', COLOR_TRANSICION);
       document.body.appendChild(velo);
       await velo.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 350, easing: 'ease-in', fill: 'forwards' }).finished;
       location.href = destino;
@@ -1232,7 +1235,7 @@ function iniciarArcade() {
     destello.setAttribute('aria-hidden', 'true');
     destello.style.setProperty('--x', x);
     destello.style.setProperty('--y', y);
-    destello.style.setProperty('--color', planeta.dataset.color || '#29B6F6');
+    destello.style.setProperty('--color', COLOR_TRANSICION);
     document.body.appendChild(destello);
 
     planeta.querySelector('.planeta__esfera').animate([
