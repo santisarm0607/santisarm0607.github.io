@@ -402,3 +402,4 @@ Accesibilidad:
 - **Trayecto:** la última tarjeta «La meta» dice «Seguir creciendo como multimedia.» (no menciona el estudio).
 - **Arcade (`juegos.html`):** la ficha de cada juego tiene una fila «Cómo se hizo» (`data-hecho` en cada planeta, lo llena `js/main.js`) que cuenta qué puso Santiago (idea, diseño, pruebas) y en qué lo ayudó Claude (código y guías).
 - Todo respeta «reducir movimiento».
+- **Íconos:** `img/favicon.png` (96×96) y `img/apple-touch-icon.png` (180×180) ahora llevan el logo SS entrelazado sobre azul. Pendiente: `img/og-portada.jpg` (imagen al compartir el enlace).
