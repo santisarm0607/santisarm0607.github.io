@@ -733,9 +733,10 @@ export function crearEscena(opciones) {
 
     // la cámara va un poquito hacia donde apunta la nave
     if (!salto) {
-      camMeta.set(panX + vectorMirada().x * 0.9, camPos.y - vectorMirada().y * 0.25, camPos.z);
+      const vaiven = PANEO > 0 ? 1 : 0; // en pantalla ancha la cámara no se mueve de lado: la escena queda centrada
+      camMeta.set(panX + vectorMirada().x * 0.9 * vaiven, camPos.y - vectorMirada().y * 0.25, camPos.z);
       camara.position.lerp(camMeta, Math.min(1, dt * 2.5));
-      camara.lookAt(panX + vectorMirada().x * 2.2, 0.8, -12);
+      camara.lookAt(panX + vectorMirada().x * 2.2 * vaiven, 0.8, -12);
     }
 
     posicionarEtiquetas();

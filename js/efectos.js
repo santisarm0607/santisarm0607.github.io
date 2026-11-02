@@ -458,7 +458,8 @@
   function iniciarLinterna() {
     const seccion = document.querySelector('.sobre');
     const texto = seccion && seccion.querySelector('.sobre__texto');
-    if (!texto || reducido) return;
+    // en el celular (sin mouse) el texto se queda completo: así se lee bien en pantallas chicas
+    if (!texto || reducido || !hayMouse) return;
 
     const luz = seccion.querySelector('.sobre__luz');
     seccion.classList.add('sobre--linterna');

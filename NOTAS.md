@@ -412,3 +412,4 @@ Accesibilidad:
 - **Botón volver arriba**: apagado (comentada la llamada `iniciarVolverArriba()` en `main.js`).
 - **Avatar**: se borró `img/avatar.webp` (ya no se usa en ninguna página; el favicon es el logo SS).
 - `proyecto-slotnova.html`: filas «Herramientas», «Mi rol» y «El equipo».
+- **Arreglos (13:30):** en pantalla ancha la cámara 3D ya no se mueve de lado (la escena del Arcade queda centrada). En celular (sin mouse) «Sobre mí» muestra el texto completo, sin linterna. Todas las páginas llevan `<meta name="color-scheme" content="dark light">` para que el navegador del celular no oscurezca el modo claro por su cuenta.
