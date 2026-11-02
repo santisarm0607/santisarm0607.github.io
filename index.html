@@ -23,16 +23,20 @@
     <link rel="stylesheet" href="css/styles.css">
     <script src="js/tema.js"></script> <!-- modo claro/oscuro guardado (va antes de dibujar) -->
     <script src="js/main.js" defer></script> <!-- efectos con JavaScript (ver js/main.js) -->
+    <script src="js/efectos.js" defer></script> <!-- la capa divertida: sonidos, estrellas, logros (ver js/efectos.js) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
-<body>
+<body class="pagina-marca pagina-inicio">
 
     <header class="header">
         <div class="contenedor header__contenedor">
             <a href="index.html" class="header__logo" aria-label="Ir al inicio - Santisarm">
-                <img src="img/logo-santisarm-horizontal.webp" alt="Logo de Santisarm" width="180" height="52" class="header__logo-img">
+                <span class="marca" aria-hidden="true">
+                    <span class="marca__ss"><span class="marca__s marca__s--a">S</span><span class="marca__s marca__s--b">S</span></span>
+                    <span class="marca__txt">Santisarm</span>
+                </span>
             </a>
             <nav aria-label="Menú principal">
                 <ul class="nav__lista">
@@ -46,32 +50,42 @@
     </header>
 
     <main>
-        <section class="hero" aria-labelledby="titulo-principal">
+        <section class="hero hero--nombre" aria-labelledby="titulo-principal">
             <div class="contenedor hero__contenedor">
-                <div class="hero__foto">
-                    <img src="img/avatar.webp" alt="Ilustración de avatar de Santiago Sarmiento, rostro sonriente de estilo caricatura" width="220" height="220">
-                </div>
                 <div class="hero__texto">
-                    <h1 id="titulo-principal" class="hero__titulo">Santiago Sarmiento</h1>
                     <p class="hero__subtitulo">Ingeniero Multimedia</p>
-                    <p class="hero__bio">
-                        Estudiante de Ingeniería Multimedia en sexto semestre en la Universidad Simón Bolívar
-                        sede Cúcuta, con experiencia en diseño gráfico, animación, UI/UX y desarrollo web.
-                        Trabajo con Illustrator, After Effects, Figma y HTML/CSS para crear piezas de branding
-                        digital. Mi meta es fundar un estudio multimedia enfocado en contenido animado con
-                        impacto social.
-                    </p>
+                    <h1 id="titulo-principal" class="hero__titulo" aria-label="Santiago Sarmiento"><span class="hero__linea"><span class="l" style="--i:0" aria-hidden="true">S</span><span class="l" style="--i:1" aria-hidden="true">a</span><span class="l" style="--i:2" aria-hidden="true">n</span><span class="l" style="--i:3" aria-hidden="true">t</span><span class="l" style="--i:4" aria-hidden="true">i</span><span class="l" style="--i:5" aria-hidden="true">a</span><span class="l" style="--i:6" aria-hidden="true">g</span><span class="l" style="--i:7" aria-hidden="true">o</span></span> <span class="hero__linea"><span class="l" style="--i:8" aria-hidden="true">S</span><span class="l" style="--i:9" aria-hidden="true">a</span><span class="l" style="--i:10" aria-hidden="true">r</span><span class="l" style="--i:11" aria-hidden="true">m</span><span class="l" style="--i:12" aria-hidden="true">i</span><span class="l" style="--i:13" aria-hidden="true">e</span><span class="l" style="--i:14" aria-hidden="true">n</span><span class="l" style="--i:15" aria-hidden="true">t</span><span class="l" style="--i:16" aria-hidden="true">o</span></span></h1>
+                    <p class="hero__bio hero__lema">Creo experiencias digitales: ideas que <span class="lema__v">se ven</span>, <span class="lema__v">se oyen</span>, <span class="lema__v">se mueven</span> y <span class="lema__v">se sienten</span>.</p>
+                    <p class="hero__uni">Universidad Simón Bolívar · Cúcuta</p>
                     <div class="hero__botones">
                         <a href="portafolio.html" class="boton boton--primario">Ver Portafolio</a>
-                        <a href="contacto.html" class="boton boton--secundario">Contáctame</a>
                     </div>
                 </div>
+            </div>
+        </section>
+
+        <section class="cifras" aria-label="Datos rápidos">
+            <div class="contenedor">
+                <ul class="cifras__lista">
+                    <li class="cifra"><span class="cifra__numero" data-contar="8">8</span><span class="cifra__texto">Proyectos publicados</span></li>
+                    <li class="cifra"><span class="cifra__numero" data-contar="2">2</span><span class="cifra__texto">Juegos publicados</span></li>
+                    <li class="cifra"><span class="cifra__numero" data-contar="6" data-sufijo="º">6º</span><span class="cifra__texto">Semestre en curso</span></li>
+                    <li class="cifra"><span class="cifra__numero" data-contar="8">8</span><span class="cifra__texto">Habilidades clave</span></li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="sobre" aria-labelledby="titulo-sobre">
+            <div class="contenedor">
+                <p id="titulo-sobre" class="habilidades__titulo">Sobre mí</p>
+                <p class="sobre__texto">Estudio Ingeniería Multimedia y me apasiona todo lo que une la creatividad con la tecnología: <span class="subrayar">diseño</span>, <span class="subrayar">código</span>, animación, videojuegos y todo lo que aún me falta por explorar.</p>
             </div>
         </section>
 
         <section class="destacados" aria-labelledby="titulo-destacados">
             <div class="contenedor">
                 <p id="titulo-destacados" class="habilidades__titulo">Proyectos destacados</p>
+                <p class="seccion__subtitulo">Una muestra de mi trabajo en diseño, branding y publicidad</p>
                 <ul class="proyectos__lista">
 
                     <li class="proyecto" data-filtro="diseno">
@@ -115,55 +129,137 @@
 
 
                 </ul>
-                <p class="destacados__mas"><a href="portafolio.html" class="boton boton--secundario">Ver los 7 proyectos</a></p>
-            </div>
-        </section>
-
-        <section class="arcade-franja" aria-labelledby="titulo-arcade">
-            <div class="contenedor">
-                <div class="arcade-franja__caja">
-                    <div class="arcade-franja__planetas" aria-hidden="true">
-                        <span class="arcade-franja__planeta arcade-franja__planeta--uno"></span>
-                        <span class="arcade-franja__planeta arcade-franja__planeta--dos"></span>
-                    </div>
-                    <div class="arcade-franja__info">
-                        <p id="titulo-arcade" class="arcade-franja__titulo">Arcade Santisarm</p>
-                        <p class="arcade-franja__texto">Dos juegos de mi autoría: Galaxy Gol y COSMOBALL. Elige un planeta y viaja a su juego.</p>
-                    </div>
-                    <a href="juegos.html" class="boton boton--primario">Entrar al Arcade</a>
-                </div>
+                <p class="destacados__mas"><a href="portafolio.html" class="boton boton--secundario">Ver los 8 proyectos</a></p>
             </div>
         </section>
 
         <section class="habilidades" aria-labelledby="titulo-habilidades">
             <div class="contenedor">
                 <p id="titulo-habilidades" class="habilidades__titulo">Habilidades</p>
-                <ul class="habilidades__lista">
-                    <li class="habilidad">Illustrator</li>
-                    <li class="habilidad">After Effects</li>
-                    <li class="habilidad">3ds Max</li>
-                    <li class="habilidad">HTML/CSS</li>
-                    <li class="habilidad">Figma</li>
-                    <li class="habilidad">UI/UX</li>
-                    <li class="habilidad">Animación</li>
-                    <li class="habilidad">Diseño Gráfico</li>
-                </ul>
+                <div class="constelacion">
+                    <svg class="constelacion__lineas constelacion__lineas--pc" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><line x1="10" y1="30" x2="30" y2="20"/><line x1="10" y1="30" x2="28" y2="72"/><line x1="30" y1="20" x2="48" y2="50"/><line x1="28" y1="72" x2="48" y2="50"/><line x1="48" y1="50" x2="62" y2="18"/><line x1="48" y1="50" x2="66" y2="76"/><line x1="62" y1="18" x2="86" y2="40"/><line x1="66" y1="76" x2="86" y2="40"/><line x1="86" y1="40" x2="88" y2="82"/><line x1="66" y1="76" x2="88" y2="82"/></svg>
+                    <svg class="constelacion__lineas constelacion__lineas--cel" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><line x1="22" y1="8" x2="74" y2="16"/><line x1="22" y1="8" x2="40" y2="30"/><line x1="74" y1="16" x2="40" y2="30"/><line x1="40" y1="30" x2="78" y2="42"/><line x1="40" y1="30" x2="20" y2="50"/><line x1="78" y1="42" x2="58" y2="60"/><line x1="20" y1="50" x2="58" y2="60"/><line x1="58" y1="60" x2="24" y2="74"/><line x1="24" y1="74" x2="72" y2="86"/><line x1="58" y1="60" x2="72" y2="86"/></svg>
+                    <ul class="constelacion__lista">
+                        <li class="constelacion__estrella" style="--x:10%;--y:30%;--cx:22%;--cy:8%;--n:0.85;--d:0.00s">
+                            <button type="button" class="habilidad" data-nivel="85" data-etiqueta="Avanzado" data-texto="Composición, color y tipografía, trabajados sobre todo en Illustrator."><span class="constelacion__astro" aria-hidden="true"></span><span class="constelacion__nombre">Diseño Gráfico</span></button>
+                        </li>
+                        <li class="constelacion__estrella" style="--x:48%;--y:50%;--cx:78%;--cy:42%;--n:0.8;--d:0.37s">
+                            <button type="button" class="habilidad" data-nivel="80" data-etiqueta="Avanzado" data-texto="Animación 2D y de personajes en After Effects: mi camino hacia el estudio."><span class="constelacion__astro" aria-hidden="true"></span><span class="constelacion__nombre">Animación</span></button>
+                        </li>
+                        <li class="constelacion__estrella" style="--x:28%;--y:72%;--cx:20%;--cy:50%;--n:0.8;--d:0.74s">
+                            <button type="button" class="habilidad" data-nivel="80" data-etiqueta="Avanzado" data-texto="Logos, manuales de marca y mockups, como el de Santisarm Animation."><span class="constelacion__astro" aria-hidden="true"></span><span class="constelacion__nombre">Branding</span></button>
+                        </li>
+                        <li class="constelacion__estrella" style="--x:62%;--y:18%;--cx:40%;--cy:30%;--n:0.7;--d:1.11s">
+                            <button type="button" class="habilidad" data-nivel="70" data-etiqueta="Intermedio" data-texto="Prototipos y flujos en Figma, pensando en la persona que usa."><span class="constelacion__astro" aria-hidden="true"></span><span class="constelacion__nombre">UI/UX</span></button>
+                        </li>
+                        <li class="constelacion__estrella" style="--x:66%;--y:76%;--cx:58%;--cy:60%;--n:0.55;--d:1.48s">
+                            <button type="button" class="habilidad" data-nivel="55" data-etiqueta="Intermedio" data-texto="Modelado y escenas en 3ds Max, todavía en aprendizaje."><span class="constelacion__astro" aria-hidden="true"></span><span class="constelacion__nombre">Modelado 3D</span></button>
+                        </li>
+                        <li class="constelacion__estrella" style="--x:30%;--y:20%;--cx:74%;--cy:16%;--n:0.75;--d:1.85s">
+                            <button type="button" class="habilidad" data-nivel="75" data-etiqueta="Intermedio-alto" data-texto="Personajes y piezas ilustradas en estilo vectorial."><span class="constelacion__astro" aria-hidden="true"></span><span class="constelacion__nombre">Ilustración</span></button>
+                        </li>
+                        <li class="constelacion__estrella" style="--x:86%;--y:40%;--cx:24%;--cy:74%;--n:0.75;--d:2.22s">
+                            <button type="button" class="habilidad" data-nivel="75" data-etiqueta="Intermedio-alto" data-texto="HTML, CSS y JavaScript: páginas responsivas y animadas, como esta."><span class="constelacion__astro" aria-hidden="true"></span><span class="constelacion__nombre">Desarrollo Web</span></button>
+                        </li>
+                        <li class="constelacion__estrella" style="--x:88%;--y:82%;--cx:72%;--cy:86%;--n:0.7;--d:2.59s">
+                            <button type="button" class="habilidad" data-nivel="70" data-etiqueta="Intermedio" data-texto="Piezas promocionales para eventos, como Love Market."><span class="constelacion__astro" aria-hidden="true"></span><span class="constelacion__nombre">Publicidad</span></button>
+                        </li>
+                    </ul>
+                    <div class="orbita__ficha" hidden aria-live="polite"></div>
+                </div>
+                <p class="habilidades__pista">Toca una estrella para ver mi nivel · cuanto más grande, más dominio</p>
+            </div>
+        </section>
+
+        <section class="proceso" aria-labelledby="titulo-proceso">
+            <div class="contenedor">
+                <p id="titulo-proceso" class="habilidades__titulo">Cómo trabajo</p>
+                <ol class="proceso__lista">
+                    <li class="paso"><span class="paso__icono paso__icono--escuchar" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4V5zM8 9h8M8 12h5"/></svg></span><p class="paso__titulo">1. Escuchar</p><p>Escucho la idea del cliente: qué busca exactamente, todo el trasfondo y el porqué de lo que pide.</p></li>
+                    <li class="paso"><span class="paso__icono paso__icono--proponer" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 4h8v8H3V4zM13 4h8v5h-8V4zM13 11h8v9h-8v-9zM3 14h8v6H3v-6z"/></svg></span><p class="paso__titulo">2. Proponer</p><p>Le muestro ideas y opciones, con sugerencias cuando hacen falta, bocetos y moodboards.</p></li>
+                    <li class="paso"><span class="paso__icono paso__icono--disenar" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 20l1-4L16.5 4.5a2 2 0 0 1 3 3L8 19l-4 1zM14 7l3 3"/></svg></span><p class="paso__titulo">3. Diseñar a la vista</p><p>Empiezo los diseños y voy mostrando el avance, para aplicar a tiempo los cambios que pida.</p></li>
+                    <li class="paso"><span class="paso__icono paso__icono--entregar" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><p class="paso__titulo">4. Entregar</p><p>Presento el resultado final de la mejor forma, con mockups si hacen falta, y me aseguro de que el cliente quede satisfecho.</p></li>
+                </ol>
+            </div>
+        </section>
+
+        <section class="trayecto" aria-labelledby="titulo-trayecto">
+            <div class="contenedor">
+                <p id="titulo-trayecto" class="habilidades__titulo">Mi trayecto</p>
+                <ol class="linea">
+                    <li class="linea__item"><span class="linea__punto" aria-hidden="true"></span><p class="linea__titulo">Ingreso a Ingeniería Multimedia</p><p>Empiezo en la Universidad Simón Bolívar, sede Cúcuta.</p></li>
+                    <li class="linea__item"><span class="linea__punto" aria-hidden="true"></span><p class="linea__titulo">Diseño gráfico y branding</p><p>Mis primeros proyectos: etiquetas, afiches y manuales de marca.</p></li>
+                    <li class="linea__item"><span class="linea__punto" aria-hidden="true"></span><p class="linea__titulo">Animación y diseño editorial</p><p>Revista Up Date y el estudio ficticio Santisarm Animation.</p></li>
+                    <li class="linea__item"><span class="linea__punto" aria-hidden="true"></span><p class="linea__titulo">Videojuegos web</p><p>Galaxy Gol y COSMOBALL, mis dos juegos publicados en el Arcade.</p></li>
+                    <li class="linea__item linea__item--logro"><span class="linea__punto" aria-hidden="true"></span><p class="linea__titulo">🏆 Tercer puesto en la hackatón Colombia 5.0</p><p>Con Cielo Caicedo y Santiago Colmenares creamos <a href="proyecto-slotnova.html">SlotNova</a>, una página web que genera horarios escolares. Jueves 29 de octubre de 2026.</p></li>
+                    <li class="linea__item"><span class="linea__punto" aria-hidden="true"></span><p class="linea__titulo">Hoy: sexto semestre</p><p>Sigo creciendo y puliendo mi portafolio.</p></li>
+                    <li class="linea__item"><span class="linea__punto" aria-hidden="true"></span><p class="linea__titulo">La meta</p><p>Seguir creciendo como multimedia.</p></li>
+                </ol>
+            </div>
+        </section>
+
+        <section class="arcade-franja" aria-labelledby="titulo-arcade">
+            <div class="contenedor">
+                <div class="arcade-franja__caja">
+                    <div class="arcade-franja__info">
+                        <span class="arcade-franja__chip">Arcade · PC y celular</span>
+                        <p id="titulo-arcade" class="arcade-franja__titulo">Arcade Santisarm</p>
+                        <p class="arcade-franja__texto">¿Te animas a una partida? Juegos hechos por mí con ayuda de Claude, la IA de Anthropic, listos para jugar en tu navegador o en tu celular.</p>
+                        <a href="juegos.html" class="boton boton--primario arcade-franja__boton">Entrar al Arcade <span aria-hidden="true">→</span></a>
+                    </div>
+                    <div class="arcade-pantalla" aria-hidden="true">
+                        <div class="arcade-pantalla__escena arcade-pantalla__escena--pong">
+                            <span class="arcade-pantalla__marcador">05 · 03</span>
+                            <span class="arcade-pantalla__red"></span>
+                            <span class="arcade-pantalla__raqueta arcade-pantalla__raqueta--a"></span>
+                            <span class="arcade-pantalla__raqueta arcade-pantalla__raqueta--b"></span>
+                            <span class="arcade-pantalla__pelota"></span>
+                        </div>
+                        <div class="arcade-pantalla__escena arcade-pantalla__escena--futbol">
+                            <span class="arcade-pantalla__marcador">02 · 01</span>
+                            <span class="arcade-pantalla__cancha"></span>
+                            <span class="arcade-pantalla__jug arcade-pantalla__jug--a1"></span>
+                            <span class="arcade-pantalla__jug arcade-pantalla__jug--a2"></span>
+                            <span class="arcade-pantalla__jug arcade-pantalla__jug--b1"></span>
+                            <span class="arcade-pantalla__jug arcade-pantalla__jug--b2"></span>
+                            <span class="arcade-pantalla__balon"></span>
+                        </div>
+                        <span class="arcade-pantalla__inicio">▶ Press start</span>
+                    </div>
+                </div>
             </div>
         </section>
 
         <section class="contacto-rapido" aria-labelledby="titulo-contacto-rapido">
+            <span class="contacto-rapido__orbe contacto-rapido__orbe--a" aria-hidden="true"></span>
+            <span class="contacto-rapido__orbe contacto-rapido__orbe--b" aria-hidden="true"></span>
+            <span class="contacto-rapido__estrellas" aria-hidden="true"></span>
             <div class="contenedor">
-                <p id="titulo-contacto-rapido" class="contacto-rapido__titulo">¿Tienes un proyecto en mente?</p>
-                <p class="contacto-rapido__subtitulo">CONTÁCTAME</p>
+                <span class="contacto-rapido__chip"><span class="contacto-rapido__punto" aria-hidden="true"></span>Abierto a oportunidades, prácticas y proyectos</span>
+                <p id="titulo-contacto-rapido" class="contacto-rapido__titulo">Hablemos<span class="contacto-rapido__rota" aria-hidden="true">de <span class="contacto-rapido__palabra" data-palabras="tu equipo|tu proyecto|una práctica|una idea|un reto">tu equipo o proyecto</span></span></p>
+                <p class="contacto-rapido__subtitulo">¿Buscas a alguien creativo para tu equipo o tienes un proyecto en mente? Cuéntame qué necesitas y te respondo.</p>
+                <div class="contacto-rapido__acciones">
+                    <a href="contacto.html" class="boton boton--primario">Contáctame</a>
+                    <a href="https://www.linkedin.com/in/david-santiago-sarmiento-salguero-2a3740448" class="boton contacto-rapido__ghost" target="_blank" rel="noopener noreferrer">Ver mi LinkedIn</a>
+                </div>
                 <p class="contacto-rapido__correo">
-                    <a href="mailto:santisarm.06salguero@gmail.com">santisarm.06salguero@gmail.com</a>
+                    <a href="mailto:santisarm.multimedia@gmail.com">santisarm.multimedia@gmail.com</a>
                 </p>
             </div>
         </section>
     </main>
 
     <footer class="footer">
-        <div class="contenedor footer__contenedor"></div>
+        <div class="contenedor footer__contenedor">
+            <nav class="footer__redes" aria-label="Mis perfiles en línea">
+                <a href="https://www.linkedin.com/in/david-santiago-sarmiento-salguero-2a3740448" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                <a href="https://www.behance.net/davidssarmien1" target="_blank" rel="noopener noreferrer">Behance</a>
+                <a href="https://www.instagram.com/santisarmstudio" target="_blank" rel="noopener noreferrer">Instagram</a>
+                <a href="https://www.youtube.com/@SantisarmStudio" target="_blank" rel="noopener noreferrer">YouTube</a>
+                <a href="https://www.tiktok.com/@santisarmstudio" target="_blank" rel="noopener noreferrer">TikTok</a>
+            </nav>
+            <p class="footer__copy">© 2026 Santiago Sarmiento · Ingeniero Multimedia</p>
+        </div>
     </footer>
 
 </body>

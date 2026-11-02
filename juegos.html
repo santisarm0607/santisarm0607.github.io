@@ -23,6 +23,7 @@
     <link rel="stylesheet" href="css/styles.css">
     <script src="js/tema.js"></script> <!-- modo claro/oscuro guardado (va antes de dibujar) -->
     <script src="js/main.js" defer></script> <!-- efectos con JavaScript (ver js/main.js) -->
+    <script src="js/efectos.js" defer></script> <!-- la capa divertida: sonidos, estrellas, logros (ver js/efectos.js) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -32,7 +33,10 @@
     <header class="header">
         <div class="contenedor header__contenedor">
             <a href="index.html" class="header__logo" aria-label="Ir al inicio - Santisarm">
-                <img src="img/logo-santisarm-horizontal.webp" alt="Logo de Santisarm" width="180" height="52" class="header__logo-img">
+                <span class="marca" aria-hidden="true">
+                    <span class="marca__ss"><span class="marca__s marca__s--a">S</span><span class="marca__s marca__s--b">S</span></span>
+                    <span class="marca__txt">Santisarm</span>
+                </span>
             </a>
             <nav aria-label="Menú principal">
                 <ul class="nav__lista">
@@ -75,6 +79,7 @@
                         <li class="planetas__item">
                             <a href="futbol.html" class="planeta planeta--gol" data-color="#3FAF4A"
                                data-mini="gol"
+                               data-hecho="Yo puse la idea, el diseño y las pruebas. Claude (la IA de Anthropic) me ayudó a escribir el código, el modo en línea y las guías de sonidos y animaciones, mejorándolo versión por versión."
                                data-qr="img/qr-galaxy-gol.svg"
                                data-descripcion="Fútbol arcade de alienígenas, 4 contra 4. Pasa hacia donde apuntas, tira, derrapa y cambia de jugador para meterle 5 goles a Zorp y su equipo. De vez en cuando aparece una cápsula con un poder para lanzarle al rival."
                                data-genero="Fútbol arcade 2D"
@@ -99,6 +104,7 @@
                         <li class="planetas__item">
                             <a href="cosmoball.html" class="planeta planeta--cosmo" data-color="#9B5CFF"
                                data-mini="cosmo"
+                               data-hecho="Yo puse la idea, el diseño y las pruebas. Claude (la IA de Anthropic) me ayudó a escribir el código y a pulirlo versión por versión."
                                data-qr="img/qr-cosmoball.svg"
                                data-descripcion="Ping-pong espacial con un agujero negro de fondo. Mueve tu nave arriba y abajo y no dejes pasar la pelota. Juega solo, con un amigo o en línea."
                                data-genero="Ping-pong arcade 2D"
@@ -198,6 +204,7 @@
                         <dt>Género</dt><dd class="ficha-juego__genero"></dd>
                         <dt>Jugadores</dt><dd class="ficha-juego__jugadores"></dd>
                         <dt>Controles</dt><dd class="ficha-juego__controles"></dd>
+                        <dt>Cómo se hizo</dt><dd class="ficha-juego__hecho"></dd>
                     </dl>
                     <figure class="ficha-juego__qr" hidden>
                         <img class="ficha-juego__qr-img" src="img/qr-galaxy-gol.svg" alt="Código QR para abrir Galaxy Gol en el celular" width="104" height="104">
@@ -212,7 +219,16 @@
     </main>
 
     <footer class="footer">
-        <div class="contenedor footer__contenedor"></div>
+        <div class="contenedor footer__contenedor">
+            <nav class="footer__redes" aria-label="Mis perfiles en línea">
+                <a href="https://www.linkedin.com/in/david-santiago-sarmiento-salguero-2a3740448" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                <a href="https://www.behance.net/davidssarmien1" target="_blank" rel="noopener noreferrer">Behance</a>
+                <a href="https://www.instagram.com/santisarmstudio" target="_blank" rel="noopener noreferrer">Instagram</a>
+                <a href="https://www.youtube.com/@SantisarmStudio" target="_blank" rel="noopener noreferrer">YouTube</a>
+                <a href="https://www.tiktok.com/@santisarmstudio" target="_blank" rel="noopener noreferrer">TikTok</a>
+            </nav>
+            <p class="footer__copy">© 2026 Santiago Sarmiento · Ingeniero Multimedia</p>
+        </div>
     </footer>
 
 </body>

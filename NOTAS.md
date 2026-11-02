@@ -10,10 +10,10 @@ Bootstrap se usa solo en Contacto. **Tema espacial** (fondo azul noche con estre
 
 | Archivo | Qué es |
 |---|---|
-| `index.html` | Inicio: presentación, **proyectos destacados**, franja del Arcade, habilidades y correo |
+| `index.html` | Inicio: presentación, **proyectos destacados**, habilidades (constelación), cómo trabajo, trayecto, franja del Arcade y contacto |
 | `blog.html` | Solo una **redirección** a `portafolio.html`, para que los enlaces viejos sigan funcionando (no tiene contenido) |
-| `portafolio.html` | Portafolio: 7 proyectos en tarjetas, con filtros, visor y el enlace «Ver proyecto» |
-| `proyecto-*.html` | **Una página por proyecto** (7): `proyecto-feu-doux`, `proyecto-marvel`, `proyecto-santisarm-animation`, `proyecto-revista-up-date`, `proyecto-love-market`, `proyecto-trio-amoroso` y `proyecto-flama`. Cada una tiene la obra completa, un cuadro con los datos y los textos «El pedido», «Mi rol» y «La idea». Al final llevan a la anterior y a la siguiente |
+| `portafolio.html` | Portafolio: 8 proyectos en tarjetas, con filtros, visor y el enlace «Ver proyecto» |
+| `proyecto-*.html` | **Una página por proyecto** (8): `proyecto-slotnova` (hackatón Colombia 5.0), `proyecto-feu-doux`, `proyecto-marvel`, `proyecto-santisarm-animation`, `proyecto-revista-up-date`, `proyecto-love-market`, `proyecto-trio-amoroso` y `proyecto-flama`. Cada una tiene la obra completa, un cuadro con los datos y los textos «El pedido», «Mi rol» y «La idea». Al final llevan a la anterior y a la siguiente |
 | `contacto.html` | Formulario (maqueta) + tarjetas de Correo y Ubicación |
 | `juegos.html` | **Arcade**: una nave y un planeta por cada juego. Al hacer clic, la nave viaja al planeta y entra al juego |
 | `futbol.html` | **Galaxy Gol** (fútbol). Igual que `cosmoball.html`: menú, juego en ventana, "Volver a la nave" y portada para celular |
@@ -46,7 +46,7 @@ Cómo se conectan:
 **index.html**
 - Header + menú → líneas 32–46 *(igual en todas las páginas; solo cambia cuál está activo)*
 - `.hero` (avatar, nombre, bio, botones) → 49–70
-- `.destacados` (3 tarjetas: Marvel, Manual de marca y Love Market + botón «Ver los 7 proyectos») → 72–132
+- `.destacados` (3 tarjetas: Marvel, Manual de marca y Love Market + botón «Ver los 8 proyectos») → 72–132
 - `.arcade-franja` (acceso a Juegos) → 134–142
 - `.habilidades` (píldoras) → 144–158
 - `.contacto-rapido` (franja azul con correo) → 160–168
@@ -386,3 +386,19 @@ Accesibilidad:
   - Los 3 HTML: línea `<script>` en el `<head>`.
   - `blog.html`: botones de filtro + `data-filtro` en cada tarjeta.
 - **2026-10-08** — `styles.css`, `.nav__lista`: agregado `padding: 0; margin: 0;`. Bootstrap movía el menú en `contacto.html`; ahora se ve igual en las 3 páginas. También se limpió un comentario viejo en `.contacto-rapido__subtitulo`.
+
+## 2026-11-01 — Capa divertida en todo el sitio
+- Nuevo `js/efectos.js` (en las 13 páginas, después de main.js) y CSS parte 14.
+- Despegue de bienvenida (solo inicio, una vez por visita), salto de hiperespacio entre páginas, estela de estrellitas del mouse, cielo con parallax, estrellas doradas coleccionables, panel de logros (guardado en localStorage `santisarm.juego`), código secreto (↑↑↓↓←→←→BA), sonidos hechos con código y botón de silencio en el menú.
+- Todo respeta "menos movimiento". Para apagar un efecto: comentar su línea en la parte 9 de `js/efectos.js`.
+
+## 2026-11-02 — Marca Santisarm, inicio más vivo y créditos de ayuda
+- **Marca:** el encabezado de todas las páginas muestra el logo SS entrelazado (`.marca`, CSS 14m) + el texto «Santisarm». Es la marca personal (no el estudio). Pie de página en todas las páginas con enlaces a LinkedIn, Behance, Instagram, YouTube y TikTok (CSS 14n). Se quitó el enlace a GitHub.
+- **Correo único:** `santisarm.multimedia@gmail.com` (en `index.html`, `contacto.html` y `const MI_CORREO` de `js/main.js`).
+- **Inicio — Habilidades:** constelación viva (CSS 14o–14q, `efectos.js` 7b): las estrellas se encienden y las líneas se dibujan al entrar, flotan despacio (deriva), reaccionan al mouse (en celular, al centro de la pantalla), y al tocar una estrella se iluminan sus conexiones y viaja una chispa. Las estrellas no llevan recuadro.
+- **Inicio — Cómo trabajo:** los 4 pasos se encienden uno tras otro con barrita de avance (CSS 14r, `efectos.js` 7c). Se quitó la frase «Si el proyecto lo necesita, además lo animo.».
+- **Inicio — Arcade:** franja nueva con una pantalla retro que alterna ping-pong y fútbol; toda la franja lleva a `juegos.html` (CSS 14s–14u, `efectos.js` 12b). La cifra «Juegos de mi autoría» ahora dice «Juegos publicados».
+- **Inicio — Contacto:** «Hablemos de…» con palabra que cambia, luces flotantes, luz que sigue al mouse, entrada escalonada; el botón «Contáctame» lleva a `contacto.html` (CSS 14v–14w, `efectos.js` 12c).
+- **Trayecto:** la última tarjeta «La meta» dice «Seguir creciendo como multimedia.» (no menciona el estudio).
+- **Arcade (`juegos.html`):** la ficha de cada juego tiene una fila «Cómo se hizo» (`data-hecho` en cada planeta, lo llena `js/main.js`) que cuenta qué puso Santiago (idea, diseño, pruebas) y en qué lo ayudó Claude (código y guías).
+- Todo respeta «reducir movimiento».

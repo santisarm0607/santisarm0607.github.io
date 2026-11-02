@@ -19,7 +19,7 @@
 const movimientoReducido = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 // Mi correo, para copiarlo y para el formulario
-const MI_CORREO = 'santisarm.06salguero@gmail.com';
+const MI_CORREO = 'santisarm.multimedia@gmail.com';
 
 // Frases que se van escribiendo debajo de mi nombre (index.html)
 // Puedo agregar, quitar o cambiar las que quiera
@@ -186,7 +186,7 @@ const ELEMENTOS_QUE_APARECEN = [
   '.contacto-rapido .contenedor',
   '.portafolio-intro .contenedor', '.filtros', '.proyecto',
   '.contacto-hero .contenedor', '.form-tarjeta', '.contacto-dato',
-  '.destacados .habilidades__titulo', '.arcade-franja .contenedor',
+  '.destacados .habilidades__titulo', '.arcade-franja .contenedor', '.cifra',
   '.ficha__cab', '.ficha__datos', '.ficha__bloque', '.ficha__otros'
 ];
 
@@ -825,6 +825,7 @@ function iniciarArcade() {
     panel.querySelector('.ficha-juego__genero').textContent = planeta.dataset.genero;
     panel.querySelector('.ficha-juego__jugadores').textContent = planeta.dataset.jugadores;
     panel.querySelector('.ficha-juego__controles').textContent = planeta.dataset.controles;
+    panel.querySelector('.ficha-juego__hecho').textContent = planeta.dataset.hecho || 'Todavía por hacer.';
     panel.querySelector('.ficha-juego__mini').className = 'ficha-juego__mini ficha-juego__mini--' + planeta.dataset.mini;
 
     // código QR del juego (para abrirlo desde el celular); el planeta en construcción no tiene
@@ -1160,7 +1161,7 @@ prepararAviso();
 iniciarAparecer();
 iniciarHeaderCompacto();
 iniciarVolverArriba();
-iniciarEscritura();
+// iniciarEscritura(); // apagado: ahora el subtítulo lo anima js/efectos.js (letras que se juntan)
 iniciarAvatar();
 iniciarHabilidades();
 iniciarCopiarCorreo();

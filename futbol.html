@@ -23,6 +23,7 @@
     <link rel="stylesheet" href="css/styles.css">
     <script src="js/tema.js"></script> <!-- modo claro/oscuro guardado (va antes de dibujar) -->
     <script src="js/main.js" defer></script> <!-- efectos con JavaScript (ver js/main.js) -->
+    <script src="js/efectos.js" defer></script> <!-- la capa divertida: sonidos, estrellas, logros (ver js/efectos.js) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -32,7 +33,10 @@
     <header class="header">
         <div class="contenedor header__contenedor">
             <a href="index.html" class="header__logo" aria-label="Ir al inicio - Santisarm">
-                <img src="img/logo-santisarm-horizontal.webp" alt="Logo de Santisarm" width="180" height="52" class="header__logo-img">
+                <span class="marca" aria-hidden="true">
+                    <span class="marca__ss"><span class="marca__s marca__s--a">S</span><span class="marca__s marca__s--b">S</span></span>
+                    <span class="marca__txt">Santisarm</span>
+                </span>
             </a>
             <nav aria-label="Menú principal">
                 <ul class="nav__lista">
@@ -84,7 +88,16 @@
     </main>
 
     <footer class="footer">
-        <div class="contenedor footer__contenedor"></div>
+        <div class="contenedor footer__contenedor">
+            <nav class="footer__redes" aria-label="Mis perfiles en línea">
+                <a href="https://www.linkedin.com/in/david-santiago-sarmiento-salguero-2a3740448" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                <a href="https://www.behance.net/davidssarmien1" target="_blank" rel="noopener noreferrer">Behance</a>
+                <a href="https://www.instagram.com/santisarmstudio" target="_blank" rel="noopener noreferrer">Instagram</a>
+                <a href="https://www.youtube.com/@SantisarmStudio" target="_blank" rel="noopener noreferrer">YouTube</a>
+                <a href="https://www.tiktok.com/@santisarmstudio" target="_blank" rel="noopener noreferrer">TikTok</a>
+            </nav>
+            <p class="footer__copy">© 2026 Santiago Sarmiento · Ingeniero Multimedia</p>
+        </div>
     </footer>
 
 </body>
