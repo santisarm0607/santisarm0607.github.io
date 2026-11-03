@@ -428,3 +428,6 @@ Accesibilidad:
 
 ## Favicon en el celular
 - Chrome guardaba el favicon viejo (muñequito). Se añadió `?v=2` a los enlaces de favicon/ícono de celular en todas las páginas y un `favicon.ico` en la raíz con el logo SS. Si cambia el ícono otra vez, subir el número (`?v=3`).
+
+## Inicio a pantalla completa
+- Bloque 14zk en `css/styles.css`: `.hero--nombre` usa `--alto-header` como las portadas, así en celular ya no se asoman las tarjetas bajo el nombre.

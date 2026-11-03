@@ -5676,3 +5676,11 @@ html[data-tema="claro"] .sobre--linterna .sobre__luz::before { background: radia
   .arcade__etiqueta--sobre { opacity: 1; }
   .arcade__etiqueta--activa:not(.arcade__etiqueta--sobre) .arcade__etiqueta-chip { opacity: 0; }
 }
+
+/* ===========================================================
+   14zk. El Inicio también llena la pantalla (celular y PC): solo se ve mi nombre
+   =========================================================== */
+.hero--nombre {
+  min-height: max(480px, calc(100svh - var(--alto-header, 84px))); /* igual que las portadas: llena justo lo que queda bajo el header */
+  box-sizing: border-box;
+}
