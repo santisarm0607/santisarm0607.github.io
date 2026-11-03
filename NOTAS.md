@@ -471,3 +471,6 @@ Accesibilidad:
 ## Franja blanca y herramientas (segunda vuelta)
 - Franja blanca abajo en el celular: `100lvh` no bastó (la zona de la barra de gestos queda con el fondo blanco de la página). Se agregó `viewport-fit=cover` al `<meta name="viewport">` de Inicio, Portafolio, Juegos, Contacto, blog y todas las fichas, y en el CSS (14zv) un margen con `env(safe-area-inset-bottom)` en portadas y footer. Si sigue saliendo, pedir captura.
 - Herramientas: en las fichas y en las etiquetas de las tarjetas solo van los nombres de las aplicaciones usadas (sin explicaciones ni técnicas).
+
+## Franja de datos del Inicio
+- Se quitó la franja de 4 cifras (Proyectos, Juegos, Semestre, Habilidades) del Inicio, junto con su CSS y la referencia `.cifra` en `js/main.js` y `js/efectos.js`. El conteo animado (`data-contar`) sigue en la portada del Portafolio.

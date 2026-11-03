@@ -188,7 +188,7 @@ const ELEMENTOS_QUE_APARECEN = [
   '.contacto-rapido .contenedor',
   '.portafolio-intro .contenedor', '.filtros', '.proyecto',
   '.contacto-hero .contenedor', '.form-tarjeta', '.contacto-dato',
-  '.destacados .habilidades__titulo', '.arcade-franja .contenedor', '.cifra',
+  '.destacados .habilidades__titulo', '.arcade-franja .contenedor',
   '.ficha__cab', '.ficha__datos', '.ficha__bloque', '.ficha__otros'
 ];
 
