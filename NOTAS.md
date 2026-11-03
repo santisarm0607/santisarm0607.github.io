@@ -445,3 +445,6 @@ Accesibilidad:
 - Para cambiar un nivel: `style="--nivel:85%"` del botón en `index.html`. "Perfil innprendedor" se escribe así a propósito.
 - Se borró el código de la constelación (HTML, JS en `efectos.js` y CSS 14f). Queda CSS viejo `.orbita*` sin uso (no estorba).
 - Niveles reales (los dio Santiago): Branding 85, Publicidad 75, Animación 60, Ilustración 55, Fotografía digital 55, UI/UX 50, Modelado 3D 50, Desarrollo Web 50. Se quitaron Diseño Gráfico y Perfil innprendedor. Love Market y Trío Amoroso se hacen aparte de la universidad (así lo dice el Trayecto).
+
+## Imagen al compartir el enlace
+- `img/og-portada.jpg` (1200x630) rehecha: logo SS, nombre, "Ingeniero Multimedia" y la dirección, sin el muñequito ni el planeta. WhatsApp/LinkedIn guardan la vieja un tiempo.
