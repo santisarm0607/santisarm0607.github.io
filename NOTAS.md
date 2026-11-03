@@ -431,3 +431,8 @@ Accesibilidad:
 
 ## Inicio a pantalla completa
 - Bloque 14zk en `css/styles.css`: `.hero--nombre` usa `--alto-header` como las portadas, así en celular ya no se asoman las tarjetas bajo el nombre.
+
+## Panel "Opciones"
+- Botón de ajustes en el header (reemplaza al sol/luna) que abre un panel lateral (desde abajo en celular): tema (Automático/Claro/Nocturno), tamaño de letra, alto contraste y reducir animaciones, con Restablecer.
+- `js/tema.js` guarda y aplica todo (`localStorage` clave `santisarm.opciones`, por defecto Nocturno); el panel lo crea `js/main.js` (parte 19); estilos en `css/styles.css`, bloque 14zl. Se aplican con `data-tema`, `data-letra`, `data-contraste` y `data-reducir` en `<html>`.
+- Reducir animaciones recarga la página una vez al cerrar el panel (los efectos de JS leen la opción al cargar).

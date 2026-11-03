@@ -5684,3 +5684,312 @@ html[data-tema="claro"] .sobre--linterna .sobre__luz::before { background: radia
   min-height: max(480px, calc(100svh - var(--alto-header, 84px))); /* igual que las portadas: llena justo lo que queda bajo el header */
   box-sizing: border-box;
 }
+
+/* ===========================================================
+   14zl. Panel "Opciones" (lo crea js/main.js, parte 19b; lo guardado lo pone js/tema.js)
+   - Botón en el header, panel lateral con tema, tamaño de letra, alto contraste y reducir animaciones.
+   - Todo cambia con atributos en <html>: data-letra, data-contraste y data-reducir.
+   =========================================================== */
+/* Botón que abre el panel (usa la base de .tema-boton: en celular va arriba a la derecha) */
+.opciones-boton:hover {
+  transform: none; /* solo se ilumina */
+}
+
+/* El panel: una hoja lateral a la derecha (en celular sube desde abajo) */
+.opciones {
+  position: fixed;
+  inset: 0 0 0 auto;
+  width: min(380px, 100%);
+  height: 100dvh;
+  max-height: none;
+  margin: 0;
+  padding: 26px 22px 22px;
+  overflow-y: auto;
+  border: 0;
+  border-left: 1px solid var(--espacio-borde);
+  border-radius: 22px 0 0 22px;
+  background:
+    radial-gradient(circle at 100% 0, var(--espacio-brillo), transparent 55%),
+    var(--espacio-panel);
+  color: var(--espacio-texto);
+  box-shadow: -24px 0 60px rgba(0, 0, 0, 0.4);
+}
+.opciones[open] { animation: opciones-entra 0.28s ease-out; }
+@keyframes opciones-entra {
+  from { transform: translateX(40px); opacity: 0; }
+}
+.opciones::backdrop {
+  background: rgba(5, 8, 22, 0.55);
+  backdrop-filter: blur(2px);
+}
+@media (max-width: 768px) {
+  .opciones {
+    inset: auto 0 0 0;
+    width: 100%;
+    height: auto;
+    max-height: 90dvh;
+    border-left: 0;
+    border-top: 1px solid var(--espacio-borde);
+    border-radius: 22px 22px 0 0;
+    box-shadow: 0 -24px 60px rgba(0, 0, 0, 0.4);
+  }
+  @keyframes opciones-entra {
+    from { transform: translateY(40px); opacity: 0; }
+  }
+}
+
+.opciones__cab {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 22px;
+}
+.opciones__titulo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+.opciones__sub {
+  margin-top: 2px;
+  font-size: 0.875rem;
+  color: var(--espacio-texto-suave);
+}
+.opciones__cerrar {
+  flex: 0 0 auto;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--espacio-borde);
+  background: transparent;
+  color: inherit;
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+}
+.opciones__cerrar:hover { background: var(--espacio-borde); }
+
+.opciones__bloque { margin-bottom: 22px; }
+.opciones__etiqueta {
+  margin-bottom: 10px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--espacio-acento-texto);
+}
+
+/* Tema y tamaño de letra: tres fichas con su dibujo */
+.opciones__grupo {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+.opciones__grupo button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 84px;
+  padding: 10px 4px;
+  border: 1px solid var(--espacio-borde);
+  border-radius: 14px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  line-height: 1.2;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+.opciones__grupo button:hover { background: var(--espacio-borde); }
+.opciones__grupo button[aria-checked="true"] {
+  border-color: var(--color-acento);
+  background: var(--espacio-brillo);
+  box-shadow: 0 0 0 1px var(--color-acento);
+}
+
+/* Dibujitos del tema */
+.opciones__mini {
+  position: relative;
+  width: 44px;
+  height: 30px;
+  border: 1px solid rgba(128, 140, 180, 0.6);
+  border-radius: 7px;
+  overflow: hidden;
+}
+.opciones__mini::before {
+  content: "";
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  right: 14px;
+  height: 4px;
+  border-radius: 2px;
+  background: currentColor;
+  opacity: 0.55;
+}
+.opciones__mini--claro { background: #FFFFFF; color: #3153A1; }
+.opciones__mini--oscuro { background: #0B1026; color: #8FDBFF; }
+.opciones__mini--auto { background: linear-gradient(135deg, #FFFFFF 50%, #0B1026 50%); color: #29B6F6; }
+
+/* "Aa" de tres tamaños (en px para que no cambien al elegir otro tamaño) */
+.opciones__aa { display: grid; place-items: center; height: 30px; font-weight: 700; line-height: 1; } /* alto fijo: así los tres "Normal / Grande / Muy grande" quedan alineados */
+.opciones__aa--1 { font-size: 16px; }
+.opciones__aa--2 { font-size: 21px; }
+.opciones__aa--3 { font-size: 27px; }
+
+/* Interruptores: una tarjeta por opción */
+.opciones__fila {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  margin-bottom: 8px;
+  padding: 12px 14px;
+  border: 1px solid var(--espacio-borde);
+  border-radius: 14px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+.opciones__fila:hover { background: var(--espacio-borde); }
+.opciones__fila[aria-checked="true"] {
+  border-color: var(--color-acento);
+  background: var(--espacio-brillo);
+}
+.opciones__icono {
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: var(--espacio-borde);
+  color: var(--espacio-acento-texto);
+}
+.opciones__icono svg { width: 20px; height: 20px; fill: currentColor; }
+.opciones__datos { flex: 1 1 auto; min-width: 0; }
+.opciones__nombre { display: block; font-weight: 600; font-size: 0.95rem; }
+.opciones__texto { display: block; font-size: 0.8rem; color: var(--espacio-texto-suave); }
+.opciones__interruptor {
+  position: relative;
+  flex: 0 0 auto;
+  width: 44px;
+  height: 26px;
+  border: 1px solid var(--espacio-borde);
+  border-radius: 13px;
+  background: var(--espacio-fondo);
+  transition: background-color 0.2s ease;
+}
+.opciones__interruptor::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--espacio-texto-suave);
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+.opciones__fila[aria-checked="true"] .opciones__interruptor { background: var(--color-acento); }
+.opciones__fila[aria-checked="true"] .opciones__interruptor::after {
+  transform: translateX(18px);
+  background: #0B1026;
+}
+
+/* Abajo: "Restablecer" discreto a la izquierda y "Listo" grande */
+.opciones__acciones {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 6px;
+}
+.opciones__reset {
+  padding: 10px 6px;
+  border: 0;
+  background: transparent;
+  color: var(--espacio-texto-suave);
+  font: inherit;
+  font-size: 0.9rem;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+.opciones__reset:hover { color: var(--espacio-texto); }
+.opciones__listo {
+  flex: 1 1 auto;
+  min-height: 46px;
+  border: 0;
+  border-radius: 14px;
+  background: var(--color-acento);
+  color: #0B1026;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+.opciones__listo:hover { filter: brightness(1.08); }
+
+.opciones button:focus-visible {
+  outline: 3px solid var(--color-acento);
+  outline-offset: 2px;
+}
+
+/* --- Tamaño de letra: todo lo que está en rem crece con el <html> --- */
+html[data-letra="grande"] { font-size: 112.5%; }
+html[data-letra="muy-grande"] { font-size: 125%; }
+
+/* --- Alto contraste: más contraste en textos y bordes, en oscuro y en claro --- */
+html[data-contraste] {
+  --espacio-fondo: #000000;
+  --espacio-negro: #000000;
+  --espacio-panel: #070B1C;
+  --espacio-borde: rgba(255, 255, 255, 0.7);
+  --espacio-texto: #FFFFFF;
+  --espacio-texto-suave: #FFFFFF;
+  --espacio-lavanda: #D4E0FF;
+  --espacio-celeste-claro: #A8E6FF;
+  --espacio-acento-texto: #5CCBFF;
+  --espacio-placeholder: #D0D6EC;
+  --espacio-titulo: #FFFFFF;
+  --espacio-header: #000000;
+}
+html[data-contraste][data-tema="claro"] {
+  --espacio-fondo: #FFFFFF;
+  --espacio-negro: #14295E;
+  --espacio-panel: #FFFFFF;
+  --espacio-borde: rgba(0, 0, 0, 0.75);
+  --espacio-texto: #000000;
+  --espacio-texto-suave: #1A1A1A;
+  --espacio-lavanda: #14295E;
+  --espacio-celeste-claro: #14295E;
+  --espacio-acento-texto: #14295E;
+  --espacio-placeholder: #444444;
+  --espacio-titulo: #14295E;
+  --espacio-header: #14295E;
+}
+html[data-contraste] .opciones__grupo button[aria-checked="true"],
+html[data-contraste] .opciones__fila[aria-checked="true"],
+html[data-contraste] .opciones__listo {
+  outline: 2px solid var(--espacio-texto);
+  outline-offset: -2px;
+}
+
+/* --- Reducir animaciones: quita movimiento y transiciones (los efectos de JS se apagan al recargar) --- */
+html[data-reducir],
+html[data-reducir] *,
+html[data-reducir] *::before,
+html[data-reducir] *::after {
+  animation-duration: 0.001ms !important;
+  animation-delay: 0s !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
+  transition-delay: 0s !important;
+  scroll-behavior: auto !important;
+}

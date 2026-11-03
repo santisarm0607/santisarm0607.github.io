@@ -16,7 +16,9 @@
 
 // Si la persona pidió en su sistema "reducir movimiento",
 // no hacemos animaciones fuertes (accesibilidad)
-const movimientoReducido = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+// (o si la activó en el panel Opciones: js/tema.js pone data-reducir en <html>)
+const movimientoReducido = window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
+  document.documentElement.hasAttribute('data-reducir');
 
 // Mi correo, para copiarlo y para el formulario
 const MI_CORREO = 'santisarm.multimedia@gmail.com';
@@ -1284,47 +1286,151 @@ function iniciarVentanaJuego() {
 
 
 /* ---------------------------------------------------------
-   19. BOTÓN MODO CLARO / OSCURO (todas las páginas)
-   - Oscuro = el tema espacial. Claro = mis colores de antes (blanco y azul).
-   - Lo elegido se guarda en localStorage ("santisarm.tema") y js/tema.js
-     lo pone al entrar a cualquier página.
-   - El CSS cambia solo: en styles.css (parte 1) el bloque
-     html[data-tema="claro"] cambia los colores --espacio-.
+   19. PANEL "OPCIONES" (todas las páginas)
+   - Un botón en el header abre un panel lateral (en celular, desde abajo) con: tema (automático,
+     claro, nocturno), tamaño de letra, alto contraste y reducir animaciones.
+   - Todo se guarda con js/tema.js (SantiOpciones) y se aplica al instante.
+   - Reducir animaciones se termina de aplicar al cerrar el panel (recarga la
+     página una vez, porque los efectos se deciden cuando la página carga).
+   - Los colores y tamaños salen de styles.css, parte 14zl.
    --------------------------------------------------------- */
-const ICONO_LUNA = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 14.5A9 9 0 0 1 9.5 3a7.5 7.5 0 1 0 11.5 11.5z"/></svg>';
-const ICONO_SOL = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="5"/><path d="M11 1h2v4h-2zM11 19h2v4h-2zM1 11h4v2H1zM19 11h4v2h-4zM3.5 5l1.5-1.5 2.8 2.8-1.5 1.5zM16.2 17.7l1.5-1.5 2.8 2.8-1.5 1.5zM3.5 19l2.8-2.8 1.5 1.5L5 20.5zM16.2 6.3 19 3.5 20.5 5l-2.8 2.8z"/></svg>';
+const ICONO_OPCIONES = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h9v2H3zM16 6h5v2h-5zM3 16h5v2H3zM12 16h9v2h-9z"/><circle cx="14" cy="7" r="3"/><circle cx="10" cy="17" r="3"/></svg>';
 
-function iniciarTema() {
+function iniciarOpciones() {
   const nav = document.querySelector('nav[aria-label="Menú principal"]');
-  if (!nav) return;
+  if (!nav || !window.SantiOpciones || typeof HTMLDialogElement === 'undefined') return;
+  const API = window.SantiOpciones;
 
-  const boton = document.createElement('button');
-  boton.type = 'button';
-  boton.className = 'tema-boton';
-  nav.appendChild(boton);
+  const abrir = document.createElement('button');
+  abrir.type = 'button';
+  abrir.className = 'tema-boton opciones-boton';
+  abrir.innerHTML = ICONO_OPCIONES;
+  abrir.setAttribute('aria-label', 'Abrir opciones');
+  abrir.title = 'Opciones';
+  abrir.setAttribute('aria-haspopup', 'dialog');
+  nav.appendChild(abrir);
 
-  function temaActual() {
-    return document.documentElement.getAttribute('data-tema') === 'claro' ? 'claro' : 'oscuro';
-  }
+  const mini = function (valor) { return '<span class="opciones__mini opciones__mini--' + valor + '" aria-hidden="true"></span>'; };
+  const aa = function (n) { return '<span class="opciones__aa opciones__aa--' + n + '" aria-hidden="true">Aa</span>'; };
+  const ficha = function (valor, dibujo, texto) {
+    return '<button type="button" role="radio" aria-checked="false" data-valor="' + valor + '">' + dibujo + '<span>' + texto + '</span></button>';
+  };
+  const grupo = function (id, titulo, fichas) {
+    return '<div class="opciones__bloque"><p class="opciones__etiqueta" id="op-' + id + '">' + titulo + '</p>' +
+      '<div class="opciones__grupo" role="radiogroup" aria-labelledby="op-' + id + '" data-opcion="' + id + '">' + fichas.join('') + '</div></div>';
+  };
+  const interruptor = function (id, icono, titulo, texto) {
+    return '<button type="button" class="opciones__fila" role="switch" aria-checked="false" data-opcion="' + id + '">' +
+      '<span class="opciones__icono" aria-hidden="true">' + icono + '</span>' +
+      '<span class="opciones__datos"><span class="opciones__nombre">' + titulo + '</span><span class="opciones__texto">' + texto + '</span></span>' +
+      '<span class="opciones__interruptor" aria-hidden="true"></span></button>';
+  };
+  const ICONO_CONTRASTE = '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 3.5a8.5 8.5 0 0 1 0 17z"/></svg>';
+  const ICONO_MOVIMIENTO = '<svg viewBox="0 0 24 24"><path d="M3 9c3-4 6-4 9 0s6 4 9 0M3 15c3-4 6-4 9 0s6 4 9 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
 
-  // El botón muestra el modo AL QUE vas a cambiar: en oscuro sale el sol, en claro la luna
+  const panel = document.createElement('dialog');
+  panel.className = 'opciones';
+  panel.setAttribute('aria-labelledby', 'opciones-titulo');
+  panel.innerHTML =
+    '<div class="opciones__cab"><div><p class="opciones__titulo" id="opciones-titulo">Opciones</p>' +
+    '<p class="opciones__sub">Ajusta cómo se ve la página</p></div>' +
+    '<button type="button" class="opciones__cerrar" aria-label="Cerrar opciones">&times;</button></div>' +
+    grupo('tema', 'Tema', [
+      ficha('auto', mini('auto'), 'Automático'),
+      ficha('claro', mini('claro'), 'Claro'),
+      ficha('oscuro', mini('oscuro'), 'Nocturno')]) +
+    grupo('letra', 'Tamaño de letra', [
+      ficha('normal', aa(1), 'Normal'),
+      ficha('grande', aa(2), 'Grande'),
+      ficha('muy-grande', aa(3), 'Muy grande')]) +
+    '<div class="opciones__bloque"><p class="opciones__etiqueta">Accesibilidad</p>' +
+    interruptor('contraste', ICONO_CONTRASTE, 'Alto contraste', 'Textos y bordes más marcados.') +
+    interruptor('reducir', ICONO_MOVIMIENTO, 'Reducir animaciones', 'Quita desplazamientos y transiciones.') + '</div>' +
+    '<div class="opciones__acciones"><button type="button" class="opciones__reset">Restablecer</button>' +
+    '<button type="button" class="opciones__listo">Listo</button></div>';
+  document.body.appendChild(panel);
+
+  let reducirAlAbrir = false;
+
+  // Marca en el panel lo que está guardado
   function pintar() {
-    const claro = temaActual() === 'claro';
-    boton.innerHTML = claro ? ICONO_LUNA : ICONO_SOL;
-    boton.setAttribute('aria-label', claro ? 'Cambiar a modo oscuro' : 'Cambiar a modo claro');
-    boton.title = boton.getAttribute('aria-label');
-    boton.setAttribute('aria-pressed', claro ? 'true' : 'false');
+    const o = API.leer();
+    panel.querySelectorAll('.opciones__grupo').forEach(function (g) {
+      g.querySelectorAll('[role="radio"]').forEach(function (b) {
+        const activo = b.dataset.valor === o[g.dataset.opcion];
+        b.setAttribute('aria-checked', activo ? 'true' : 'false');
+        b.tabIndex = activo ? 0 : -1; // con el teclado: Tab entra al grupo y las flechas cambian
+      });
+    });
+    panel.querySelectorAll('[role="switch"]').forEach(function (b) {
+      b.setAttribute('aria-checked', o[b.dataset.opcion] ? 'true' : 'false');
+    });
   }
 
-  boton.addEventListener('click', function () {
-    const nuevo = temaActual() === 'claro' ? 'oscuro' : 'claro';
-    document.documentElement.setAttribute('data-tema', nuevo);
-    try { localStorage.setItem('santisarm.tema', nuevo); } catch (e) { /* no se guarda, pero cambia igual */ }
+  function cambiar(clave, valor) {
+    const o = API.leer();
+    o[clave] = valor;
+    API.guardar(o);
+    API.aplicar(o);
     pintar();
-    mostrarAviso(nuevo === 'claro' ? '☀️ Modo claro' : '🌙 Modo oscuro');
+    if (clave === 'tema') document.dispatchEvent(new CustomEvent('santisarm:opciones'));
+    if (clave === 'letra') window.dispatchEvent(new Event('resize')); // el header cambia de alto: las portadas lo vuelven a medir
+  }
+
+  panel.querySelectorAll('.opciones__grupo').forEach(function (g) {
+    g.addEventListener('click', function (e) {
+      const b = e.target.closest('[role="radio"]');
+      if (b) cambiar(g.dataset.opcion, b.dataset.valor);
+    });
+    g.addEventListener('keydown', function (e) {
+      if (['ArrowRight', 'ArrowLeft', 'ArrowDown', 'ArrowUp'].indexOf(e.key) < 0) return;
+      e.preventDefault();
+      const botones = Array.from(g.querySelectorAll('[role="radio"]'));
+      const i = botones.findIndex(function (b) { return b.getAttribute('aria-checked') === 'true'; });
+      const paso = (e.key === 'ArrowRight' || e.key === 'ArrowDown') ? 1 : -1;
+      const sig = botones[(i + paso + botones.length) % botones.length];
+      cambiar(g.dataset.opcion, sig.dataset.valor);
+      sig.focus();
+    });
+  });
+  panel.querySelectorAll('[role="switch"]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      cambiar(b.dataset.opcion, b.getAttribute('aria-checked') !== 'true');
+    });
   });
 
-  pintar();
+  function cerrar() {
+    panel.close();
+  }
+  panel.addEventListener('close', function () {
+    abrir.focus();
+    if (API.leer().reducir !== reducirAlAbrir) window.location.reload(); // para que los efectos lean la opción nueva
+  });
+  panel.querySelector('.opciones__listo').addEventListener('click', cerrar);
+  panel.querySelector('.opciones__cerrar').addEventListener('click', cerrar);
+  panel.querySelector('.opciones__reset').addEventListener('click', function () {
+    const o = Object.assign({}, API.defecto);
+    API.guardar(o);
+    API.aplicar(o);
+    pintar();
+    document.dispatchEvent(new CustomEvent('santisarm:opciones'));
+  });
+  // clic en lo oscuro de afuera = cerrar
+  panel.addEventListener('click', function (e) { if (e.target === panel) cerrar(); });
+
+  abrir.addEventListener('click', function () {
+    reducirAlAbrir = API.leer().reducir;
+    pintar();
+    panel.showModal();
+  });
+
+  // Con "Automático", si el sistema cambia de claro a oscuro, la página lo sigue
+  const sistemaClaro = window.matchMedia('(prefers-color-scheme: light)');
+  const alCambiarSistema = function () {
+    const o = API.leer();
+    if (o.tema === 'auto') { API.aplicar(o); document.dispatchEvent(new CustomEvent('santisarm:opciones')); }
+  };
+  if (sistemaClaro.addEventListener) sistemaClaro.addEventListener('change', alCambiarSistema);
 }
 
 
@@ -1398,5 +1504,5 @@ iniciarFormulario();
 iniciarEstrellasFugaces();
 iniciarArcade();
 iniciarVentanaJuego();
-iniciarTema();
+iniciarOpciones();
 iniciarFicha();

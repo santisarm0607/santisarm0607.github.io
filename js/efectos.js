@@ -16,7 +16,8 @@
 (function () {
   'use strict';
 
-  const reducido = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const reducido = window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
+    document.documentElement.hasAttribute('data-reducir'); // o lo activó en el panel Opciones
   const hayMouse = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
   const raiz = document.documentElement;
 
