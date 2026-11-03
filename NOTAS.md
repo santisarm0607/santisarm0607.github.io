@@ -425,3 +425,6 @@ Accesibilidad:
 
 ## SlotNova
 - Botón "Probar SlotNova" en `proyecto-slotnova.html`, enlaza a https://santisarm0607.github.io/slotnova/
+
+## Favicon en el celular
+- Chrome guardaba el favicon viejo (muñequito). Se añadió `?v=2` a los enlaces de favicon/ícono de celular en todas las páginas y un `favicon.ico` en la raíz con el logo SS. Si cambia el ícono otra vez, subir el número (`?v=3`).
