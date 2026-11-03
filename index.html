@@ -141,38 +141,89 @@
         <section class="habilidades" aria-labelledby="titulo-habilidades">
             <div class="contenedor">
                 <p id="titulo-habilidades" class="habilidades__titulo">Habilidades</p>
-                <div class="constelacion">
-                    <svg class="constelacion__lineas constelacion__lineas--pc" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><line x1="10" y1="30" x2="30" y2="20"/><line x1="10" y1="30" x2="28" y2="72"/><line x1="30" y1="20" x2="48" y2="50"/><line x1="28" y1="72" x2="48" y2="50"/><line x1="48" y1="50" x2="62" y2="18"/><line x1="48" y1="50" x2="66" y2="76"/><line x1="62" y1="18" x2="86" y2="40"/><line x1="66" y1="76" x2="86" y2="40"/><line x1="86" y1="40" x2="88" y2="82"/><line x1="66" y1="76" x2="88" y2="82"/></svg>
-                    <svg class="constelacion__lineas constelacion__lineas--cel" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><line x1="22" y1="8" x2="74" y2="16"/><line x1="22" y1="8" x2="40" y2="30"/><line x1="74" y1="16" x2="40" y2="30"/><line x1="40" y1="30" x2="78" y2="42"/><line x1="40" y1="30" x2="20" y2="50"/><line x1="78" y1="42" x2="58" y2="60"/><line x1="20" y1="50" x2="58" y2="60"/><line x1="58" y1="60" x2="24" y2="74"/><line x1="24" y1="74" x2="72" y2="86"/><line x1="58" y1="60" x2="72" y2="86"/></svg>
-                    <ul class="constelacion__lista">
-                        <li class="constelacion__estrella" style="--x:10%;--y:30%;--cx:22%;--cy:8%;--n:0.85;--d:0.00s">
-                            <button type="button" class="habilidad" data-nivel="85" data-etiqueta="Avanzado" data-texto="Composición, color y tipografía, trabajados sobre todo en Illustrator."><span class="constelacion__astro" aria-hidden="true"></span><span class="constelacion__nombre">Diseño Gráfico</span></button>
-                        </li>
-                        <li class="constelacion__estrella" style="--x:48%;--y:50%;--cx:78%;--cy:42%;--n:0.8;--d:0.37s">
-                            <button type="button" class="habilidad" data-nivel="80" data-etiqueta="Avanzado" data-texto="Animación 2D y de personajes en After Effects: mi camino hacia el estudio."><span class="constelacion__astro" aria-hidden="true"></span><span class="constelacion__nombre">Animación</span></button>
-                        </li>
-                        <li class="constelacion__estrella" style="--x:28%;--y:72%;--cx:20%;--cy:50%;--n:0.8;--d:0.74s">
-                            <button type="button" class="habilidad" data-nivel="80" data-etiqueta="Avanzado" data-texto="Logos, manuales de marca y mockups, como el de Santisarm Animation."><span class="constelacion__astro" aria-hidden="true"></span><span class="constelacion__nombre">Branding</span></button>
-                        </li>
-                        <li class="constelacion__estrella" style="--x:62%;--y:18%;--cx:40%;--cy:30%;--n:0.7;--d:1.11s">
-                            <button type="button" class="habilidad" data-nivel="70" data-etiqueta="Intermedio" data-texto="Prototipos y flujos en Figma, pensando en la persona que usa."><span class="constelacion__astro" aria-hidden="true"></span><span class="constelacion__nombre">UI/UX</span></button>
-                        </li>
-                        <li class="constelacion__estrella" style="--x:66%;--y:76%;--cx:58%;--cy:60%;--n:0.55;--d:1.48s">
-                            <button type="button" class="habilidad" data-nivel="55" data-etiqueta="Intermedio" data-texto="Modelado y escenas en 3ds Max, todavía en aprendizaje."><span class="constelacion__astro" aria-hidden="true"></span><span class="constelacion__nombre">Modelado 3D</span></button>
-                        </li>
-                        <li class="constelacion__estrella" style="--x:30%;--y:20%;--cx:74%;--cy:16%;--n:0.75;--d:1.85s">
-                            <button type="button" class="habilidad" data-nivel="75" data-etiqueta="Intermedio-alto" data-texto="Personajes y piezas ilustradas en estilo vectorial."><span class="constelacion__astro" aria-hidden="true"></span><span class="constelacion__nombre">Ilustración</span></button>
-                        </li>
-                        <li class="constelacion__estrella" style="--x:86%;--y:40%;--cx:24%;--cy:74%;--n:0.75;--d:2.22s">
-                            <button type="button" class="habilidad" data-nivel="75" data-etiqueta="Intermedio-alto" data-texto="HTML, CSS y JavaScript: páginas responsivas y animadas, como esta."><span class="constelacion__astro" aria-hidden="true"></span><span class="constelacion__nombre">Desarrollo Web</span></button>
-                        </li>
-                        <li class="constelacion__estrella" style="--x:88%;--y:82%;--cx:72%;--cy:86%;--n:0.7;--d:2.59s">
-                            <button type="button" class="habilidad" data-nivel="70" data-etiqueta="Intermedio" data-texto="Piezas promocionales para eventos, como Love Market."><span class="constelacion__astro" aria-hidden="true"></span><span class="constelacion__nombre">Publicidad</span></button>
-                        </li>
-                    </ul>
-                    <div class="orbita__ficha" hidden aria-live="polite"></div>
+                <div class="areas">
+                    <div class="area">
+                        <p class="area__titulo">Diseño</p>
+                        <ul class="area__lista">
+                            <li class="nivel">
+                                <button type="button" class="nivel__boton" aria-expanded="false" aria-controls="nivel-1" style="--nivel:85%">
+                                    <span class="nivel__cab"><span class="nivel__nombre">Diseño Gráfico</span><span class="nivel__dato">Avanzado · 85%</span></span>
+                                    <span class="nivel__barra" aria-hidden="true"><span class="nivel__relleno"></span></span>
+                                </button>
+                                <p class="nivel__texto" id="nivel-1" hidden>Composición, color y tipografía, trabajados sobre todo en Illustrator.</p>
+                            </li>
+                            <li class="nivel">
+                                <button type="button" class="nivel__boton" aria-expanded="false" aria-controls="nivel-2" style="--nivel:80%">
+                                    <span class="nivel__cab"><span class="nivel__nombre">Branding</span><span class="nivel__dato">Avanzado · 80%</span></span>
+                                    <span class="nivel__barra" aria-hidden="true"><span class="nivel__relleno"></span></span>
+                                </button>
+                                <p class="nivel__texto" id="nivel-2" hidden>Logos, manuales de marca y mockups, como el de Santisarm Animation.</p>
+                            </li>
+                            <li class="nivel">
+                                <button type="button" class="nivel__boton" aria-expanded="false" aria-controls="nivel-3" style="--nivel:75%">
+                                    <span class="nivel__cab"><span class="nivel__nombre">Ilustración</span><span class="nivel__dato">Intermedio-alto · 75%</span></span>
+                                    <span class="nivel__barra" aria-hidden="true"><span class="nivel__relleno"></span></span>
+                                </button>
+                                <p class="nivel__texto" id="nivel-3" hidden>Personajes y piezas ilustradas en estilo vectorial.</p>
+                            </li>
+                            <li class="nivel">
+                                <button type="button" class="nivel__boton" aria-expanded="false" aria-controls="nivel-4" style="--nivel:70%">
+                                    <span class="nivel__cab"><span class="nivel__nombre">Publicidad</span><span class="nivel__dato">Intermedio · 70%</span></span>
+                                    <span class="nivel__barra" aria-hidden="true"><span class="nivel__relleno"></span></span>
+                                </button>
+                                <p class="nivel__texto" id="nivel-4" hidden>Piezas promocionales para eventos, como Love Market.</p>
+                            </li>
+                            <li class="nivel">
+                                <button type="button" class="nivel__boton" aria-expanded="false" aria-controls="nivel-5" style="--nivel:70%">
+                                    <span class="nivel__cab"><span class="nivel__nombre">UI/UX</span><span class="nivel__dato">Intermedio · 70%</span></span>
+                                    <span class="nivel__barra" aria-hidden="true"><span class="nivel__relleno"></span></span>
+                                </button>
+                                <p class="nivel__texto" id="nivel-5" hidden>Prototipos y flujos en Figma, pensando en la persona que usa.</p>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="area">
+                        <p class="area__titulo">Multimedia y emprendimiento</p>
+                        <ul class="area__lista">
+                            <li class="nivel">
+                                <button type="button" class="nivel__boton" aria-expanded="false" aria-controls="nivel-6" style="--nivel:80%">
+                                    <span class="nivel__cab"><span class="nivel__nombre">Animación</span><span class="nivel__dato">Avanzado · 80%</span></span>
+                                    <span class="nivel__barra" aria-hidden="true"><span class="nivel__relleno"></span></span>
+                                </button>
+                                <p class="nivel__texto" id="nivel-6" hidden>Animación 2D y de personajes en After Effects, con stop motion y motion graphics: mi camino hacia el estudio.</p>
+                            </li>
+                            <li class="nivel">
+                                <button type="button" class="nivel__boton" aria-expanded="false" aria-controls="nivel-7" style="--nivel:60%">
+                                    <span class="nivel__cab"><span class="nivel__nombre">Fotografía digital</span><span class="nivel__dato">Intermedio · 60%</span></span>
+                                    <span class="nivel__barra" aria-hidden="true"><span class="nivel__relleno"></span></span>
+                                </button>
+                                <p class="nivel__texto" id="nivel-7" hidden>Fotos de composición, como un postre con efecto flotante y un bodegón de naturaleza muerta.</p>
+                            </li>
+                            <li class="nivel">
+                                <button type="button" class="nivel__boton" aria-expanded="false" aria-controls="nivel-8" style="--nivel:55%">
+                                    <span class="nivel__cab"><span class="nivel__nombre">Modelado 3D</span><span class="nivel__dato">Intermedio · 55%</span></span>
+                                    <span class="nivel__barra" aria-hidden="true"><span class="nivel__relleno"></span></span>
+                                </button>
+                                <p class="nivel__texto" id="nivel-8" hidden>Modelado y escenas en 3ds Max, todavía en aprendizaje.</p>
+                            </li>
+                            <li class="nivel">
+                                <button type="button" class="nivel__boton" aria-expanded="false" aria-controls="nivel-9" style="--nivel:75%">
+                                    <span class="nivel__cab"><span class="nivel__nombre">Desarrollo Web</span><span class="nivel__dato">Intermedio-alto · 75%</span></span>
+                                    <span class="nivel__barra" aria-hidden="true"><span class="nivel__relleno"></span></span>
+                                </button>
+                                <p class="nivel__texto" id="nivel-9" hidden>HTML, CSS y JavaScript: páginas responsivas y animadas, como esta.</p>
+                            </li>
+                            <li class="nivel">
+                                <button type="button" class="nivel__boton" aria-expanded="false" aria-controls="nivel-10" style="--nivel:60%">
+                                    <span class="nivel__cab"><span class="nivel__nombre">Perfil innprendedor</span><span class="nivel__dato">Intermedio · 60%</span></span>
+                                    <span class="nivel__barra" aria-hidden="true"><span class="nivel__relleno"></span></span>
+                                </button>
+                                <p class="nivel__texto" id="nivel-10" hidden>La fusión de innovación y emprendimiento: aquí diseñé mi perfil innprendedor.</p>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
-                <p class="habilidades__pista">Toca una estrella para ver mi nivel · cuanto más grande, más dominio</p>
+                <p class="habilidades__pista">Toca una habilidad para ver más · la barra muestra mi nivel</p>
             </div>
         </section>
 
@@ -192,13 +243,13 @@
             <div class="contenedor">
                 <p id="titulo-trayecto" class="habilidades__titulo">Mi trayecto</p>
                 <ol class="linea">
-                    <li class="linea__item"><span class="linea__punto" aria-hidden="true"></span><p class="linea__titulo">Ingreso a Ingeniería Multimedia</p><p>Empiezo en la Universidad Simón Bolívar, sede Cúcuta.</p></li>
-                    <li class="linea__item"><span class="linea__punto" aria-hidden="true"></span><p class="linea__titulo">Diseño gráfico y branding</p><p>Mis primeros proyectos: etiquetas, afiches y manuales de marca.</p></li>
-                    <li class="linea__item"><span class="linea__punto" aria-hidden="true"></span><p class="linea__titulo">Animación y diseño editorial</p><p>Revista Up Date y el estudio ficticio Santisarm Animation.</p></li>
-                    <li class="linea__item"><span class="linea__punto" aria-hidden="true"></span><p class="linea__titulo">Videojuegos web</p><p>Galaxy Gol y COSMOBALL, mis dos juegos publicados en el Arcade.</p></li>
-                    <li class="linea__item linea__item--logro"><span class="linea__punto" aria-hidden="true"></span><p class="linea__titulo">🏆 Tercer puesto en la hackatón Colombia 5.0</p><p>Con Cielo Caicedo y Santiago Colmenares creamos <a href="proyecto-slotnova.html">SlotNova</a>, una página web que genera horarios escolares. Jueves 29 de octubre de 2026.</p></li>
-                    <li class="linea__item"><span class="linea__punto" aria-hidden="true"></span><p class="linea__titulo">Hoy: sexto semestre</p><p>Sigo creciendo y puliendo mi portafolio.</p></li>
-                    <li class="linea__item"><span class="linea__punto" aria-hidden="true"></span><p class="linea__titulo">La meta</p><p>Seguir creciendo como multimedia.</p></li>
+                    <li class="linea__item"><span class="linea__punto" aria-hidden="true"></span><span class="linea__fecha">2024-1 · Primer semestre</span><p class="linea__titulo">Ingreso a Ingeniería Multimedia</p><p>Empiezo en la Universidad Simón Bolívar, sede Cúcuta. Entre 2024-1 y 2025-1 empiezo a ver las materias propias de la carrera.</p></li>
+                    <li class="linea__item"><span class="linea__punto" aria-hidden="true"></span><span class="linea__fecha">2025-1 · Tercer semestre</span><p class="linea__titulo">Diseño gráfico</p><p>Elaboro la etiqueta de <a href="proyecto-feu-doux.html">Feu Doux Delux</a> y el pendón de <a href="proyecto-marvel.html">Marvel Comics</a>.</p></li>
+                    <li class="linea__item"><span class="linea__punto" aria-hidden="true"></span><span class="linea__fecha">2025-2 · Cuarto semestre</span><p class="linea__titulo">Diseño gráfico digital</p><p>Hago el manual de marca de <a href="proyecto-santisarm-animation.html">Santisarm Animation</a> y la <a href="proyecto-revista-up-date.html">revista Up Date</a>.</p></li>
+                    <li class="linea__item"><span class="linea__punto" aria-hidden="true"></span><span class="linea__fecha">2026-1 · Quinto semestre</span><p class="linea__titulo">Animación 2D y perfil innprendedor</p><p>En animación 2D hago un stop motion y dos motion graphics: uno de marca personal y otro de un empaque. En perfil innprendedor diseño mi perfil y hago el rebranding y la camiseta de <a href="proyecto-flama.html">Flama</a>, Escuela de Liderazgo.</p></li>
+                    <li class="linea__item linea__item--logro"><span class="linea__punto" aria-hidden="true"></span><span class="linea__fecha">2026-2 · 29 de octubre</span><p class="linea__titulo">🏆 Tercer puesto en la hackatón Colombia 5.0</p><p>Con Cielo Caicedo y Santiago Colmenares creamos <a href="proyecto-slotnova.html">SlotNova</a>, una página web que genera horarios escolares.</p></li>
+                    <li class="linea__item"><span class="linea__punto" aria-hidden="true"></span><span class="linea__fecha">2026-2 · Sexto semestre</span><p class="linea__titulo">Hoy: sexto semestre</p><p>En modelado 3D hago una espada a partir de una referencia; en fotografía digital, un postre con efecto flotante y un bodegón de naturaleza muerta; y en ingeniería web, esta página personal y mis videojuegos. También la pieza gráfica de <a href="proyecto-love-market.html">Love Market</a> y la campaña <a href="proyecto-trio-amoroso.html">Trío Amoroso</a>.</p></li>
+                    <li class="linea__item"><span class="linea__punto" aria-hidden="true"></span><span class="linea__fecha">Lo que sigue</span><p class="linea__titulo">La meta</p><p>Seguir creciendo como multimedia.</p></li>
                 </ol>
             </div>
         </section>

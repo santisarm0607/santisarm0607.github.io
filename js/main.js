@@ -184,7 +184,7 @@ function mostrarAviso(texto) {
    --------------------------------------------------------- */
 const ELEMENTOS_QUE_APARECEN = [
   '.hero__texto',
-  '.habilidades__titulo', '.habilidad',
+  '.habilidades__titulo',
   '.contacto-rapido .contenedor',
   '.portafolio-intro .contenedor', '.filtros', '.proyecto',
   '.contacto-hero .contenedor', '.form-tarjeta', '.contacto-dato',
@@ -1506,3 +1506,76 @@ iniciarArcade();
 iniciarVentanaJuego();
 iniciarOpciones();
 iniciarFicha();
+
+
+/* ---------------------------------------------------------
+   21. HABILIDADES POR ÁREAS (solo inicio)
+   - Cada habilidad es un botón: al tocarlo se abre su texto (una abierta por área).
+   - Con el scroll, las filas entran y las barras se llenan y cuentan hasta mi nivel (y retroceden al subir).
+   - Para cambiar un nivel, edito --nivel (y el texto "Avanzado · 85%") en index.html.
+   --------------------------------------------------------- */
+function iniciarNiveles() {
+  const cajas = document.querySelector('.areas');
+  if (!cajas) return;
+
+  cajas.querySelectorAll('.area').forEach(function (area) {
+    const botones = Array.from(area.querySelectorAll('.nivel__boton'));
+    botones.forEach(function (boton) {
+      boton.addEventListener('click', function () {
+        const abrir = boton.getAttribute('aria-expanded') !== 'true';
+        botones.forEach(function (b) { // una sola abierta por área
+          b.setAttribute('aria-expanded', 'false');
+          document.getElementById(b.getAttribute('aria-controls')).hidden = true;
+        });
+        if (abrir) {
+          boton.setAttribute('aria-expanded', 'true');
+          document.getElementById(boton.getAttribute('aria-controls')).hidden = false;
+        }
+      });
+    });
+  });
+
+  // Con el scroll: cada fila entra desde su lado y su barra se llena (y el número cuenta) según cuánto has bajado.
+  // Si subes, retrocede. Así la sección reacciona a ti, no solo cuando aparece.
+  const filas = Array.from(cajas.querySelectorAll('.nivel'));
+  filas.forEach(function (fila, i) { fila.style.setProperty('--i', i % 5); });
+  if (movimientoReducido) return;
+
+  const datos = filas.map(function (fila) {
+    const boton = fila.querySelector('.nivel__boton');
+    const dato = fila.querySelector('.nivel__dato');
+    return {
+      fila: fila,
+      boton: boton,
+      dato: dato,
+      nivel: parseFloat(boton.style.getPropertyValue('--nivel')) || 0,
+      etiqueta: dato.textContent.split(' · ')[0]
+    };
+  });
+  cajas.classList.add('areas--scroll');
+
+  let esperando = false;
+  function pintar() {
+    esperando = false;
+    const alto = window.innerHeight;
+    const desde = alto;       // la fila empieza a llenarse cuando asoma por abajo...
+    const hasta = alto - 170; // ...y queda completa cuando ya está 170px dentro de la pantalla (así, con la sección a la vista, todo está listo)
+    datos.forEach(function (d) {
+      const arriba = d.fila.getBoundingClientRect().top;
+      let p = Math.min(1, Math.max(0, (desde - arriba) / (desde - hasta)));
+      if (d.listo) p = 1;        // una fila ya completa se queda completa, aunque subas
+      else if (p === 1) d.listo = true;
+      const v = d.nivel * (1 - Math.pow(1 - p, 3)); // arranca rápido y frena al llegar
+      d.fila.style.setProperty('--p', p.toFixed(3));
+      d.boton.style.setProperty('--v', v.toFixed(1) + '%');
+      d.dato.textContent = d.etiqueta + ' · ' + Math.round(v) + '%';
+    });
+  }
+  function alMover() {
+    if (!esperando) { esperando = true; requestAnimationFrame(pintar); }
+  }
+  window.addEventListener('scroll', alMover, { passive: true });
+  window.addEventListener('resize', alMover);
+  pintar();
+}
+iniciarNiveles();

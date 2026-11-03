@@ -436,3 +436,12 @@ Accesibilidad:
 - Botón de ajustes en el header (reemplaza al sol/luna) que abre un panel lateral (desde abajo en celular): tema (Automático/Claro/Nocturno), tamaño de letra, alto contraste y reducir animaciones, con Restablecer.
 - `js/tema.js` guarda y aplica todo (`localStorage` clave `santisarm.opciones`, por defecto Nocturno); el panel lo crea `js/main.js` (parte 19); estilos en `css/styles.css`, bloque 14zl. Se aplican con `data-tema`, `data-letra`, `data-contraste` y `data-reducir` en `<html>`.
 - Reducir animaciones recarga la página una vez al cerrar el panel (los efectos de JS leen la opción al cargar).
+
+## Trayecto por semestres
+- `index.html`: línea de tiempo 2024-1 → 2026-2 con fechas (`.linea__fecha`, bloque 14zm) y el logro de la hackatón en dorado. Los nombres de proyecto enlazan a su ficha.
+
+## Habilidades por áreas
+- Reemplaza la constelación: dos tarjetas de área con filas `.nivel` (botón + barra de 10 segmentos). La barra se llena con el scroll (`iniciarNiveles()` en `js/main.js`, parte 21); una fila completa se queda completa. Estilos en bloque 14zn.
+- Para cambiar un nivel: `style="--nivel:85%"` del botón en `index.html`. "Perfil innprendedor" se escribe así a propósito.
+- Se borró el código de la constelación (HTML, JS en `efectos.js` y CSS 14f). Queda CSS viejo `.orbita*` sin uso (no estorba).
+

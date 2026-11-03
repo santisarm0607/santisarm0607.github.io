@@ -4401,67 +4401,7 @@ html[data-tema="claro"] .hero--nombre .hero__titulo {
 body.pagina-inicio { overflow-x: clip; }
 html:has(body.pagina-inicio) { overflow-x: clip; }
 
-/* ===========================================================
-   14f. HABILIDADES EN CONSTELACIÓN: cada habilidad es una estrella
-   =========================================================== */
-.constelacion {
-  position: relative;
-  width: 100%;
-  max-width: 1000px;
-  margin: 8px auto 0;
-  aspect-ratio: 16 / 8;
-  border-radius: 24px;
-  border: 1px solid rgba(143, 219, 255, 0.22);
-  background:
-    radial-gradient(circle at 20% 25%, rgba(143, 219, 255, 0.10), transparent 45%),
-    radial-gradient(circle at 80% 75%, rgba(185, 168, 255, 0.10), transparent 45%),
-    rgba(8, 16, 41, 0.35);
-}
-.constelacion__lineas { position: absolute; inset: 0; width: 100%; height: 100%; }
-.constelacion__lineas line { stroke: rgba(143, 219, 255, 0.45); stroke-width: 1.2; vector-effect: non-scaling-stroke; stroke-linecap: round; }
-.constelacion__lineas--cel { display: none; }
-.constelacion__lista { list-style: none; margin: 0; padding: 0; }
-.constelacion__estrella { position: absolute; left: var(--x); top: var(--y); translate: -50% -50%; }
-.constelacion .habilidad {
-  display: grid; justify-items: center; gap: 6px;
-  padding: 8px 10px; border: 0; border-radius: 12px;
-  background: none; color: var(--espacio-texto); cursor: pointer;
-  font-size: clamp(0.8rem, 1.5vw, 1rem); font-weight: 600; white-space: nowrap;
-}
-.constelacion .habilidad:hover { background: none; color: var(--espacio-texto); }
-/* la estrella: más grande = más nivel */
-.constelacion__astro {
-  width: calc(14px + var(--n) * 22px); height: calc(14px + var(--n) * 22px);
-  background: radial-gradient(circle, #ffffff 0 18%, #8fdbff 45%, #29b6f6 100%);
-  clip-path: polygon(50% 0, 61% 39%, 100% 50%, 61% 61%, 50% 100%, 39% 61%, 0 50%, 39% 39%);
-  filter: drop-shadow(0 0 8px rgba(41, 182, 246, 0.9));
-  transition: scale 0.25s ease;
-}
-.constelacion .habilidad:hover .constelacion__astro,
-.constelacion .habilidad:focus-visible .constelacion__astro,
-.constelacion .habilidad[aria-expanded="true"] .constelacion__astro { scale: 1.45; }
-.constelacion .habilidad:focus-visible { outline: 2px solid var(--espacio-acento-texto); }
-@media (prefers-reduced-motion: no-preference) {
-  .constelacion__astro { animation: titila 3.2s ease-in-out var(--d) infinite; }
-  .constelacion__lineas line { animation: hilo 5s ease-in-out infinite; }
-}
-@keyframes titila { 50% { opacity: 0.55; } }
-@keyframes hilo { 50% { stroke-opacity: 0.55; } }
-
-html[data-tema="claro"] .constelacion { border-color: rgba(49, 83, 161, 0.25); background: radial-gradient(circle at 20% 25%, rgba(41, 182, 246, 0.14), transparent 45%), rgba(255, 255, 255, 0.6); }
-html[data-tema="claro"] .constelacion__lineas line { stroke: rgba(49, 83, 161, 0.5); }
-html[data-tema="claro"] .constelacion__astro { background: radial-gradient(circle, #ffffff 0 15%, #29b6f6 50%, #3153a1 100%); filter: drop-shadow(0 0 6px rgba(49, 83, 161, 0.45)); }
-html[data-tema="claro"] .constelacion .habilidad { color: #1b2f73; }
-
-@media (max-width: 680px) {
-  .constelacion { aspect-ratio: 3 / 4; }
-  .constelacion__lineas--pc { display: none; }
-  .constelacion__lineas--cel { display: block; }
-  .constelacion__estrella { left: var(--cx); top: var(--cy); }
-  .constelacion .habilidad { padding: 6px; font-size: 0.78rem; }
-}
-html[data-tema="claro"] .constelacion .habilidad,
-html[data-tema="claro"] .constelacion .habilidad:hover { background: none; border: 0; box-shadow: none; color: #1b2f73; }
+@keyframes titila { 50% { opacity: 0.55; } } /* la usa Contacto */
 
 /* ===========================================================
    14h. OLAS CONECTADAS CON LA PÁGINA: el mar del inicio reacciona al scroll
@@ -5992,4 +5932,113 @@ html[data-reducir] *::after {
   transition-duration: 0.001ms !important;
   transition-delay: 0s !important;
   scroll-behavior: auto !important;
+}
+
+/* ===========================================================
+   14zm. Trayecto por semestres: la fecha de cada hito
+   =========================================================== */
+.linea__fecha {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--espacio-acento-texto);
+}
+
+/* ===========================================================
+   14zn. Habilidades por áreas: una barra de nivel por habilidad (lo anima js/main.js, parte 21)
+   =========================================================== */
+.areas {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+  max-width: 1000px;
+  margin: 8px auto 0;
+}
+.area {
+  padding: 22px 24px 14px;
+  border: 1px solid var(--espacio-borde);
+  border-radius: 20px;
+  background: var(--espacio-panel);
+}
+.area__titulo {
+  margin: 0 0 6px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--espacio-acento-texto);
+}
+.area__lista { list-style: none; margin: 0; padding: 0; }
+.nivel { border-top: 1px solid var(--espacio-borde); }
+.nivel:first-child { border-top: 0; }
+.nivel__boton {
+  display: block;
+  width: 100%;
+  padding: 14px 0 12px;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.nivel__boton:focus-visible { outline: 3px solid var(--color-acento); outline-offset: 2px; border-radius: 8px; }
+.nivel__cab {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+.nivel__nombre { font-weight: 600; color: var(--espacio-texto); }
+.nivel__dato { flex: 0 0 auto; font-size: 0.8rem; color: var(--espacio-texto-suave); }
+/* barra en 10 tramos: el relleno llega hasta mi nivel */
+.nivel__barra {
+  display: block;
+  height: 8px;
+  overflow: hidden;
+  border-radius: 4px;
+  background: var(--espacio-borde);
+  -webkit-mask: repeating-linear-gradient(90deg, #000 0 calc(10% - 3px), transparent calc(10% - 3px) 10%);
+  mask: repeating-linear-gradient(90deg, #000 0 calc(10% - 3px), transparent calc(10% - 3px) 10%);
+}
+.nivel__relleno {
+  display: block;
+  height: 100%;
+  width: var(--v, var(--nivel, 0%)); /* --v lo va subiendo js/main.js mientras cuenta; sin JS se ve el nivel final */
+  background:
+    linear-gradient(100deg, transparent 42%, rgba(255, 255, 255, 0.6) 50%, transparent 58%) 200% 0 / 250% 100% no-repeat,
+    linear-gradient(90deg, #29b6f6, #b9a8ff);
+}
+.nivel__boton:hover .nivel__relleno { filter: brightness(1.25) saturate(1.2); }
+.nivel__boton:hover .nivel__nombre,
+.nivel__boton[aria-expanded="true"] .nivel__nombre { color: var(--espacio-acento-texto); }
+.nivel__texto {
+  margin: 0;
+  padding: 0 0 14px;
+  font-size: 0.9rem;
+  color: var(--espacio-texto-suave);
+}
+.nivel__texto[hidden] { display: none; }
+@media (prefers-reduced-motion: no-preference) {
+  /* con el scroll (--p de 0 a 1, lo pone js/main.js): las filas de la izquierda entran desde la izquierda y las de la derecha, desde la derecha */
+  .areas--scroll .nivel {
+    opacity: calc(0.15 + var(--p, 1) * 0.85);
+    translate: calc((1 - var(--p, 1)) * -48px) 0;
+  }
+  .areas--scroll .area:nth-child(even) .nivel { translate: calc((1 - var(--p, 1)) * 48px) 0; }
+  /* y un brillo recorre cada barra de vez en cuando */
+  .areas--scroll .nivel__relleno { animation: nivel-brillo 5s ease-in-out calc(var(--i, 0) * 0.45s) infinite; }
+  .nivel__boton { transition: translate 0.25s ease; }
+  .nivel__boton:hover { translate: 4px 0; }
+  .nivel__texto:not([hidden]) { animation: nivel-abre 0.25s ease-out; }
+}
+@keyframes nivel-brillo { 0%, 60% { background-position: 200% 0, 0 0; } 100% { background-position: -100% 0, 0 0; } }
+@keyframes nivel-abre { from { opacity: 0; translate: 0 -4px; } }
+@media (max-width: 768px) {
+  .areas { grid-template-columns: 1fr; }
+  .area { padding: 18px 18px 8px; }
 }
