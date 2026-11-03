@@ -6114,3 +6114,11 @@ html[data-tema="claro"] .hero--nombre .hero__titulo {
 .hero--nombre > .contenedor {
   margin-bottom: calc(100lvh - 100svh);
 }
+
+/* 14zv. Páginas con viewport-fit=cover: el contenido llega hasta abajo de la pantalla (también bajo la barra de gestos del celular),
+   así ya no se asoma el fondo blanco. El margen de seguridad evita que el contenido quede tapado por esa barra. */
+.portada > .contenedor,
+.hero--nombre > .contenedor {
+  margin-bottom: calc(100lvh - 100svh + env(safe-area-inset-bottom, 0px));
+}
+.footer { padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px)); }
