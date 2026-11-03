@@ -599,7 +599,7 @@ export function crearEscena(opciones) {
     // en pantallas anchas (PC, pantalla completa) caben los 5 planetas a la vez: la cámara no se desplaza
     const ancha = ancho >= 560;
     const mitadAncho = ancha ? 0.86 : 0.62;
-    PANEO = ancha ? 0 : 0.65;
+    PANEO = ancha ? 0 : 1; // en celular la cámara se centra justo en el planeta elegido
     camara.fov = limitar(2 * Math.atan(mitadAncho / camara.aspect) * 180 / Math.PI, 40, 78);
     camara.updateProjectionMatrix();
   }

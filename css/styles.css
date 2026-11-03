@@ -6091,3 +6091,26 @@ html[data-reducir] *::after {
 /* 14zs. Botones de icono (girar, ampliar, cerrar) */
 .ficha__icono { display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; padding: 0 !important; }
 .ficha__icono[aria-pressed="true"] { border-color: var(--espacio-lavanda); background: rgba(157, 184, 255, 0.12); }
+
+/* 14zt. Modo claro: el nombre ya no usa degradado recortado en el título.
+   En algunos celulares ese recorte dejaba "fantasmas" de las letras mientras se animaban. */
+html[data-tema="claro"] .hero--nombre .hero__titulo {
+  background: none;
+  -webkit-background-clip: border-box;
+  background-clip: border-box;
+  -webkit-text-fill-color: initial;
+  color: transparent;
+}
+
+/* 14zu. Portadas sin franja blanca abajo en el celular:
+   100lvh es el alto grande de la pantalla (cubre también la zona de los botones del sistema, donde 100svh dejaba ver el fondo blanco).
+   El margen de abajo mantiene el contenido centrado como antes. */
+.portada,
+.hero--nombre {
+  min-height: max(480px, calc(100svh - var(--alto-header, 84px)));
+  min-height: max(480px, calc(100lvh - var(--alto-header, 84px)));
+}
+.portada > .contenedor,
+.hero--nombre > .contenedor {
+  margin-bottom: calc(100lvh - 100svh);
+}

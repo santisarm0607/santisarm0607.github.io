@@ -461,3 +461,9 @@ Accesibilidad:
 
 ## Regla de los textos de rol
 - En "Mi rol" no escribir "todo fue mío" ni "lo hice todo": se lista lo que se hizo ("Me encargué de…"). Aplicado en todas las fichas y tarjetas.
+
+## Ajustes del 3 de noviembre (revisión en el celular)
+- Nombre del Inicio en modo claro: el título ya no lleva degradado recortado (`background-clip:text`), que en algunos celulares dejaba "fantasmas" de las letras al animarse (CSS 14zt).
+- Franja blanca abajo en Portafolio, Juegos y Contacto: las portadas y el Inicio usan `100lvh` (alto grande de la pantalla) con un margen interno que las mantiene centradas (CSS 14zu). Si en algún celular sigue saliendo, revisar esa regla.
+- Arcade en celular: `PANEO = 1` en `js/arcade3d.js`, así la cámara queda justo frente al planeta elegido (antes quedaba a un lado).
+- Herramientas reales en las fichas (solo apps, como pidió Santiago): La última cena (app Stop Motion + Premiere), Dulce Suspensión y bodegón (Photoshop, retoque leve) y Perfil innprendedor (Illustrator). Etiquetas de las tarjetas actualizadas.
