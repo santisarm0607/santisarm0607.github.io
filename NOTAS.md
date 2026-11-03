@@ -441,7 +441,7 @@ Accesibilidad:
 - `index.html`: línea de tiempo 2024-1 → 2026-2 con fechas (`.linea__fecha`, bloque 14zm) y el logro de la hackatón en dorado. Los nombres de proyecto enlazan a su ficha.
 
 ## Habilidades por áreas
-- Reemplaza la constelación: dos tarjetas de área con filas `.nivel` (botón + barra de 10 segmentos). La barra se llena con el scroll (`iniciarNiveles()` en `js/main.js`, parte 21); una fila completa se queda completa. Estilos en bloque 14zn.
+- Reemplaza la constelación: una sola tarjeta con 8 habilidades (de mayor a menor, en dos columnas en PC) con filas `.nivel` (botón + barra de 10 segmentos). La barra se llena con el scroll (`iniciarNiveles()` en `js/main.js`, parte 21); una fila completa se queda completa. Estilos en bloque 14zn.
 - Para cambiar un nivel: `style="--nivel:85%"` del botón en `index.html`. "Perfil innprendedor" se escribe así a propósito.
 - Se borró el código de la constelación (HTML, JS en `efectos.js` y CSS 14f). Queda CSS viejo `.orbita*` sin uso (no estorba).
-
+- Niveles reales (los dio Santiago): Branding 85, Publicidad 75, Animación 60, Ilustración 55, Fotografía digital 55, UI/UX 50, Modelado 3D 50, Desarrollo Web 50. Se quitaron Diseño Gráfico y Perfil innprendedor. Love Market y Trío Amoroso se hacen aparte de la universidad (así lo dice el Trayecto).

@@ -5952,8 +5952,7 @@ html[data-reducir] *::after {
    =========================================================== */
 .areas {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 20px;
+  grid-template-columns: minmax(0, 1fr);
   max-width: 1000px;
   margin: 8px auto 0;
 }
@@ -5972,6 +5971,13 @@ html[data-reducir] *::after {
   color: var(--espacio-acento-texto);
 }
 .area__lista { list-style: none; margin: 0; padding: 0; }
+/* una sola tarjeta con todas las habilidades: en pantallas anchas, en dos columnas */
+@media (min-width: 760px) {
+  .area { padding: 14px 32px 8px; }
+  /* se lee de arriba abajo: primero la columna izquierda (de mayor a menor) y luego la derecha */
+  .area__lista { display: grid; grid-auto-flow: column; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: repeat(4, auto); column-gap: 48px; }
+  .nivel:nth-child(5) { border-top: 0; }
+}
 .nivel { border-top: 1px solid var(--espacio-borde); }
 .nivel:first-child { border-top: 0; }
 .nivel__boton {
