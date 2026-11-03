@@ -6048,3 +6048,46 @@ html[data-reducir] *::after {
   .areas { grid-template-columns: 1fr; }
   .area { padding: 18px 18px 8px; }
 }
+
+/* 14zo. Video horizontal en una ficha (La última cena) */
+.ficha__video--ancho { max-width: 900px; aspect-ratio: 16 / 9; }
+
+/* 14zp. Ficha de Flama: logo, variantes y más mockups debajo de la ficha */
+.ficha__extra { display: flex; flex-direction: column; gap: 48px; margin-top: 56px; }
+.ficha__paginas--dos { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.ficha__paginas--una { grid-template-columns: minmax(0, 420px); }
+.ficha__paginas--ancha { grid-template-columns: minmax(0, 720px); margin-top: 18px; }
+@media (max-width: 560px) {
+  .ficha__paginas--dos { grid-template-columns: minmax(0, 1fr); }
+}
+.ficha__paginas--grande { grid-template-columns: minmax(0, 1000px); }
+
+/* 14zq. Botón para girar el desplegable (la fila de arriba viene al revés) */
+.ficha__girar {
+  margin-top: 14px; padding: 9px 18px; border-radius: 999px; cursor: pointer;
+  font: 600 0.9rem var(--fuente-principal);
+  color: var(--espacio-lavanda); background: transparent; border: 1px solid var(--espacio-borde);
+}
+.ficha__girar:hover, .ficha__girar:focus-visible { border-color: var(--espacio-lavanda); }
+.ficha__img--gira { transition: transform 0.6s ease; }
+.ficha__img--gira.girada { transform: rotate(180deg); }
+@media (prefers-reduced-motion: reduce) { .ficha__img--gira { transition: none; } }
+:root[data-reducir] .ficha__img--gira { transition: none; }
+
+/* 14zr. Visor para ampliar el desplegable */
+.ficha__acciones { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+.ficha__acciones .ficha__girar { margin-top: 0; }
+.ficha__img--gira { cursor: zoom-in; }
+.ampliado { width: 100vw; max-width: none; height: 100vh; height: 100dvh; max-height: none; margin: 0; padding: 0; border: 0; background: #070B1C; color: #E8EEFF; }
+.ampliado[open] { display: flex; flex-direction: column; }
+.ampliado__barra { display: flex; flex-wrap: nowrap; gap: 8px; align-items: center; padding: 12px max(16px, env(safe-area-inset-right, 0px)) 12px max(16px, env(safe-area-inset-left, 0px)); }
+.ampliado__barra .ficha__girar { margin: 0; padding: 8px 14px; white-space: nowrap; color: #9DB8FF; border-color: rgba(157,184,255,.3); }
+.ampliado__barra .ampliado__cerrar { margin-left: auto; }
+.ampliado__caja { flex: 1; min-height: 0; overflow: auto; padding: 0 max(16px, env(safe-area-inset-right, 0px)) 16px max(16px, env(safe-area-inset-left, 0px)); }
+.ampliado__img { display: block; margin: 0 auto; max-width: 100%; max-height: calc(100dvh - 90px); width: auto; height: auto; cursor: zoom-in; }
+.ampliado--grande .ampliado__img { max-width: none; max-height: none; width: 2000px; cursor: zoom-out; }
+.ampliado::backdrop { background: rgba(7,11,28,.9); }
+
+/* 14zs. Botones de icono (girar, ampliar, cerrar) */
+.ficha__icono { display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; padding: 0 !important; }
+.ficha__icono[aria-pressed="true"] { border-color: var(--espacio-lavanda); background: rgba(157, 184, 255, 0.12); }

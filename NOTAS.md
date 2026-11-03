@@ -448,3 +448,16 @@ Accesibilidad:
 
 ## Imagen al compartir el enlace
 - `img/og-portada.jpg` (1200x630) rehecha: logo SS, nombre, "Ingeniero Multimedia" y la dirección, sin el muñequito ni el planeta. WhatsApp/LinkedIn guardan la vieja un tiempo.
+
+## Fichas nuevas (12 proyectos)
+- Nuevas: `proyecto-la-ultima-cena.html` (stop motion, video `video/la-ultima-cena.mp4`, ficha ancha con `.ficha__video--ancho`), `proyecto-dulce-suspension.html`, `proyecto-bodegon.html` y `proyecto-perfil-innprendedor.html`. Todas con la plantilla de Trío Amoroso y su tarjeta en `portafolio.html`.
+- Filtros nuevos en Portafolio: "Animación" y "Fotografía". Contador: 12 proyectos.
+- Inicio, "Proyectos destacados": SlotNova (con ★), Marvel y Love Market. Santisarm Animation sigue en Portafolio.
+- `proyecto-flama.html` tiene `.ficha__extra` con logo y variantes, diseño de la camiseta sin mockup (blanco sobre azul oscuro) y más mockups. Bloques CSS 14zo y 14zp.
+- Pendientes: fichas de los 2 motion graphics y de la espada 3D (faltan archivos y datos).
+
+## Desplegable del perfil innprendedor
+- Botones de icono (girar 180°, ampliar) y un `<dialog class="ampliado">` con la imagen grande `img/perfil-innprendedor-desplegable-grande.webp` (2600 px, se carga al abrir). Gira solo con el botón. CSS 14zq–14zs; JS en la propia página. No usar la clase `.visor`: ya la usa el visor del Portafolio.
+
+## Regla de los textos de rol
+- En "Mi rol" no escribir "todo fue mío" ni "lo hice todo": se lista lo que se hizo ("Me encargué de…"). Aplicado en todas las fichas y tarjetas.
