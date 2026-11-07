@@ -188,22 +188,26 @@
       <h2>🌐 Jugar en línea</h2>
 
       <!-- Paso 1: nombre, color y elegir crear o unirse -->
-      <div id="lineaInicio" class="caja">
-        <label for="nombreLinea">Tu nombre de piloto</label>
+      <div id="lineaInicio" class="linea-dos">
+       <div class="caja panel-linea">
+        <span class="titulo-panel">🚀 Tu piloto</span>
+        <label for="nombreLinea" class="oculta-visual">Tu nombre de piloto</label>
         <div id="chipsLinea" class="chips-pilotos" role="group" aria-label="Pilotos guardados"></div>
         <input id="nombreLinea" class="nombre" type="text" maxlength="12" placeholder="Nombre" autocomplete="off">
         <div id="coloresLinea" class="colores"></div>
         <button id="botonCrearSala" class="boton grande">🛸 Crear sala</button>
-        <span class="etiqueta">¿Te pasaron un código?</span>
-        <div class="botones">
-          <input id="codigoSala" class="nombre codigo" type="text" inputmode="numeric" maxlength="10" placeholder="Ej: 4821" autocomplete="off" aria-label="Código de la sala">
+        <div class="separador"><span>o únete con un código</span></div>
+        <div class="botones fila-codigo">
+          <input id="codigoSala" class="nombre codigo" type="text" inputmode="numeric" maxlength="10" placeholder="4821" autocomplete="off" aria-label="Código de la sala">
           <button id="botonUnirse" class="boton">Unirme</button>
         </div>
+       </div>
       </div>
 
       <!-- Paso 2: la sala (código, estado de la conexión y, para el anfitrión, empezar) -->
-      <div id="lineaSala" class="caja oculta">
-        <span id="tituloCodigo" class="etiqueta">Código de tu sala</span>
+      <div id="lineaSala" class="linea-dos oculta">
+       <div class="caja panel-linea">
+        <span id="tituloCodigo" class="titulo-panel">Código de tu sala</span>
         <p id="codigoGrande" class="codigo-grande" aria-live="polite"></p>
         <button id="botonCopiarCodigo" class="boton secundario">📋 Copiar código</button>
         <p id="estadoLinea" class="estado-linea" aria-live="polite"></p>
@@ -211,6 +215,13 @@
           <span class="etiqueta">Goles para ganar (o contrarreloj)</span>
           <div id="golesLinea" class="niveles"></div>
           <button id="botonEmpezarLinea" class="boton grande">▶ Empezar partida</button>
+        </div>
+       </div>
+        <!-- 📱 QR de la sala: al escanearlo, el rival llega con el código ya puesto -->
+        <div id="qrSala" class="qr-caja panel-linea oculta">
+          <span class="titulo-panel">📱 Invita a tu rival</span>
+          <div class="qr-imagen"></div>
+          <p class="qr-texto">Que lo escanee con la cámara: llega con el código ya puesto.</p>
         </div>
       </div>
 

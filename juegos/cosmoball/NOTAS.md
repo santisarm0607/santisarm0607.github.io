@@ -76,6 +76,12 @@ Todo se dibuja con Canvas y todos los sonidos se crean con Web Audio, así que n
 - **Probar sin internet** (dos pestañas del mismo navegador):
   - Abre `html/index.html?red=local` en las dos pestañas, con Live Server.
   - Así usa `BroadcastChannel` en vez de PeerJS.
+- **📱 QR** (`pintarQR` y `direccionQR` en `enlinea.js`):
+  - Al crear la sala sale un QR con la dirección del juego + `?sala=4821`. Al escanearlo, el otro celular abre directo "Jugar en línea" con el código puesto (en naranja); solo toca **Unirme**.
+  - Las dos pantallas de En línea usan `.linea-dos` con dos tarjetas `.panel-linea` iguales (título arriba con `.titulo-panel`): «🚀 Tu piloto» (sola, centrada, en el paso 1) y, al crear la sala, «Código de tu sala» a la izquierda y el QR a la derecha. En celular vertical, el QR va debajo. El QR solo sale después de crear la sala.
+  - Si el juego está en `localhost`, `127.0.0.1` o en Claude, el QR usa la dirección pública `URL_PUBLICA` (GitHub Pages), porque el otro celular no puede llegar a esas direcciones.
+  - La librería `qrcode-generator` se baja de jsDelivr solo cuando se necesita. Sin internet sale la dirección escrita en vez del QR.
+  - Después de abrir, `?sala=` se borra de la dirección para que al recargar no vuelva a entrar.
 - En pantalla sale el cartel **"🌐 En línea · N ms"** con el retraso entre los dos aparatos. Si no llega nada del rival en 2 segundos, sale "⏳ Esperando a…".
 
 ## Pantallas
@@ -135,3 +141,7 @@ La pausa sale encima del juego. `mostrarPantalla(id)` esconde todas las pantalla
   - Botones con los pilotos guardados en Prepara tu nave (`#chips1`, `#chips2`) y en En línea (`#chipsLinea`).
   - Aviso si en 2 jugadores los dos pilotos se llaman igual.
   - Cambios en `html/index.html`, `css/estilos.css` (al final), `js/juego.js` (`pintarChipsPilotos`, `chipsDeTarjeta`) y `js/enlinea.js` (`abrirPantallaLinea`).
+- **📱 QR para En línea** (7 nov 2026):
+  - QR de la sala al lado del código (llega con el código puesto). Solo aparece al crear la sala.
+  - Pantalla completa: se quitó el título de arriba (`h1` oculto) y los márgenes; la cancha llena toda la ventana.
+  - Cambios en `html/index.html` (`#botonQrInicio`, `#qrInicio`, `#qrSala`), `css/estilos.css` (bloque "📱 QR") y `js/enlinea.js` (`URL_QR`, `URL_PUBLICA`, `pintarQR`, `direccionQR` y el bloque final "SE ABRIÓ DESDE UN QR").

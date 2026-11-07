@@ -474,3 +474,10 @@ Accesibilidad:
 
 ## Franja de datos del Inicio
 - Se quitó la franja de 4 cifras (Proyectos, Juegos, Semestre, Habilidades) del Inicio, junto con su CSS y la referencia `.cifra` en `js/main.js` y `js/efectos.js`. El conteo animado (`data-contar`) sigue en la portada del Portafolio.
+
+## Juegos actualizados (7 de noviembre de 2026)
+- Se compararon los repositorios `santisarm0607/cosmoball` y `santisarm0607/galaxy-gol` con las copias de `juegos/` y se actualizaron los archivos que habían cambiado.
+- **COSMOBALL**: QR para que el rival se una a la sala en línea y juego en pantalla completa (`html/index.html`, `css/estilos.css`, `js/enlinea.js`, `LEEME.txt`, `NOTAS.md`).
+- **Galaxy Gol** (versiones 4.1 y 4.2): QR para entrar a la sala en línea y menús que caben en la pantalla, con columnas en pantallas anchas y acostadas (`index.html`, `css/style.css`, `js/script.js`, `NOTAS.md`, `README.md`).
+- El panel del Arcade (`juegos.html`) menciona ahora que en línea el rival entra escaneando un QR.
+- Se copian solo los archivos del juego, sin `guias/` ni `una-sola-pagina/` de galaxy-gol.

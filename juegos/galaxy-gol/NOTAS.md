@@ -26,21 +26,29 @@ Autor: David Santiago Sarmiento Salguero (SantiSarm) · Ingeniería Web · Ingen
 
 ## Controles
 
-Regla: una mano se mueve y la otra hace las acciones. El jugador 1 usa F (patear) y G (derrapar).
+Regla: una mano se mueve y la otra hace las acciones. El jugador 1 usa F (patear), G (derrapar) y H (cambiar), en fila: un dedo por tecla y sin soltar nunca W A S D.
 
 | Acción | Jugador 1 | Jugador 2 (mano izquierda) | Celular |
 | --- | --- | --- | --- |
 | Mover | W A S D (mano izquierda) | Flechas (mano derecha) | Joystick |
 | Patear (toque = pasar, mantener = tirar) | F | Ñ | Patear |
 | Derrapar | G | . (punto) | Derrapar |
+| Cambiar de alienígena | H | L | (automático) |
 
-**No hay botón para cambiar de alienígena** (desde la versión 3.2): siempre manejas al de tu equipo más cercano al balón.
+**Cambiar** (versión 4.0): el juego te sigue cambiando solo al alienígena más cercano al balón, pero con H (o L) eliges tú. El primer toque salta al compañero más cercano al balón (sin contarte a ti); si vuelves a tocar antes de 1 segundo, sigue con el siguiente, así llegas a cualquiera de los tres. Después de un cambio manual, el automático espera 3 segundos antes de volver a ayudarte (`CAMBIO.manual`). Si tu equipo lleva el balón, Cambiar no hace nada (ya manejas al que lo tiene). El arquero lo maneja siempre la máquina. En celular no hay botón: ahí el cambio sigue siendo solo automático.
+
+**Pase dirigido** (versión 4.0): el pase va hacia donde apuntas con W A S D, las flechas o el joystick.
+- Si apuntas, va al compañero que esté hacia ese lado (un cono de unos 37° a cada lado, `PASE.cono`). Si hay varios, el mejor alineado y más libre.
+- Si no apuntas, el juego elige al más adelantado o más libre, como antes.
+- Si hacia ese lado no hay nadie, el balón sale **al espacio** (190 unidades, `PASE.espacio`) y lo va a buscar el compañero más cercano a ese punto.
+- Mientras llevas el balón, un **aro punteado** que gira marca a quién le llegaría el pase; si va al espacio, se ve una **mira**. Mientras cargas un tiro, no se ve.
+- Zorp sigue pasando como antes (sin apuntar).
 
 **Patear**: un toque corto (menos de 0,18 s) pasa a un compañero. Si lo mantienes, se carga el tiro y sale al soltar: más tiempo, más fuerte (carga llena en 1 s; a los 1,25 s sale solo). Sin carga el tiro sale al 70 % de la velocidad normal y con la carga llena al 115 %, pero un poco menos preciso. Mientras cargas, una barrita bajo tu alienígena (y en la guía) muestra la fuerza. Zorp tira siempre a la velocidad normal.
 
-En la partida, abajo a la derecha, hay una **guía de botones** (F Patear, G Derrapar) que se pone amarilla mientras aprietas cada tecla. Con 2 jugadores, la del jugador 2 va abajo a la izquierda. En celulares no aparece, porque ahí están los botones táctiles, que se ponen blancos al tocarlos.
+En la partida, abajo a la derecha, hay una **guía de botones** (F Patear, G Derrapar, H Cambiar) que se pone amarilla mientras aprietas cada tecla. Con 2 jugadores, la del jugador 2 va abajo a la izquierda. En celulares no aparece, porque ahí están los botones táctiles, que se ponen blancos al tocarlos.
 
-En teclado en inglés, la Ñ es `;` (el juego usa la posición física de la tecla). Entre los dos bloques quedan libres J, K, N, M y la coma, para que las manos no choquen jugando de a dos.
+En teclado en inglés, la Ñ es `;` (el juego usa la posición física de la tecla). Entre los dos bloques (F G H y L Ñ .) quedan libres J y K, para que las manos no choquen jugando de a dos.
 
 Pausa: P, Espacio o Esc. Silencio: M. Con 1 jugador también sirven las teclas del jugador 2.
 
@@ -169,6 +177,26 @@ Pausa: P, Espacio o Esc. Silencio: M. Con 1 jugador también sirven las teclas d
 - **Versión 3.3** (22 de octubre de 2026): el jugador 1 usa F (pasar), G (tirar) y H (derrapar), en fila y en el mismo orden que la guía. La guía de botones pasa a la esquina inferior derecha (con 2 jugadores, la del jugador 2 va a la izquierda).
 - **Versión 3.4** (22 de octubre de 2026): pasar y tirar se juntan en un solo botón, **Patear** (F, Ñ o el botón del celular): un toque pasa y mantener carga un tiro con fuerza, con barrita de carga. Derrapar pasa a la G. En celular quedan 2 botones: Patear y Derrapar.
 - **Versión 3.5** (23 de octubre de 2026): carpetas separadas por tipo de código: `css/style.css` y `js/script.js` (antes estaban al lado de `index.html`). No cambia nada del juego.
+- **Versión 4.2** (7 de noviembre de 2026): **los menús caben en la pantalla** sin bajar con la rueda, aunque el navegador no esté en pantalla completa (por ejemplo, un portátil con Windows al 125 %).
+  - En pantallas anchas y acostadas (desde 760 px, también el celular acostado) las pantallas largas van en columnas: la **sala en línea** pone el código y el **QR a la derecha**, junto a los jugadores; **Prepara tu equipo** (1 jugador) pone nombre a la izquierda y color y capitán a la derecha; **Logros** en dos columnas.
+  - **Controles** en el computador: las 4 tarjetas en una fila y "Cómo se juega" en dos columnas. En el computador se esconde la tarjeta "En el celular" y en el celular las del teclado.
+  - **Inicio** con poca altura: los 6 botones en 3 columnas.
+  - Si aun así no cabe, `encajarMenu()` (sección de pantallas en `js/script.js`) achica el panel lo justo con `zoom` (mínimo 55 % acostado y 85 % con el celular parado; más chico se leería mal y ahí se baja con el dedo). El zoom va en una hoja de estilos aparte (`adoptedStyleSheets`): cero atributos `style`. Se vuelve a calcular al cambiar de pantalla, al cambiar el tamaño de la ventana y cuando cambia lo que hay adentro (`ResizeObserver`).
+  - Cambios en `index.html` (clase `tarjeta-generales`), `css/style.css` (sección "Menús que caben en la pantalla" al final) y `js/script.js` (`mostrarPantalla`, `prepararEncaje`, `pedirEncaje`, `encajarMenu`, `ENCAJE` y el arranque).
+- **Versión 4.1** (7 de noviembre de 2026): **código QR en la sala en línea**.
+  - Quien crea la sala ve, debajo del código, un QR. Tu amigo lo escanea con la cámara del celular, se abre el juego (no tiene que tenerlo), escribe su nombre en "Prepara tu equipo" y entra solo a la sala.
+  - El QR lleva el enlace `https://santisarm0607.github.io/galaxy-gol/?sala=CODIGO`. Si el juego está publicado en otra dirección, usa esa; si lo abres con Live Server en tu computador (localhost), usa la de GitHub Pages, porque localhost no le sirve a otro aparato.
+  - Botón **Compartir enlace**: en celular abre el menú de compartir (WhatsApp, etc.); en computador copia el enlace.
+  - El QR lo dibuja la librería qrcode-generator 1.4.4 (jsDelivr, con huella SRI, igual que PeerJS). Si no carga, la sala funciona igual sin el QR.
+  - Cambios en `index.html` (script de la librería, `#qr-figura`, `#boton-compartir-sala`, `#aviso-invitacion`), `css/style.css` (`--qr-claro`, `--qr-oscuro` y sección "Código QR de la sala") y `js/script.js` sección 20 (`URL_PUBLICA`, `enlaceDeSala`, `pintarQR`, `compartirSala`, `leerInvitacion`) y sección 21 (`leerInvitacion()` al arrancar).
+  - Prueba: `herramientas/probar_red.py` lee el QR con OpenCV y el invitado entra abriendo el enlace del QR. Necesita `npm install qrcode-generator@1.4.4` en la carpeta de PeerJS.
+- **Versión 4.0** (31 de octubre de 2026): **pase dirigido** y vuelve la tecla **Cambiar**.
+  - El pase va hacia donde apuntas; sin dirección es automático; sin nadie hacia ese lado, va al espacio. Aro punteado sobre quien recibiría el pase (mira si va al espacio).
+  - Tecla Cambiar: H (jugador 1) y L (jugador 2). Convive con el cambio automático, que respeta tu elección 3 segundos. Funciona en línea (el invitado manda la acción `cambiar`).
+  - Cambios en `index.html` (pantalla Controles, Cómo jugar y guía de la partida), `js/script.js` (`CONTROLES`, `accion`, `PASE`, `planDePase`, `pasar`, `cambiarManual`, `medidorDeLejania`, `dibujarPlanesDePase`, textos del tutorial). `css/style.css` no cambia.
+  - El sonido `cambio` vuelve a usarse. No cambian las animaciones. Cero atributos `style`.
+  - `una-sola-pagina/galaxy-gol.html` queda al día con esta versión.
+  - Pruebas: `herramientas/probar40.py` (pase, cambio, guía, partidas que terminan, celular) y `herramientas/probar_red.py` (dos navegadores; ya pasa por "Prepara tu equipo").
 - **Versión 3.9** (29 de octubre de 2026): **perfiles guardados y ranking por jugador**.
   - Pantalla nueva **Prepara tu equipo** después de elegir el modo (1 jugador, Tutorial, 2 jugadores y En línea), con los perfiles guardados como botones.
   - "Tu perfil" pasa a ser **Perfiles**: lista de todos los que han jugado, con su mejor puntaje, y botones Editar y Borrar.
@@ -184,5 +212,4 @@ Pausa: P, Espacio o Esc. Silencio: M. Con 1 jugador también sirven las teclas d
   - Cambios en `index.html`, `css/style.css` y `js/script.js` (`dom.botonPantallaMenu` y `pintarBotonPantalla`).
   - Cero atributos `style`.
   - No cambian los sonidos ni las animaciones.
-  - `una-sola-pagina/galaxy-gol.html` todavía es la versión anterior.
 - **Versión 3.6** (27 de octubre de 2026): en celular acostado la cancha usa toda la altura (cerca de un 40 % más grande). La barra de arriba se reparte a los costados: pausa, pantalla completa y sonido a la izquierda; goles y reloj a la derecha. Patear y Derrapar van uno encima del otro. Nuevo botón de **pantalla completa** (esconde la barra del navegador y, en Android, deja el celular acostado; en iPhone no existe para páginas web y el botón se esconde).

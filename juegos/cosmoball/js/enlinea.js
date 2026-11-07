@@ -27,6 +27,10 @@
 //    ping / pong                       para medir el retraso (ms)
 //    adios                             alguien salió de la sala
 //
+//  📱 QR: el anfitrión ve un QR con la dirección del juego y "?sala=4821".
+//  Al escanearlo, el celular del rival abre "Jugar en línea" con el código
+//  ya puesto. El QR solo aparece después de crear la sala.
+//
 //  PARA PROBAR EN UN SOLO COMPUTADOR (sin internet): abre el juego en dos
 //  pestañas con "?red=local" al final de la dirección, por ejemplo
 //  html/index.html?red=local. Se conectan entre pestañas del mismo navegador.
@@ -40,6 +44,11 @@
   const PREFIJO = "cosmoball-sala-";     // nombre de la sala en el servidor de PeerJS
   const VERSION_RED = 1;                 // si algún día cambia el formato de los mensajes
   const pruebaLocal = new URLSearchParams(location.search).get("red") === "local";
+  // 📱 Librería para dibujar el QR (se descarga solo cuando se necesita)
+  const URL_QR = "https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js";
+  // Dirección pública del juego. El QR la usa cuando el juego está abierto
+  // en un lugar al que el otro celular no puede llegar (localhost o Claude).
+  const URL_PUBLICA = "https://santisarm0607.github.io/cosmoball/html/index.html";
 
   let red = null;               // la conexión (PeerJS o la de prueba local)
   let codigo = null;            // los 4 números de la sala
@@ -165,6 +174,57 @@
     });
   }
 
+  // ===================================================================
+  //  📱 QR
+  // ===================================================================
+  function cargarLibreriaQR() {
+    return new Promise((listo, falla) => {
+      if (window.qrcode) { listo(); return; }
+      const s = document.createElement("script");
+      s.src = URL_QR;
+      s.onload = () => (window.qrcode ? listo() : falla());
+      s.onerror = falla;
+      document.head.appendChild(s);
+    });
+  }
+
+  // La dirección que va dentro del QR (con el código de la sala si hay)
+  function direccionQR(cod) {
+    const local = /^(localhost|127\.|\[::1\])/.test(location.hostname) || location.hostname === "";
+    const enClaude = /claude/i.test(location.hostname);
+    const base = (/^https?:$/.test(location.protocol) && !local && !enClaude)
+      ? location.origin + location.pathname
+      : URL_PUBLICA;
+    const params = new URLSearchParams();
+    params.set("sala", cod || "");
+    if (pruebaLocal) params.set("red", "local");
+    return base + "?" + params.toString();
+  }
+
+  // Dibuja el QR dentro de una caja .qr-caja
+  async function pintarQR(caja, cod) {
+    const img = caja.querySelector(".qr-imagen");
+    const url = direccionQR(cod);
+    img.classList.remove("sin-qr");
+    img.innerHTML = "";
+    caja.classList.remove("oculta");
+    try {
+      await cargarLibreriaQR();
+      const qr = window.qrcode(0, "M");
+      qr.addData(url);
+      qr.make();
+      img.innerHTML = qr.createSvgTag({ cellSize: 4, margin: 2, scalable: true });
+    } catch (e) {
+      // Sin internet no se puede bajar la librería: se muestra la dirección
+      img.classList.add("sin-qr");
+      img.innerHTML = "";
+      const p = document.createElement("p");
+      p.className = "qr-texto";
+      p.textContent = "No se pudo crear el QR. Abre: " + url;
+      img.appendChild(p);
+    }
+  }
+
   async function prepararTransporte() {
     if (red) { red.alCerrar = null; red.cerrar(); }
     if (pruebaLocal) { red = transporteLocal(); return; }
@@ -198,6 +258,7 @@
     $("lineaInicio").classList.toggle("oculta", paso !== "inicio");
     $("lineaSala").classList.toggle("oculta", paso !== "sala");
     if (paso === "inicio") $("lineaConfig").classList.add("oculta");
+    $("qrSala").classList.add("oculta");
   }
 
   // Mi nombre, color y nave (la nave se revisa con mis medallas)
@@ -276,6 +337,7 @@
     $("botonCopiarCodigo").classList.remove("oculta");
     $("botonCopiarCodigo").textContent = "📋 Copiar código";
     estadoLinea("Esperando a tu rival… Pásale este código para que se una.");
+    pintarQR($("qrSala"), codigo);
     ocupado = false;
   }
 
@@ -655,4 +717,26 @@
     }
     ctx.restore();
   };
+
+  // ===================================================================
+  //  📱 SE ABRIÓ DESDE UN QR (?sala=4821): directo a "Jugar en línea"
+  // ===================================================================
+  const salaQR = new URLSearchParams(location.search).get("sala");
+  if (salaQR !== null) {
+    const cod = (salaQR.match(/\d/g) || []).join("").slice(-4);
+    abrirPantallaLinea();
+    if (cod.length === 4) {
+      $("codigoSala").value = cod;
+      $("codigoSala").classList.add("desde-qr");
+      avisoLinea("Código COSMO-" + cod + " listo ✓ Revisa tu nombre y toca «Unirme».");
+    }
+    // Quita "?sala=" de la dirección para que al recargar no vuelva a entrar
+    try {
+      const p = new URLSearchParams(location.search);
+      p.delete("sala");
+      const q = p.toString();
+      history.replaceState(null, "", location.pathname + (q ? "?" + q : "") + location.hash);
+    } catch (e) { /* no importa */ }
+  }
+  $("codigoSala").addEventListener("input", () => $("codigoSala").classList.remove("desde-qr"));
 })();

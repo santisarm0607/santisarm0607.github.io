@@ -115,6 +115,11 @@
   --tecla-ataque-fondo: #3a2f0a;
   --tecla-defensa-fondo: #0a2f3a;
 
+  /* Código QR de la sala (versión 4.1): claro y oscuro con mucho contraste
+     para que cualquier cámara lo lea */
+  --qr-claro: #fbf5e4;
+  --qr-oscuro: #120c33;
+
   /* Tipografía: Jersey 10 (títulos y marcador, pixelada) y Atkinson
      Hyperlegible (textos). Atkinson está hecha para personas con baja visión:
      cada letra se distingue bien (B y 8, G y 6, l, I y 1). Versión 3.1. */
@@ -1303,6 +1308,49 @@ kbd.tecla-defensa {
   user-select: all;
 }
 
+/* ---- Código QR de la sala (versión 4.1) ---- */
+.qr-figura {
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  margin: 10px 0 0;
+}
+
+.qr-figura[hidden],
+.boton-compartir[hidden] {
+  display: none;
+}
+
+/* El canvas ya trae el margen claro alrededor (lo necesitan las cámaras) */
+.qr-sala {
+  width: min(176px, 46vw);
+  height: auto;
+  border-radius: var(--radio);
+  image-rendering: pixelated;
+}
+
+.qr-figura figcaption {
+  max-width: 26ch;
+  font-size: 0.85rem;
+  text-align: center;
+  color: var(--texto-suave);
+}
+
+.boton-compartir {
+  margin-top: 8px;
+}
+
+/* Aviso en "Prepara tu equipo" cuando llegas con el QR de un amigo */
+.aviso-invitacion {
+  margin: 0 0 12px;
+  padding: 10px 14px;
+  font-weight: 700;
+  text-align: center;
+  color: var(--texto);
+  border: 2px solid var(--foco);
+  border-radius: var(--radio);
+}
+
 .sala-opciones {
   display: grid;
   justify-items: center;
@@ -2394,5 +2442,154 @@ kbd.tecla-defensa {
 
   .perfil-fila-botones .boton {
     flex: 1;
+  }
+}
+
+/* ==========================================================================
+   MENÚS QUE CABEN EN LA PANTALLA (versión 4.2)
+   Idea: todo el menú se ve sin bajar con la rueda, aunque el navegador no
+   esté en pantalla completa.
+   1. En pantallas anchas, las pantallas largas se acomodan en columnas.
+   2. Con poca altura, títulos y espacios un poco más chicos.
+   3. Si aun así no cabe, js/script.js (encajarMenu) achica el panel lo justo
+      con "zoom" (sin atributos style: usa una hoja de estilos aparte).
+   ========================================================================== */
+
+/* Controles: en el computador no hace falta la tarjeta del celular, y en el
+   celular no hacen falta las del teclado */
+@media (hover: hover) and (pointer: fine) {
+  .tarjeta-celular {
+    display: none;
+  }
+}
+
+@media (hover: none) and (pointer: coarse) {
+  .tarjeta-cometa,
+  .tarjeta-zorp,
+  .tarjeta-generales {
+    display: none;
+  }
+}
+
+/* Poca altura (laptops, navegador sin pantalla completa): todo más compacto */
+@media (max-height: 820px) and (orientation: landscape) {
+  .pantalla-menu {
+    padding-block: 14px;
+  }
+
+  .panel {
+    gap: 14px;
+    padding: 24px 22px 20px;
+  }
+
+  .titulo-pantalla {
+    font-size: clamp(2.2rem, 7vh, 3rem);
+  }
+}
+
+/* Inicio con poca altura: los 6 botones en 3 columnas (2 filas) */
+@media (max-height: 820px) and (min-width: 760px) {
+  .menu {
+    width: min(100%, 640px);
+  }
+
+  .menu-lista {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+  }
+}
+
+/* Pantallas anchas y acostadas (también el celular acostado): columnas */
+@media (min-width: 760px) and (orientation: landscape) {
+  /* -- Sala en línea: a la izquierda los jugadores; a la derecha el código
+        con el QR (o crear sala / unirse) -- */
+  .panel-sala {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, auto);
+    column-gap: 28px;
+    width: min(100%, 1080px);
+  }
+
+  .panel-sala > * {
+    grid-column: 1;
+    justify-self: center;
+  }
+
+  .panel-sala > .titulo-pantalla,
+  .panel-sala > .ayuda {
+    grid-column: 1 / -1;
+  }
+
+  .panel-sala > .sala-codigo,
+  .panel-sala > .sala-opciones {
+    grid-column: 2;
+    grid-row: 2 / span 4;
+    align-self: center;
+  }
+
+  /* -- Prepara tu equipo (1 jugador): datos a la izquierda, color y capitán a la derecha -- */
+  .panel-equipo {
+    width: min(100%, 1040px);
+  }
+
+  .tarjetas-equipo:not(.dos) .tarjeta-equipo {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: start;
+    column-gap: 20px;
+  }
+
+  .tarjetas-equipo:not(.dos) .tarjeta-equipo > * {
+    grid-column: 1;
+  }
+
+  .tarjetas-equipo:not(.dos) .tarjeta-equipo > .grupo-opciones {
+    grid-column: 2;
+  }
+
+  .tarjetas-equipo:not(.dos) .tarjeta-equipo > .grupo-opciones:nth-of-type(1) {
+    grid-row: 1;
+  }
+
+  .tarjetas-equipo:not(.dos) .tarjeta-equipo > .grupo-opciones:nth-of-type(2) {
+    grid-row: 2 / span 4;
+  }
+
+  /* -- Logros en dos columnas -- */
+  #pantalla-logros .panel {
+    width: min(100%, 980px);
+  }
+
+  .lista-logros {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Controles en el computador: las 4 tarjetas en una fila y las reglas en dos columnas */
+@media (min-width: 1100px) and (hover: hover) and (pointer: fine) {
+  #pantalla-controles .panel-ancho {
+    width: min(100%, 1400px);
+  }
+
+  .grupos-controles {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .tarjeta-poderes {
+    grid-column: auto;
+  }
+
+  .tarjeta-poderes .lista-poderes {
+    grid-template-columns: 1fr;
+  }
+
+  .reglas ul {
+    columns: 2;
+    column-gap: 36px;
+  }
+
+  .reglas li {
+    break-inside: avoid;
   }
 }

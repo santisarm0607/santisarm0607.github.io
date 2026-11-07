@@ -60,6 +60,9 @@ JUGAR EN LÍNEA (cada uno en su celular o computador)
 1. Los dos: Play -> "🌐 En línea" y escriben su nombre.
 2. Uno toca "Crear sala". Le sale un código, por ejemplo COSMO-4821.
 3. El otro escribe los 4 números (4821) y toca "Unirme".
+   📱 Más rápido: debajo del código sale un QR. El otro lo escanea con la
+   cámara del celular y se abre "Jugar en línea" con el código ya puesto;
+   solo revisa su nombre y toca "Unirme".
 4. El que creó la sala elige los goles y toca "Empezar partida".
 - Cada uno mueve su nave con el mouse, W / S, las flechas o el dedo.
 - Necesita internet. Funciona con la página publicada (GitHub Pages).

@@ -1,6 +1,6 @@
 'use strict';
 /* ==========================================================================
-   GALAXY GOL · js/script.js · versión 4.0
+   GALAXY GOL · js/script.js · versión 4.2
    Fútbol arcade 2D de alienígenas. Autor: David Santiago Sarmiento Salguero.
 
    Índice:
@@ -401,7 +401,7 @@ function leerColores() {
     'baba', 'baba-oscuro', 'charco', 'crater', 'crater-borde', 'roca', 'roca-oscura', 'fuego',
     'nave', 'nave-oscura', 'nave-cupula', 'rayo', 'polvo', 'aviso-impacto',
     'naranja', 'naranja-oscuro', 'naranja-claro', 'morado', 'morado-oscuro', 'morado-claro',
-    'rojo', 'rojo-oscuro', 'rojo-claro'
+    'rojo', 'rojo-oscuro', 'rojo-claro', 'qr-claro', 'qr-oscuro'
   ];
   for (const nombre of nombres) COLORES[nombre] = css.getPropertyValue('--' + nombre).trim();
   FUENTE_TITULO = css.getPropertyValue('--fuente-titulo').trim() || 'sans-serif';
@@ -697,7 +697,65 @@ function mostrarPantalla(id, enfocar = true) {
   for (const pantalla of dom.pantallas) pantalla.hidden = pantalla.id !== id;
   document.title = TITULOS[id] || 'Galaxy Gol';
   const actual = document.getElementById(id);
+  encajarMenu();   // versión 4.2: que quepa sin bajar con la rueda
   if (enfocar) actual.querySelector('h1, h2')?.focus();
+}
+
+// ---- Menús que caben en la pantalla (versión 4.2) ----
+// Si el panel de un menú es más alto que la pantalla, se achica con "zoom"
+// lo justo para que quepa entero. El zoom va en una hoja de estilos aparte
+// (adoptedStyleSheets), así no se escribe ningún atributo style en el HTML.
+// En el celular parado no se achica tanto (se leería muy chico): ahí se
+// puede bajar con el dedo como siempre.
+const ENCAJE = { pisoAcostado: 0.55, pisoParado: 0.85 };
+const encaje = { hoja: null, caja: null, observador: null, pendiente: false };
+
+function prepararEncaje() {
+  const sePuede = 'adoptedStyleSheets' in document && window.CSS && CSS.supports('zoom', '0.5');
+  if (!sePuede) return;   // navegadores viejos: se baja con la rueda, como antes
+  encaje.hoja = new CSSStyleSheet();
+  document.adoptedStyleSheets = [...document.adoptedStyleSheets, encaje.hoja];
+  // Si cambia lo que hay adentro (sale el QR, un mensaje, la lista de récords...)
+  if ('ResizeObserver' in window) encaje.observador = new ResizeObserver(pedirEncaje);
+  window.addEventListener('resize', pedirEncaje);
+  if (document.fonts) document.fonts.ready.then(pedirEncaje);
+}
+
+// Un solo ajuste por cuadro, aunque lleguen varios avisos juntos
+function pedirEncaje() {
+  if (encaje.pendiente) return;
+  encaje.pendiente = true;
+  window.requestAnimationFrame(() => {
+    encaje.pendiente = false;
+    encajarMenu();
+  });
+}
+
+function encajarMenu() {
+  if (!encaje.hoja) return;
+  const pantalla = [...dom.pantallas].find((p) => !p.hidden);
+  const caja = pantalla && pantalla.querySelector(':scope > .panel, :scope > .inicio-contenido');
+  if (!caja || pantalla.id === 'pantalla-partida') {
+    encaje.hoja.replaceSync('');
+    return;
+  }
+  if (encaje.caja !== caja) {
+    if (encaje.observador) {
+      encaje.observador.disconnect();
+      encaje.observador.observe(caja);
+    }
+    encaje.caja = caja;
+  }
+  // Se mide el panel a tamaño normal y se compara con el alto disponible
+  encaje.hoja.replaceSync('');
+  const estilo = getComputedStyle(pantalla);
+  const disponible = pantalla.clientHeight - parseFloat(estilo.paddingTop) - parseFloat(estilo.paddingBottom);
+  const alto = caja.getBoundingClientRect().height;
+  if (alto <= disponible || disponible <= 0) return;
+  const parado = window.matchMedia('(orientation: portrait)').matches;
+  const piso = parado ? ENCAJE.pisoParado : ENCAJE.pisoAcostado;
+  const escala = Math.max(piso, Math.floor((disponible / alto) * 100) / 100);
+  encaje.hoja.replaceSync(`#${pantalla.id} > .panel, #${pantalla.id} > .inicio-contenido { zoom: ${escala}; }`);
 }
 
 // Escribe un aviso para lectores de pantalla.
@@ -4562,6 +4620,10 @@ function abrirEquipos(modo, desdeSala = false) {
   });
   equipos.listo.textContent = modo === 'red' ? (desdeSala ? 'Guardar' : 'Continuar') : '¡A jugar!';
   equipos.error.hidden = true;
+  // Versión 4.1: si llegaste con el QR de un amigo, se te avisa a qué sala vas
+  const aviso = $('#aviso-invitacion');
+  aviso.hidden = !(modo === 'red' && salaInvitada);
+  aviso.textContent = salaInvitada ? `¡Te invitaron a la sala ${salaInvitada}! Escribe tu nombre y toca Continuar para entrar.` : '';
   mostrarPantalla('pantalla-equipo');
 }
 
@@ -4602,6 +4664,7 @@ function prepararPantallaEquipo() {
     }
   });
   equipos.volver.addEventListener('click', () => {
+    salaInvitada = '';   // si se devuelve, ya no entra solo a la sala
     if (equipos.desdeSala) mostrarPantalla('pantalla-red');
     else mostrarPantalla(equipos.modo === '1j' ? 'pantalla-nivel' : 'pantalla-jugadores');
   });
@@ -4693,6 +4756,9 @@ const sala = {
   codigoEscrito: $('#codigo-sala'),
   cajaCodigo: $('#red-codigo'),
   codigo: $('#codigo-grande'),
+  qrFigura: $('#qr-figura'),
+  qr: $('#qr-sala'),
+  compartir: $('#boton-compartir-sala'),
   empezar: $('#boton-empezar-red'),
   tuRetrato: $('#sala-tu-retrato'),
   tuNombre: $('#sala-tu-nombre'),
@@ -4738,7 +4804,92 @@ function pintarSala() {
   for (const control of sala.formUnirse.elements) control.disabled = !disponible;
   sala.cajaCodigo.hidden = red.rol !== 'anfitrion';
   sala.codigo.textContent = red.codigo;
+  pintarQR(red.rol === 'anfitrion' && red.peer && red.peer.open ? red.codigo : '');
   sala.empezar.hidden = !(red.rol === 'anfitrion' && red.rival && red.conectado());
+}
+
+// ---- Código QR e invitación (versión 4.1) ----
+// El QR guarda un enlace al juego con el código de la sala, por ejemplo
+// https://santisarm0607.github.io/galaxy-gol/?sala=K7PX
+// Quien lo escanea abre el juego en su celular (no tiene que tenerlo), pone su
+// nombre en "Prepara tu equipo" y entra solo a la sala.
+const URL_PUBLICA = 'https://santisarm0607.github.io/galaxy-gol/';
+let salaInvitada = '';      // código que llegó en el enlace (?sala=…)
+let qrPintado = '';         // para no dibujar el mismo QR una y otra vez
+
+// Si abres el juego en tu computador (Live Server en localhost), ese enlace no
+// le sirve a otro aparato: entonces el QR lleva a la página publicada.
+function enlaceDeSala(codigo) {
+  const local = !/^https?:$/.test(location.protocol) ||
+    ['localhost', '127.0.0.1', '[::1]', ''].includes(location.hostname);
+  const base = local ? URL_PUBLICA : location.origin + location.pathname;
+  return `${base}?sala=${encodeURIComponent(codigo)}`;
+}
+
+// Dibuja el QR en el canvas: cada cuadrito del QR es un bloque de píxeles
+function pintarQR(codigo) {
+  const listo = Boolean(codigo) && typeof window.qrcode === 'function';
+  sala.qrFigura.hidden = !listo;
+  sala.compartir.hidden = !codigo;
+  if (!listo || qrPintado === codigo) return;
+  let qr;
+  try {
+    qr = window.qrcode(0, 'M');   // 0 = el tamaño justo; M = aguanta un poco de reflejo
+    qr.addData(enlaceDeSala(codigo));
+    qr.make();
+  } catch (error) {
+    sala.qrFigura.hidden = true;
+    return;
+  }
+  const modulos = qr.getModuleCount();
+  const margen = 4;                                   // borde claro que piden las cámaras
+  const lado = Math.floor(sala.qr.width / (modulos + margen * 2));
+  const inicio = Math.floor((sala.qr.width - lado * modulos) / 2);
+  const pincel = sala.qr.getContext('2d');
+  pincel.fillStyle = COLORES['qr-claro'];
+  pincel.fillRect(0, 0, sala.qr.width, sala.qr.height);
+  pincel.fillStyle = COLORES['qr-oscuro'];
+  for (let fila = 0; fila < modulos; fila++) {
+    for (let col = 0; col < modulos; col++) {
+      if (qr.isDark(fila, col)) pincel.fillRect(inicio + col * lado, inicio + fila * lado, lado, lado);
+    }
+  }
+  sala.qr.setAttribute('aria-label', `Código QR para entrar a la sala ${codigo}`);
+  qrPintado = codigo;
+}
+
+// "Compartir enlace": en el celular abre el menú de compartir (WhatsApp, etc.);
+// en el computador copia el enlace.
+async function compartirSala() {
+  if (!red.codigo) return;
+  const enlace = enlaceDeSala(red.codigo);
+  const texto = `¡Juguemos Galaxy Gol! Entra a mi sala ${red.codigo}:`;
+  try {
+    if (navigator.share) {
+      await navigator.share({ title: 'Galaxy Gol', text: texto, url: enlace });
+      return;
+    }
+    await navigator.clipboard.writeText(enlace);
+    estadoSala('Enlace copiado. Pégaselo a tu amigo por chat.');
+  } catch (error) {
+    // Si cerró el menú de compartir no pasa nada; si falló, se muestra el enlace
+    if (error && error.name !== 'AbortError') estadoSala(`Enlace de tu sala: ${enlace}`);
+  }
+}
+
+// Al abrir el juego desde un QR o un enlace con ?sala=CODIGO
+function leerInvitacion() {
+  let codigo = '';
+  try {
+    codigo = normalizarCodigo(new URLSearchParams(location.search).get('sala'));
+    // Se borra del enlace para que al recargar no vuelva a entrar
+    if (location.search) history.replaceState(null, '', location.pathname + location.hash);
+  } catch (error) {
+    return;
+  }
+  if (codigo.length !== RED.largoCodigo) return;
+  salaInvitada = codigo;
+  abrirEquipos('red');
 }
 
 // Al entrar a "Jugar en línea" desde "¿Cuántos jugadores?"
@@ -4749,6 +4900,12 @@ function abrirSala() {
   if (red.rol) return;
   if (!redDisponible()) {
     estadoSala('El juego en línea no está disponible aquí. Necesita internet y abrir el juego con Live Server o desde una página publicada (no funciona dentro de la vista previa de Claude).', true);
+  } else if (salaInvitada) {
+    // Llegaste con el QR: se entra solo a la sala de tu amigo
+    const codigo = salaInvitada;
+    salaInvitada = '';
+    sala.codigoEscrito.value = codigo;
+    unirseASala(codigo);
   } else {
     estadoSala('Crea una sala y dile el código a tu amigo, o escribe el código de la sala de tu amigo.');
   }
@@ -5190,6 +5347,7 @@ function enviarMovimiento() {
 // Botones y formulario de la sala
 function prepararSala() {
   sala.crear.addEventListener('click', crearSala);
+  sala.compartir.addEventListener('click', compartirSala);
   sala.empezar.addEventListener('click', empezarPartidaRed);
   sala.formUnirse.addEventListener('submit', (evento) => {
     evento.preventDefault();
@@ -5221,6 +5379,9 @@ function iniciar() {
   dom.botonPantallaMenu.hidden = !pantallaCompletaDisponible();
   pintarBotonPantalla();
   pintarLogros();
+  prepararEncaje();   // versión 4.2: los menús caben en la pantalla
+  encajarMenu();
+  leerInvitacion();   // versión 4.1: ¿llegó con el QR de un amigo?
   if ('ResizeObserver' in window) new ResizeObserver(ajustarCanvas).observe(dom.zona);
   window.addEventListener('resize', ajustarCanvas);
   window.requestAnimationFrame((ahora) => {
