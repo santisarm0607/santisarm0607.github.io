@@ -27,6 +27,9 @@ export const CONFIG = {
     fov: 75,                  // campo de visión normal (grados)
     fovApuntar: 52,           // campo de visión al apuntar (zoom); cada arma puede cambiarlo
     sensibilidadMouse: 0.0022,
+    // Si el navegador no deja atrapar el mouse: al llevar la flecha al borde, sigue girando
+    giroBorde: 2.4,        // radianes por segundo en el borde
+    zonaBorde: 0.1,        // 10% del ancho de la pantalla a cada lado
     sensibilidadTactil: 0.0055,
     factorSensibilidadApuntando: 0.6,
     pitchMax: 1.45,           // cuánto puede mirar arriba/abajo (radianes)

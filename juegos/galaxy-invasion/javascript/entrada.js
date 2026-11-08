@@ -64,7 +64,8 @@ export class Entrada {
       if (e.code === 'KeyP' || (e.code === 'Escape' && !this.bloqueado)) this.alPausar();
     });
     window.addEventListener('keyup', (e) => this.teclas.delete(e.code));
-    window.addEventListener('blur', () => { this.teclas.clear(); this.mouse.izquierdo = this.mouse.derecho = false; });
+    document.addEventListener('mouseleave', () => { this.cursorX = null; });
+    window.addEventListener('blur', () => { this.cursorX = null; this.teclas.clear(); this.mouse.izquierdo = this.mouse.derecho = false; });
   }
 
   /* ---------------- Mouse ---------------- */
@@ -73,6 +74,7 @@ export class Entrada {
     this.lienzo.addEventListener('mousedown', (e) => {
       if (!this.activa || this.esTactil) return;
       if (!this.bloqueado && !this.sinBloqueo) { this.pedirBloqueo(); return; }
+      if (!this.bloqueado) this.pedirBloqueo(); // en respaldo: se vuelve a intentar atrapar el mouse
       if (e.button === 0) { this.mouse.izquierdo = true; this.unaVez.disparar = true; }
       if (e.button === 2) this.mouse.derecho = true;
     });
@@ -82,6 +84,7 @@ export class Entrada {
     });
     window.addEventListener('mousemove', (e) => {
       if (!this.activa || this.esTactil) return;
+      this.cursorX = e.clientX;
       if (!this.bloqueado && !this.sinBloqueo) return;
       const s = CONFIG.jugador.sensibilidadMouse * this.multiplicadorSens;
       // Se limita el salto máximo para evitar tirones raros de algunos navegadores
@@ -96,7 +99,11 @@ export class Entrada {
     document.addEventListener('pointerlockchange', () => {
       const antes = this.bloqueado;
       this.bloqueado = document.pointerLockElement === this.lienzo;
-      if (this.bloqueado) this.bloqueoFunciono = true;
+      if (this.bloqueado) {
+        this.bloqueoFunciono = true;
+        this.sinBloqueo = false;
+        document.body.classList.remove('sin-bloqueo');
+      }
       // Si se soltó el mouse (tecla Esc) en medio del juego: pausa
       if (antes && !this.bloqueado && this.activa) this.alPausar();
     });
@@ -105,7 +112,7 @@ export class Entrada {
 
   /* Atrapa el mouse dentro del juego (para mirar sin que se salga la flecha) */
   pedirBloqueo() {
-    if (this.esTactil || this.sinBloqueo) return;
+    if (this.esTactil) return;
     try {
       const promesa = this.lienzo.requestPointerLock();
       if (promesa && promesa.catch) promesa.catch(() => this.activarRespaldo());
@@ -117,7 +124,7 @@ export class Entrada {
   /* Si el navegador no deja atrapar el mouse (por ejemplo dentro de Claude),
      se mira moviendo el mouse normal */
   activarRespaldo() {
-    if (this.bloqueoFunciono) return; // fue solo un error pasajero (se intentó muy rápido)
+    if (this.bloqueado || this.sinBloqueo) return;
     this.sinBloqueo = true;
     document.body.classList.add('sin-bloqueo');
   }
@@ -269,6 +276,18 @@ export class Entrada {
 
     // Joystick casi al tope hacia adelante = correr
     const correTactil = Math.hypot(t.mover.x, t.mover.y) > 0.92 && t.mover.y < -0.5;
+
+    // Respaldo sin mouse atrapado: la flecha en el borde sigue girando la cámara
+    const ahora = performance.now();
+    const dt = Math.min(0.1, ((ahora - (this.ultimaLectura || ahora)) / 1000));
+    this.ultimaLectura = ahora;
+    if (this.sinBloqueo && !this.bloqueado && !this.esTactil && this.activa && this.cursorX != null) {
+      const ancho = window.innerWidth, zona = ancho * CONFIG.jugador.zonaBorde;
+      let empuje = 0;
+      if (this.cursorX < zona) empuje = -(1 - this.cursorX / zona);
+      else if (this.cursorX > ancho - zona) empuje = 1 - (ancho - this.cursorX) / zona;
+      this.mirar.x += empuje * CONFIG.jugador.giroBorde * dt;
+    }
 
     const acciones = {
       adelante: Math.max(-1, Math.min(1, adelante)),

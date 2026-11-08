@@ -465,6 +465,7 @@ export class GestorEnemigos {
       p.vel.copy(op.direccion).normalize().multiplyScalar(op.velocidad);
       p.malla.lookAt(op.origen.clone().add(p.vel));
     }
+    p.origenX = p.malla.position.x; p.origenZ = p.malla.position.z; // de dónde salió (para los techos)
     this.proyectiles.push(p);
     return p;
   }
@@ -566,15 +567,25 @@ export class GestorEnemigos {
       const radioJugador = jugador.enVehiculo ? 1.8 : (s.recto ? 0.6 : 0.8);
       const golpeDirecto = dJugador < radioJugador && p.y > jugador.posicion.y - 0.2 && p.y < alturaJugador;
       let choco = false;
-      if (s.recto) {
-        // En línea recta: choca con paredes, autos y barreras
-        for (const c of mundo.colisiones) {
-          if (p.x > c.minX && p.x < c.maxX && p.z > c.minZ && p.z < c.maxZ && p.y < (c.alto ?? 99)) { choco = true; break; }
+      // Choca con paredes, autos y barreras. Los de arco solo con lo que tiene altura conocida
+      // (paredes de graneros, casas...), así siguen pasando por encima de cercas y matas.
+      for (const c of mundo.colisiones) {
+        if (c.inactiva) continue;
+        const alto = c.alto ?? (s.recto ? 99 : -1);
+        if (p.y < alto && p.x > c.minX && p.x < c.maxX && p.z > c.minZ && p.z < c.maxZ) { choco = true; break; }
+      }
+      // Techos (graneros): si viene de afuera y cae encima, se estrella en el techo
+      if (!choco && mundo.techos) {
+        if (!s.techosInicio) s.techosInicio = mundo.techos.filter((t) => s.origenX > t.minX && s.origenX < t.maxX && s.origenZ > t.minZ && s.origenZ < t.maxZ);
+        for (const t of mundo.techos) {
+          if (s.techosInicio.includes(t)) continue;
+          if (p.y < t.alto && p.x > t.minX && p.x < t.maxX && p.z > t.minZ && p.z < t.maxZ) { choco = true; break; }
         }
       }
       if (p.y <= 0.05 || golpeDirecto || choco || s.vida <= 0) {
         this.impactoProyectil(s, p);
-        if (golpeDirecto || (!s.recto && dJugador < s.radio)) this.alSalpicar(s.danio, p);
+        // Si se estrelló en una pared o techo, la salpicadura no la atraviesa
+        if (golpeDirecto || (!s.recto && !choco && dJugador < s.radio)) this.alSalpicar(s.danio, p);
         this.quitarProyectil(i);
       }
     }

@@ -53,7 +53,14 @@ export function crearGranja(escena, calidad) {
   function agregarColision(objeto, encoger = 0.05) {
     objeto.updateWorldMatrix(true, true);
     caja3.setFromObject(objeto);
-    colisiones.push({ minX: caja3.min.x + encoger, maxX: caja3.max.x - encoger, minZ: caja3.min.z + encoger, maxZ: caja3.max.z - encoger });
+    colisiones.push({ minX: caja3.min.x + encoger, maxX: caja3.max.x - encoger, minZ: caja3.min.z + encoger, maxZ: caja3.max.z - encoger, alto: caja3.max.y });
+  }
+  // Techos: los proyectiles en arco que caen encima se estrellan contra el techo
+  const techos = [];
+  function agregarTecho(grupo) {
+    grupo.updateWorldMatrix(true, true);
+    const c = new THREE.Box3().setFromObject(grupo);
+    techos.push({ minX: c.min.x, maxX: c.max.x, minZ: c.min.z, maxZ: c.max.z, alto: c.max.y });
   }
   function colocar(grupo, x, z, rotY = 0, choca = true, bloqueaBalas = true) {
     grupo.position.set(x, 0, z);
@@ -121,6 +128,7 @@ export function crearGranja(escena, calidad) {
   // los choques se miran desde arriba y si no taparía la entrada
   granero.paredes.filter((p) => p.name !== 'frente_arriba').forEach((p) => agregarColision(p, 0.02));
   solidos.push(granero.grupo);
+  agregarTecho(granero.grupo);
   estaticos.push({ grupo: granero.grupo, solido: true });
   const luzGranero = new THREE.PointLight(0xffc070, 18, 16, 1.6);
   luzGranero.position.set(38, 6, -20);
@@ -288,6 +296,7 @@ export function crearGranja(escena, calidad) {
   escena.add(graneroOrtiz.grupo);
   graneroOrtiz.paredes.filter((p) => p.name !== 'frente_arriba').forEach((p) => agregarColision(p, 0.02));
   solidos.push(graneroOrtiz.grupo);
+  agregarTecho(graneroOrtiz.grupo);
   estaticos.push({ grupo: graneroOrtiz.grupo, solido: true });
   colocar(crearTractor().grupo, -122, -20, 2.2);
   const luzOrtiz = new THREE.PointLight(0xffb060, 20, 16, 1.6);
@@ -519,7 +528,7 @@ export function crearGranja(escena, calidad) {
       ]
     },
     inicioVehiculo: { x: 60, z: -80, yaw: 0 },
-    colisiones, solidos, puntosAparicion, suministros, cofres,
+    colisiones, techos, solidos, puntosAparicion, suministros, cofres,
     inicioJugador: new THREE.Vector3(-25, 0, 17), yawInicio: 0,
     lugares: {
       corral: new THREE.Vector3(corral.x, 0, corral.z),

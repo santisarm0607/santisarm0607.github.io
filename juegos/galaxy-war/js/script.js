@@ -3843,7 +3843,7 @@ function iniciarCarrera(cId, conBots) {
   aplicarCielo(CIELO_CARRERA);
   colocarAsteroidesCarrera();
   anillos.forEach((m) => (m.visible = true));
-  juego.carrera = { id: cId, fase: 'cuenta', t: 0, tiempo: 0, prog: 0, fin: null, prev: J.pos.clone(), tEnem: 3, muertes: 0, tMeta: 0, ultN: 0, remotos: {}, resVisibles: false, tRes: 0, logroDado: false };
+  juego.carrera = { id: cId, fase: 'cuenta', t: 0, tiempo: 0, prog: 0, racha: 0, fin: null, prev: J.pos.clone(), tEnem: 3, muertes: 0, tMeta: 0, ultN: 0, remotos: {}, resVisibles: false, tRes: 0, logroDado: false };
   Object.assign(juego, { fase: 'carrera', tFase: 0, puntaje: 0, racha: 0, lento: 1, tCapsula: 12, derribosNivel: 0, enemigosDerribados: 0, enemigosGenerados: 0, danioRecibido: false, opcionesMejora: [], mejoraPendiente: false });
   bots = conBots ? crearBots() : [];
   Red.est = 'cuenta'; Red.cId = cId; Red.ultimaC = cId; enviarPresencia(true);
@@ -3858,14 +3858,23 @@ function iniciarCarrera(cId, conBots) {
   revisarOrientacion();
 }
 
-function pasarAnillo() {
+/** Avanza al anillo cruzado. 'saltados' = anillos que se saltó (no dan puntos ni cuentan para la racha). */
+function pasarAnillo(saltados = 0) {
   const C = juego.carrera, J = jugador;
+  for (let i = 0; i < saltados; i++) { C.prog++; revisarVuelta(); }
   C.prog++;
   sumarPuntos(50);
+  if (saltados > 0) { C.racha = 0; mostrarMensaje('−' + saltados + (saltados > 1 ? ' aros' : ' aro'), 0.9); }
+  else if (++C.racha % 5 === 0) { sumarPuntos(100); mostrarMensaje('🔥 RACHA x' + C.racha + ' +100', 1.1); Sonido.sfx.racha(); }
   Sonido.sfx.recoger();
   Particulas.emitir(J.pos, 16, 0x5dff9a, 16, 0.5);
   if (C.prog >= CARRERA.TOTAL) { llegarMeta(); return; }
-  if (C.prog > 1 && (C.prog - 1) % CARRERA.ANILLOS === 0) {
+  revisarVuelta();
+}
+/** Si el progreso acaba de empezar una vuelta nueva: bono y aviso. */
+function revisarVuelta() {
+  const C = juego.carrera;
+  if (C.prog > 1 && C.prog < CARRERA.TOTAL && (C.prog - 1) % CARRERA.ANILLOS === 0) {
     const v = vueltaDe(C.prog);
     sumarPuntos(300); juego.nivel = v;
     mostrarMensaje(v === CARRERA.VUELTAS ? '¡ÚLTIMA VUELTA!' : 'VUELTA ' + v + ' / ' + CARRERA.VUELTAS, 1.8);
@@ -3909,10 +3918,13 @@ function actualizarCarrera(dt) {
   juego.tFase += dt;
   if (juego.fase === 'reaparecer') { if (juego.tFase > 3) reaparecer(); }
   else if (J.vivo && C.fase === 'carrera') {
-    // ¿Cruzó el anillo siguiente? (pasó de un lado al otro de su plano, cerca del centro)
-    const r = anillos[C.prog % CARRERA.ANILLOS], n = r.userData.normal;
-    _a.subVectors(C.prev, r.position); _b.subVectors(J.pos, r.position);
-    if (_a.dot(n) < 0 && _b.dot(n) >= 0 && _b.length() < CARRERA.RADIO + 3 * J.escalaVis) pasarAnillo();
+    // ¿Cruzó alguno de los 3 anillos siguientes? (pasó de un lado al otro de su plano, cerca del centro)
+    // Si cruza uno más adelante, los que se saltó no dan puntos pero la carrera sigue.
+    for (let k = 0; k < 3 && C.prog + k < CARRERA.TOTAL; k++) {
+      const r = anillos[(C.prog + k) % CARRERA.ANILLOS], n = r.userData.normal;
+      _a.subVectors(C.prev, r.position); _b.subVectors(J.pos, r.position);
+      if (_a.dot(n) < 0 && _b.dot(n) >= 0 && _b.length() < CARRERA.RADIO * 1.25 + 3 * J.escalaVis) { pasarAnillo(k); break; }
+    }
     // Enemigos que aparecen más adelante en la pista
     C.tEnem -= dt;
     if (C.tEnem <= 0) {
@@ -4869,5 +4881,5 @@ revisarSalaEnEnlace();
 requestAnimationFrame(bucle);
 
 // Acceso para pruebas desde la consola del navegador (opcional)
-window.GALAXY_WAR = { juego, jugador, iniciarNivel, irAlMenu, danarParte, activarPoder, generarCapsula, iniciarCarrera, Red, danarJugador, iniciarEvento, crearJefe, guardado: () => guardado };
+window.GALAXY_WAR = { juego, jugador, iniciarNivel, irAlMenu, danarParte, activarPoder, generarCapsula, iniciarCarrera, Red, danarJugador, anillos, iniciarEvento, crearJefe, guardado: () => guardado };
 })();
