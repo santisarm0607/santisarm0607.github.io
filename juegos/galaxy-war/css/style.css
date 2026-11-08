@@ -1,0 +1,285 @@
+/* =====================================================================
+   GALAXY WAR - Estilos (menús, HUD, controles táctiles)
+   Autor: David Santiago Sarmiento Salguero (SantiSarm)
+   ===================================================================== */
+/* =====================================================================
+   ESTILOS GENERALES
+   ===================================================================== */
+:root{
+  --azul:#3ab8ff; --verde:#5dff9a; --morado:#b45dff; --rojo:#ff4d6d; --oro:#ffd166;
+  --panel:rgba(8,14,34,.86); --borde:rgba(120,180,255,.35); --texto:#e8f1ff;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{
+  width:100%;height:100%;overflow:hidden;background:#03040b;color:var(--texto);
+  font-family:"Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;
+  touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;
+  overscroll-behavior:none;position:fixed;inset:0;
+}
+canvas#juego{position:fixed;inset:0;width:100%;height:100%;display:block;}
+.oculto{display:none!important;}
+
+/* ---------- Pantallas (menús) ---------- */
+.pantalla{
+  position:fixed;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;
+  padding:max(12px,env(safe-area-inset-top)) max(14px,env(safe-area-inset-right)) max(12px,env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-left));
+  z-index:20;
+}
+.pantalla.activa{display:flex;animation:aparecer .35s ease;}
+.oscura{background:radial-gradient(ellipse at center,rgba(5,10,30,.6),rgba(0,0,0,.88));}
+@keyframes aparecer{from{opacity:0;transform:scale(.97)}to{opacity:1;transform:none}}
+
+.titulo{
+  font-size:clamp(34px,min(10vw,15vh),104px);font-weight:900;letter-spacing:.12em;line-height:1;text-align:center;
+  background:linear-gradient(90deg,#3ab8ff,#b45dff,#5dff9a,#3ab8ff);background-size:300% 100%;
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  animation:brillo 6s linear infinite, flotar 4s ease-in-out infinite;
+  filter:drop-shadow(0 0 18px rgba(90,160,255,.55));
+}
+@keyframes brillo{to{background-position:300% 0}}
+@keyframes flotar{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+.subtitulo{letter-spacing:.45em;font-size:clamp(9px,1.6vw,13px);opacity:.75;margin:clamp(4px,1.4vh,10px) 0 clamp(8px,2.6vh,22px);text-align:center}
+.menu{display:flex;flex-direction:column;gap:clamp(5px,1.3vh,10px);width:min(340px,82vw);}
+.pie{position:absolute;bottom:max(8px,env(safe-area-inset-bottom));font-size:11px;opacity:.45;letter-spacing:.2em}
+
+.btn{
+  font:inherit;font-size:clamp(13px,2vw,17px);font-weight:700;letter-spacing:.08em;color:var(--texto);
+  background:linear-gradient(180deg,rgba(40,70,140,.6),rgba(15,25,60,.8));
+  border:1px solid var(--borde);border-radius:12px;padding:clamp(7px,1.7vh,12px) 18px;cursor:pointer;
+  transition:transform .15s,box-shadow .15s,background .15s;text-transform:uppercase;touch-action:manipulation;
+}
+.btn:hover:not(:disabled),.btn:focus-visible{transform:translateY(-2px) scale(1.02);box-shadow:0 0 18px rgba(80,170,255,.55);outline:none;}
+.btn:active:not(:disabled){transform:scale(.97);}
+.btn:disabled{opacity:.35;cursor:not-allowed;}
+.btn.peq{font-size:12px;padding:7px 14px;}
+.btn.principal{background:linear-gradient(180deg,rgba(60,140,255,.75),rgba(30,60,160,.85));}
+.btn.peligro{background:linear-gradient(180deg,rgba(200,50,80,.6),rgba(90,15,35,.8));}
+
+.panel{
+  background:var(--panel);border:1px solid var(--borde);border-radius:16px;
+  padding:clamp(10px,2.4vh,22px) clamp(12px,3vw,26px);width:min(900px,94vw);max-height:calc(100% - 64px);
+  overflow-y:auto;touch-action:pan-y;-webkit-overflow-scrolling:touch;box-shadow:0 0 40px rgba(40,100,255,.2);
+}
+.h2{font-size:clamp(18px,3.4vw,30px);font-weight:900;letter-spacing:.2em;margin-bottom:clamp(6px,1.6vh,14px);text-align:center;
+  text-shadow:0 0 14px rgba(90,170,255,.7)}
+.fila-botones{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:clamp(8px,1.8vh,14px)}
+
+/* ---------- Selección de bando ---------- */
+.bandos{display:grid;grid-template-columns:1fr 1fr;gap:clamp(8px,2vw,18px);}
+.bando{border-radius:14px;padding:clamp(8px,1.8vh,16px);display:flex;flex-direction:column;gap:6px;border:1px solid;}
+.bando.tierra{background:linear-gradient(160deg,rgba(40,90,170,.45),rgba(20,30,60,.6));border-color:rgba(90,170,255,.55)}
+.bando.alien{background:linear-gradient(160deg,rgba(60,150,80,.4),rgba(60,20,90,.55));border-color:rgba(170,90,255,.55)}
+.bando h3{font-size:clamp(14px,2.2vw,20px);letter-spacing:.08em}
+.bando p{font-size:clamp(11px,1.5vw,13px);opacity:.85;line-height:1.35}
+.bando .icono{font-size:clamp(22px,4vw,34px)}
+.stats{font-size:11px;opacity:.85;letter-spacing:.05em}
+.niveles{display:flex;gap:5px;flex-wrap:wrap}
+.chip{font:inherit;font-size:11px;font-weight:700;padding:5px 9px;border-radius:8px;border:1px solid rgba(255,255,255,.3);
+  background:rgba(255,255,255,.08);color:#fff;cursor:pointer}
+.chip:disabled{opacity:.3;cursor:not-allowed}
+.chip.hecho{border-color:var(--oro);color:var(--oro)}
+
+/* ---------- Logros ---------- */
+.lista-logros{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px}
+.logro{display:flex;gap:10px;align-items:center;padding:8px 10px;border-radius:10px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);opacity:.5}
+.logro.ok{opacity:1;border-color:rgba(255,209,102,.7);background:rgba(255,209,102,.1)}
+.logro .ico{font-size:22px;width:30px;text-align:center}
+.logro b{font-size:13px;display:block}
+.logro small{font-size:11px;opacity:.8}
+.progreso-logros{text-align:center;font-size:12px;opacity:.8;margin-bottom:8px}
+
+/* ---------- Opciones ---------- */
+.opcion{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:clamp(5px,1.2vh,9px) 0;border-bottom:1px solid rgba(255,255,255,.08);font-size:14px}
+.opcion input[type=range]{width:min(260px,40vw);accent-color:#3ab8ff;touch-action:none}
+.opcion input[type=checkbox]{width:22px;height:22px;accent-color:#3ab8ff}
+.grupo-calidad{display:flex;gap:6px}
+.grupo-calidad .chip.sel{background:#3ab8ff;color:#001;border-color:#3ab8ff}
+
+/* ---------- Controles / créditos ---------- */
+.dos-col{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.dos-col h3{font-size:15px;letter-spacing:.12em;margin-bottom:6px;color:var(--azul)}
+.tabla-controles{width:100%;font-size:13px;border-collapse:collapse}
+.tabla-controles td{padding:4px 2px;border-bottom:1px solid rgba(255,255,255,.07)}
+.tabla-controles td:first-child{color:var(--oro);font-weight:700;white-space:nowrap;padding-right:10px}
+.creditos{text-align:center;line-height:1.7;font-size:14px}
+.creditos b{color:var(--oro)}
+.resumen{text-align:center;font-size:clamp(13px,2vw,16px);line-height:1.7}
+.resumen b{color:var(--oro)}
+
+/* =====================================================================
+   HUD (interfaz durante el juego)
+   ===================================================================== */
+#hud{position:fixed;inset:0;pointer-events:none;z-index:10;}
+#hudIzq{position:absolute;top:max(10px,env(safe-area-inset-top));left:max(12px,env(safe-area-inset-left));width:min(250px,33vw);}
+.barra{display:flex;align-items:center;gap:6px;margin-bottom:5px;}
+.etq{font-size:10px;letter-spacing:.15em;width:50px;opacity:.85;font-weight:700}
+.fondo-barra{flex:1;height:10px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);border-radius:6px;overflow:hidden;}
+.relleno{height:100%;width:100%;transition:width .15s;}
+.relleno.vida{background:linear-gradient(90deg,#ff4d6d,#ff9f43);}
+.relleno.escudo{background:linear-gradient(90deg,#3ab8ff,#8be9ff);}
+#infoArmas{font-size:11px;letter-spacing:.06em;opacity:.95;margin-top:2px;line-height:1.5;text-shadow:0 0 4px #000}
+#hudCentro{position:absolute;top:max(8px,env(safe-area-inset-top));left:50%;transform:translateX(-50%);text-align:center;width:min(440px,40vw);}
+#txtNivel{font-size:11px;letter-spacing:.22em;opacity:.8}
+#txtObjetivo{font-size:13px;font-weight:700;margin-top:2px;text-shadow:0 0 6px #000}
+#jefeCaja{margin-top:5px}
+#jefeNombre{font-size:12px;font-weight:900;letter-spacing:.2em;color:var(--oro);text-shadow:0 0 8px rgba(255,180,0,.6)}
+.fondo-barra.jefe{height:12px;margin-top:3px;border-color:rgba(255,200,80,.6)}
+#barraJefe{background:linear-gradient(90deg,#ff3355,#ffb703)}
+#hudDer{position:absolute;top:max(10px,env(safe-area-inset-top));right:calc(max(12px,env(safe-area-inset-right)) + 56px);display:flex;flex-direction:column;align-items:flex-end;gap:6px;}
+#txtPuntaje{font-size:18px;font-weight:900;letter-spacing:.1em;text-shadow:0 0 10px rgba(80,170,255,.7)}
+#radar{width:110px;height:110px;}
+#btnPausaHud{pointer-events:auto;position:absolute;top:max(10px,env(safe-area-inset-top));right:max(12px,env(safe-area-inset-right));
+  width:44px;height:44px;border-radius:50%;border:1px solid var(--borde);background:rgba(10,20,50,.65);color:#fff;font-size:14px;font-weight:900;cursor:pointer;touch-action:manipulation}
+#mira{position:absolute;left:50%;top:50%;width:34px;height:34px;margin:-17px 0 0 -17px;border:2px solid rgba(140,220,255,.75);border-radius:50%;}
+#mira.enMira{border-color:#ff4d6d;box-shadow:0 0 12px rgba(255,60,90,.8)}
+#marcadores{position:absolute;inset:0;width:100%;height:100%}
+#mira::after{content:'';position:absolute;left:50%;top:50%;width:4px;height:4px;margin:-2px 0 0 -2px;border-radius:50%;background:#bdf0ff}
+#fijado{position:absolute;width:44px;height:44px;margin:-22px 0 0 -22px;border:2px solid #ff4d6d;transform:rotate(45deg);box-shadow:0 0 10px rgba(255,60,90,.7)}
+#mensajeCentral{position:absolute;top:30%;left:50%;transform:translate(-50%,-50%);text-align:center;font-size:clamp(18px,3.8vw,40px);font-weight:900;
+  letter-spacing:.14em;text-shadow:0 0 18px rgba(80,170,255,.9),0 0 4px #000;opacity:0;transition:opacity .4s;white-space:pre-line;width:92vw}
+#mensajeCentral.visible{opacity:1}
+#mensajeRadio{position:absolute;bottom:24%;left:50%;transform:translateX(-50%);background:rgba(8,14,34,.78);border-left:3px solid var(--oro);
+  padding:6px 12px;font-size:clamp(11px,1.6vw,14px);border-radius:4px;opacity:0;transition:opacity .3s;max-width:min(560px,64vw);text-align:center}
+#mensajeRadio.visible{opacity:1}
+.aviso{position:absolute;left:50%;transform:translateX(-50%);font-weight:900;letter-spacing:.14em;animation:parpadeo .6s infinite alternate;
+  font-size:clamp(13px,2.2vw,20px);text-align:center;text-shadow:0 0 8px #000;white-space:nowrap}
+#avisoZona{top:42%;color:#ff4d6d}
+#avisoInvertido{top:50%;color:#d08bff}
+#avisoRaton{top:62%;color:#bde4ff;animation:none;opacity:.8;font-size:13px;font-weight:600}
+@keyframes parpadeo{from{opacity:1}to{opacity:.35}}
+#danioFlash{position:absolute;inset:0;box-shadow:inset 0 0 140px rgba(255,30,60,.9);opacity:0;transition:opacity .25s}
+#danioFlash.escudo{box-shadow:inset 0 0 120px rgba(60,170,255,.85)}
+#tintePsiquico{position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(150,60,255,0),rgba(150,60,255,.35));opacity:0;transition:opacity .4s}
+
+/* =====================================================================
+   CONTROLES TÁCTILES
+   ===================================================================== */
+#tactil{position:fixed;inset:0;z-index:12;pointer-events:none;}
+#lookZona{position:absolute;right:0;top:70px;width:55%;height:calc(100% - 70px);pointer-events:auto;touch-action:none;}
+#joyZona{position:absolute;left:0;bottom:0;width:45%;height:70%;pointer-events:auto;touch-action:none;}
+#joyBase{position:absolute;width:130px;height:130px;border-radius:50%;border:2px solid rgba(140,200,255,.45);background:rgba(20,40,90,.28);
+  left:max(24px,env(safe-area-inset-left));bottom:max(22px,env(safe-area-inset-bottom));}
+#joyPalanca{position:absolute;width:58px;height:58px;border-radius:50%;left:36px;top:36px;
+  background:radial-gradient(circle at 35% 35%,rgba(190,225,255,.95),rgba(60,120,220,.75));box-shadow:0 0 14px rgba(90,170,255,.6)}
+.tbtn{position:absolute;pointer-events:auto;touch-action:none;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-weight:900;font-size:11px;letter-spacing:.05em;color:#fff;border:2px solid rgba(255,255,255,.35);background:rgba(20,40,90,.45);
+  text-shadow:0 0 4px #000;transition:transform .08s}
+.tbtn.presionado{transform:scale(.9);filter:brightness(1.5)}
+.tbtn.enfriando{opacity:.4}
+#btnDisparo{width:96px;height:96px;right:max(22px,env(safe-area-inset-right));bottom:max(20px,env(safe-area-inset-bottom));background:rgba(255,60,90,.42);font-size:14px}
+#btnMisil{width:66px;height:66px;right:calc(max(22px,env(safe-area-inset-right)) + 106px);bottom:max(16px,env(safe-area-inset-bottom));background:rgba(255,160,60,.4)}
+#btnEsquiva{width:64px;height:64px;right:calc(max(22px,env(safe-area-inset-right)) + 16px);bottom:calc(max(20px,env(safe-area-inset-bottom)) + 108px);background:rgba(90,200,255,.38)}
+#btnTurbo{width:58px;height:58px;right:calc(max(22px,env(safe-area-inset-right)) + 104px);bottom:calc(max(20px,env(safe-area-inset-bottom)) + 84px);background:rgba(120,255,160,.32)}
+
+/* Pantallas bajas (celular en horizontal) */
+@media (max-height:460px){
+  .menu{display:grid;grid-template-columns:1fr 1fr;width:min(560px,88vw)}
+  #radar{width:86px;height:86px}
+  .bandos{gap:8px}
+  .bando p{display:none}
+  #pVictoria .h2{margin-bottom:4px}
+  #pVictoria .resumen{font-size:12px;line-height:1.45}
+  #eligeMejora{margin-top:6px}
+  .opMejora{padding:6px;gap:2px}
+  .opMejora span{font-size:18px}
+  #pVictoria .fila-botones{margin-top:6px}
+}
+@media (max-width:640px) and (orientation:portrait){ .bandos,.dos-col{grid-template-columns:1fr} }
+
+/* ---------- Aviso de girar el celular ---------- */
+#girar{position:fixed;inset:0;z-index:300;background:#03040b;display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:16px;padding:24px}
+#girar.visible{display:flex}
+#girar .cel{width:54px;height:90px;border:4px solid #8fd0ff;border-radius:10px;animation:girarCel 1.8s ease-in-out infinite}
+@keyframes girarCel{0%,20%{transform:rotate(0)}60%,100%{transform:rotate(-90deg)}}
+
+/* ---------- Avisos de logro ---------- */
+#toasts{position:fixed;top:max(10px,env(safe-area-inset-top));left:50%;transform:translateX(-50%);z-index:250;display:flex;flex-direction:column;gap:6px;pointer-events:none}
+.toast{display:flex;align-items:center;gap:10px;padding:8px 16px;border-radius:12px;color:#1c1200;
+  background:linear-gradient(90deg,rgba(255,214,102,.97),rgba(255,150,50,.97));box-shadow:0 0 22px rgba(255,190,60,.6);
+  animation:toastEntra .45s ease, toastSale .45s ease 3.4s forwards}
+.toast .ico{font-size:22px}
+.toast small{display:block;font-size:10px;letter-spacing:.2em;font-weight:800}
+.toast b{font-size:15px}
+@keyframes toastEntra{from{opacity:0;transform:translateY(-30px)}to{opacity:1;transform:none}}
+@keyframes toastSale{to{opacity:0;transform:translateY(-30px)}}
+
+/* ---------- Poderes, rachas y mejoras ---------- */
+#txtPoderes{font-size:12px;font-weight:800;color:var(--oro);white-space:pre-line;margin-top:4px;line-height:1.5;text-shadow:0 0 6px #000}
+#txtRacha{font-size:14px;font-weight:900;color:#ff9f43;text-shadow:0 0 8px rgba(255,120,0,.8)}
+#tinteLento{position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(80,140,255,0),rgba(80,140,255,.3));opacity:0;transition:opacity .4s}
+#eligeMejora{margin-top:12px}
+.titulo-mejora{text-align:center;font-weight:900;letter-spacing:.12em;font-size:13px;color:var(--oro);margin-bottom:8px}
+.tarjetas-mejora{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.opMejora{font:inherit;color:var(--texto);display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 8px;border-radius:12px;
+  border:1px solid rgba(255,209,102,.55);background:rgba(255,209,102,.08);cursor:pointer;text-align:center;touch-action:manipulation;transition:transform .15s,background .15s}
+.opMejora:hover,.opMejora:focus-visible{background:rgba(255,209,102,.22);outline:none;transform:translateY(-2px)}
+.opMejora span{font-size:24px}.opMejora b{font-size:12px}.opMejora small{font-size:11px;opacity:.8}
+.mejora-ok{text-align:center;font-size:14px}.mejora-ok b{color:var(--oro)}
+@media (max-width:520px){.tarjetas-mejora{grid-template-columns:1fr}}
+/* ---------- Dificultad, modo infinito, eventos ---------- */
+.fila-dif{display:flex;gap:6px;justify-content:center;align-items:center;flex-wrap:wrap;font-size:12px;font-weight:800;letter-spacing:.1em;margin-bottom:10px}
+.fila-dif .chip.sel{background:#ff4d6d;border-color:#ff4d6d;color:#fff}
+.intro-inf{text-align:center;font-size:13px;opacity:.85;margin-bottom:10px;line-height:1.4}
+.records ol{padding-left:22px;font-size:12px;line-height:1.6;text-align:left}
+.records li.nuevo{color:var(--oro);font-weight:800}
+.sin-rec{font-size:12px;opacity:.6}
+#topInf{margin-top:10px}
+#relampago{position:absolute;inset:0;background:#dfe8ff;opacity:0;transition:opacity .08s;pointer-events:none}
+@media (max-height:460px){.intro-inf{display:none}.records ol{font-size:11px;line-height:1.4}}
+/* ---------- Carrera multijugador ---------- */
+/* ----- Sala de la carrera (estilo "jugar en línea") ----- */
+.lobby{width:min(900px,94vw);max-height:calc(100% - 40px);overflow-y:auto;touch-action:pan-y;-webkit-overflow-scrolling:touch;padding:6px 4px 10px}
+.titulo-lobby{letter-spacing:.06em;text-transform:none;font-size:clamp(24px,4.4vw,40px)}
+.paso{display:flex;flex-direction:column;align-items:center}
+.tarjeta-l{background:linear-gradient(160deg,rgba(40,24,90,.72),rgba(10,16,44,.82));border:1px solid rgba(160,130,255,.45);border-radius:22px;
+  padding:16px 22px 18px;display:flex;flex-direction:column;align-items:center;gap:12px;box-shadow:0 0 30px rgba(120,80,255,.18);min-width:0}
+#pasoPiloto .tarjeta-l{width:min(430px,100%)}
+.tarjeta-l h3{width:100%;text-align:center;font-size:15px;font-weight:800;padding-bottom:9px;border-bottom:1px solid rgba(58,184,255,.3)}
+.in-l{font:inherit;font-size:17px;text-align:center;padding:9px 14px;border-radius:12px;border:2px solid #3ae0ff;background:rgba(10,20,50,.7);color:#fff;
+  width:min(220px,100%);min-width:0;user-select:text;-webkit-user-select:text;box-shadow:0 0 12px rgba(58,224,255,.25)}
+.in-l::placeholder{color:rgba(232,241,255,.4)}
+.in-l:focus{outline:none;box-shadow:0 0 18px rgba(58,224,255,.55)}
+.selector-bando{display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%}
+.selector-bando .chip{padding:10px 6px;font-size:13px;border-radius:999px;letter-spacing:.03em}
+.selector-bando .chip.sel{background:#3ae0ff;border-color:#3ae0ff;color:#001;box-shadow:0 0 14px rgba(58,224,255,.5)}
+.btn-grande{font:inherit;font-weight:900;font-size:clamp(18px,2.6vw,24px);color:#fff;border:none;border-radius:999px;padding:14px 20px;width:100%;cursor:pointer;
+  background:linear-gradient(90deg,#a855f7,#ff4fa3 55%,#ff8a4c);box-shadow:0 0 22px rgba(255,79,163,.45);text-shadow:0 1px 3px rgba(0,0,0,.35)}
+.btn-grande.peq{width:auto;min-width:220px;font-size:clamp(15px,2vw,19px);padding:12px 26px}
+.btn-grande:disabled{filter:grayscale(.7);opacity:.6;cursor:default}
+.btn-grande:not(:disabled):active,.btn-grad:active{transform:scale(.97)}
+.btn-grad{font:inherit;font-weight:900;font-size:16px;color:#fff;border:none;border-radius:999px;padding:10px 20px;cursor:pointer;flex:none;
+  background:linear-gradient(90deg,#a855f7,#ff4fa3);box-shadow:0 0 14px rgba(255,79,163,.4)}
+.btn-borde{font:inherit;font-weight:800;font-size:14px;color:#3ae0ff;background:rgba(10,20,50,.55);border:2px solid #3ae0ff;border-radius:999px;padding:9px 20px;cursor:pointer;box-shadow:0 0 12px rgba(58,224,255,.25)}
+.btn-borde.peq-l{font-size:12px;padding:6px 14px}
+.separador{display:flex;align-items:center;gap:10px;width:100%;font-size:13px;opacity:.75}
+.separador::before,.separador::after{content:"";flex:1;height:1px;background:rgba(160,180,255,.35)}
+.fila-unirse{display:flex;gap:10px;justify-content:center;width:100%}
+.in-codigo{width:150px;font-family:ui-monospace,Consolas,monospace;font-size:20px;letter-spacing:.12em;text-transform:uppercase}
+.aviso-l{font-size:12px;color:var(--oro);min-height:0;text-align:center}
+.aviso-l:empty{display:none}
+.sala-grid{display:grid;grid-template-columns:1.25fr 1fr;gap:18px;width:100%;align-items:stretch}
+.codigo-grande{font-size:clamp(30px,5vw,46px);font-weight:900;letter-spacing:.04em;line-height:1.1;text-align:center;word-break:break-all;
+  background:linear-gradient(90deg,#3ae0ff,#a855f7 45%,#ff4fa3 70%,#ff8a4c);-webkit-background-clip:text;background-clip:text;color:transparent}
+.estado-red{font-size:14px;opacity:.9;line-height:1.4;text-align:center}
+.pilotos-l{width:100%;display:flex;flex-direction:column;gap:6px}
+.sub-l{font-size:11px;letter-spacing:.15em;font-weight:800;color:#3ae0ff;text-transform:uppercase}
+.txt-l{font-size:14px;text-align:center;line-height:1.4;opacity:.9}
+.enlace-l{opacity:.55;font-size:10px;word-break:break-all;text-align:center}
+.qr-img{width:170px;height:170px;flex:none;background:#fff;border-radius:14px;padding:8px}
+.qr-img svg{width:100%;height:100%;display:block}
+.lista-sala{display:grid;grid-template-columns:1fr;gap:6px;font-size:13px}
+.lista-sala .vacia{opacity:.6;font-size:12px}
+.lista-sala .pil{display:flex;justify-content:space-between;gap:10px;padding:6px 10px;border-radius:8px;background:rgba(255,255,255,.06)}
+.lista-sala .pil.yo{border:1px solid rgba(255,209,102,.6)}
+.tabla-res{width:100%;border-collapse:collapse;font-size:13px}
+.tabla-res th,.tabla-res td{padding:6px 5px;border-bottom:1px solid rgba(255,255,255,.1);text-align:left}
+.tabla-res th{font-size:11px;letter-spacing:.1em;opacity:.75}
+.tabla-res tr.yo td{color:var(--oro)}
+#notaRes{margin-top:8px;font-size:13px}
+#tablaCarrera{font-size:11px;line-height:1.5;text-align:right;text-shadow:0 0 4px #000;max-width:190px}
+#tablaCarrera .yo{color:var(--oro);font-weight:800}
+@media (max-width:640px){.sala-grid{grid-template-columns:1fr}}
+@media (max-height:460px){.titulo-lobby{font-size:22px;margin-bottom:6px}.tarjeta-l{padding:10px 16px 12px;gap:8px}.tarjeta-l h3{font-size:13px;padding-bottom:6px}.in-l{padding:6px 12px;font-size:15px}.btn-grande{padding:9px 16px;font-size:18px}.selector-bando .chip{padding:7px 4px}.qr-img{width:120px;height:120px;padding:6px}.codigo-grande{font-size:30px}.enlace-l{display:none}.sala-grid{gap:12px}.fila-botones{margin-top:8px}}
+@media (max-height:460px){.tabla-res{font-size:11px}.tabla-res th,.tabla-res td{padding:3px}#tablaCarrera{font-size:10px}}
+#errorCarga{position:fixed;inset:0;display:none;align-items:center;justify-content:center;text-align:center;padding:30px;z-index:400;font-size:16px;line-height:1.6}
+#errorCarga.visible{display:flex}

@@ -18,6 +18,10 @@ Bootstrap se usa solo en Contacto. **Tema espacial** (fondo azul noche con estre
 | `juegos.html` | **Arcade**: una nave y un planeta por cada juego. Al hacer clic, la nave viaja al planeta y entra al juego |
 | `futbol.html` | **Galaxy Gol** (fútbol). Igual que `cosmoball.html`: menú, juego en ventana, "Volver a la nave" y portada para celular |
 | `juegos/galaxy-gol/` | El juego Galaxy Gol (`index.html`, `css/`, `js/`, `img/`). Es una **copia** del repositorio `github.com/santisarm0607/galaxy-gol`, sin las guías PDF ni `una-sola-pagina/`, para que la página pese menos |
+| `invasion.html` y `war.html` | **Galaxy Invasion** (FPS 3D) y **Galaxy War** (combate espacial 3D). Igual que `cosmoball.html`: menú, juego en ventana, "Volver a la nave" y portada para celular |
+| `juegos/galaxy-invasion/` y `juegos/galaxy-war/` | Copias de los repositorios `github.com/santisarm0607/galaxy-invasion` (v0.8, entra por `html/index.html`) y `galaxy-war` (v3). Si cambias un juego, cámbialo en los dos lados. Necesitan internet (Three.js por CDN) |
+| `orbix.html` | **ORBIX: Overdrive** (baloncesto 3D, 3 contra 3). Igual que `cosmoball.html`: menú, juego en ventana, "Volver a la nave" y portada para celular |
+| `juegos/orbix-overdrive/` | El juego ORBIX: Overdrive (`index.html`, `control.html`, `css/`, `js/`). Es una **copia** del repositorio `github.com/santisarm0607/orbix-overdrive`: si cambias el juego, cámbialo en los dos lados. Necesita internet (Three.js, PeerJS y el QR se cargan desde CDN) |
 | `cosmoball.html` | **COSMOBALL** (ping-pong). Tiene el menú del portafolio, el juego en una ventana (`iframe`) y el botón "Volver a la nave". Las instrucciones están dentro del juego. En celular, en vez de la ventana, muestra una portada con el botón "Jugar" que abre el juego solo |
 | `juegos/cosmoball/` | El juego COSMOBALL completo (`html/`, `css/`, `js/`, su propio `NOTAS.md`). Es una **copia** del repositorio `github.com/santisarm0607/cosmoball`: si cambias el juego, cámbialo en los dos lados |
 | `css/styles.css` | **Único archivo de estilos**, lo usan todas las páginas |
@@ -481,3 +485,8 @@ Accesibilidad:
 - **Galaxy Gol** (versiones 4.1 y 4.2): QR para entrar a la sala en línea y menús que caben en la pantalla, con columnas en pantallas anchas y acostadas (`index.html`, `css/style.css`, `js/script.js`, `NOTAS.md`, `README.md`).
 - El panel del Arcade (`juegos.html`) menciona ahora que en línea el rival entra escaneando un QR.
 - Se copian solo los archivos del juego, sin `guias/` ni `una-sola-pagina/` de galaxy-gol.
+
+## ORBIX: Overdrive en el Arcade (7 de noviembre de 2026)
+- El planeta 5 dejó de ser «Próximamente»: ahora es jugable. Se copió el repositorio `orbix-overdrive` (v1.4) a `juegos/orbix-overdrive/`, se creó `orbix.html` (igual que `cosmoball.html`) y `img/qr-orbix.svg` (apunta a `orbix.html`).
+- `juegos.html`: planeta 5 con enlace, descripción real, «Cómo se hizo» y QR; la portada dice «3 juegos listos / 2 por llegar» y suma «baloncesto 3D» a las palabras que cambian.
+- **Galaxy Invasion y Galaxy War (7 de noviembre de 2026):** los planetas 3 y 4 también son jugables: copias de sus repositorios en `juegos/`, páginas `invasion.html` y `war.html`, y `img/qr-invasion.svg` / `img/qr-war.svg`. La portada del Arcade dice «5 juegos listos» (se quitó «por llegar»). En Galaxy War el modo en línea con sala y QR solo funciona en la versión de Claude; aquí la carrera es contra 3 bots.

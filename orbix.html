@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark light">
+    <title>ORBIX: Overdrive | Santiago Sarmiento</title>
+    <meta name="description" content="ORBIX: Overdrive: baloncesto espacial 3D, 3 contra 3, hecho con JavaScript y Three.js. Juega contra bots, en línea o con el celular como control.">
+    <!-- para que se vea bonito al compartir el enlace (WhatsApp, LinkedIn, etc.) -->
+    <link rel="canonical" href="https://santisarm0607.github.io/orbix.html">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Santiago Sarmiento">
+    <meta property="og:locale" content="es_CO">
+    <meta property="og:title" content="ORBIX: Overdrive | Santiago Sarmiento">
+    <meta property="og:description" content="ORBIX: Overdrive: baloncesto espacial 3D, 3 contra 3, hecho con JavaScript y Three.js. Juega contra bots, en línea o con el celular como control.">
+    <meta property="og:url" content="https://santisarm0607.github.io/orbix.html">
+    <meta property="og:image" content="https://santisarm0607.github.io/img/og-portada.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Santiago Sarmiento, Ingeniero Multimedia">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="icon" href="favicon.ico?v=2" sizes="48x48">
+    <link rel="icon" href="img/favicon.png?v=2" type="image/png"> <!-- tu muñequito en la pestaña -->
+    <link rel="apple-touch-icon" href="img/apple-touch-icon.png?v=2"> <!-- ícono si guardan la página en el celular -->
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="js/tema.js"></script> <!-- modo claro/oscuro guardado (va antes de dibujar) -->
+    <script src="js/main.js" defer></script> <!-- efectos con JavaScript (ver js/main.js) -->
+    <script src="js/efectos.js" defer></script> <!-- la capa divertida: sonidos, estrellas, logros (ver js/efectos.js) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header class="header">
+        <div class="contenedor header__contenedor">
+            <a href="index.html" class="header__logo" aria-label="Ir al inicio - Santisarm">
+                <span class="marca" aria-hidden="true">
+                    <span class="marca__ss"><span class="marca__s marca__s--a">S</span><span class="marca__s marca__s--b">S</span></span>
+                    <span class="marca__txt">Santisarm</span>
+                </span>
+            </a>
+            <nav aria-label="Menú principal">
+                <ul class="nav__lista">
+                    <li><a href="index.html" class="nav__enlace">Inicio</a></li>
+                    <li><a href="portafolio.html" class="nav__enlace">Portafolio</a></li>
+                    <li><a href="juegos.html" class="nav__enlace nav__enlace--activo">Juegos</a></li>
+                    <li><a href="contacto.html" class="nav__enlace">Contacto</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="juego" aria-labelledby="titulo-juego">
+            <div class="contenedor">
+                <p id="titulo-juego" class="juego__titulo">ORBIX: Overdrive</p>
+                <p class="juego__eslogan">Baloncesto espacial 3D, 3 contra 3. Encesta, ataca y usa tu súper.</p>
+
+                <!-- El juego va en una ventana (iframe) para que sus estilos no choquen con los del portafolio.
+                     El código del juego está en juegos/orbix-overdrive/ (copia del repositorio santisarm0607/orbix-overdrive). -->
+                <div class="juego__marco">
+                    <iframe class="juego__ventana" src="juegos/orbix-overdrive/index.html" loading="lazy"
+                            title="Juego ORBIX: Overdrive: baloncesto espacial 3D" allow="fullscreen; autoplay" allowfullscreen></iframe>
+                </div>
+
+                <!-- En el celular la ventana queda muy pequeña: se muestra esta portada y el juego se abre solo -->
+                <div class="juego__portada">
+                    <div class="planeta planeta--orbix juego__planeta">
+                        <span class="planeta__esfera" aria-hidden="true"></span>
+                    </div>
+                    <a href="juegos/orbix-overdrive/index.html" class="boton boton--primario juego__jugar">▶ Jugar ORBIX: Overdrive</a>
+                    <p class="juego__pista">En el celular el juego se abre en su propia pantalla, en horizontal, con dos sticks y botones táctiles.</p>
+                </div>
+
+
+                <div class="juego__botones">
+                    <a href="juegos.html" class="boton boton--primario">Volver a la nave</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="contenedor footer__contenedor">
+            <nav class="footer__redes" aria-label="Mis perfiles en línea">
+                <a href="https://www.linkedin.com/in/david-santiago-sarmiento-salguero-2a3740448" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                <a href="https://www.behance.net/davidssarmien1" target="_blank" rel="noopener noreferrer">Behance</a>
+                <a href="https://www.instagram.com/santisarmstudio" target="_blank" rel="noopener noreferrer">Instagram</a>
+                <a href="https://www.youtube.com/@SantisarmStudio" target="_blank" rel="noopener noreferrer">YouTube</a>
+                <a href="https://www.tiktok.com/@santisarmstudio" target="_blank" rel="noopener noreferrer">TikTok</a>
+            </nav>
+            <p class="footer__copy">© 2026 Santiago Sarmiento · Ingeniero Multimedia</p>
+        </div>
+    </footer>
+
+</body>
+</html>

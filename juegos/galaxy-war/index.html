@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<!--
+  =====================================================================
+   GALAXY WAR  -  Juego 3D de combate espacial (un solo archivo)
+   Autor: David Santiago Sarmiento Salguero (SantiSarm)
+   Tecnología: HTML + CSS + JavaScript + Three.js r128 (CDN)
+   Archivos: index.html · css/style.css · js/script.js
+   Todos los modelos se construyen con geometrías de Three.js y todos
+   los sonidos se sintetizan con la Web Audio API (sin archivos externos).
+  =====================================================================
+-->
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#05060f">
+<title>GALAXY WAR</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<canvas id="juego"></canvas>
+
+<!-- =====================================================================
+     HUD
+     ===================================================================== -->
+<div id="hud" class="oculto">
+  <div id="hudIzq">
+    <div class="barra"><span class="etq">VIDA</span><div class="fondo-barra"><div id="barraVida" class="relleno vida"></div></div></div>
+    <div class="barra"><span class="etq">ESCUDO</span><div class="fondo-barra"><div id="barraEscudo" class="relleno escudo"></div></div></div>
+    <div id="infoArmas"><span id="txtArma"></span><br><span id="txtMisiles"></span><br><span id="txtEsquiva"></span></div>
+    <div id="txtPoderes"></div>
+  </div>
+  <div id="hudCentro">
+    <div id="txtNivel"></div>
+    <div id="txtObjetivo"></div>
+    <div id="jefeCaja" class="oculto"><div id="jefeNombre"></div><div class="fondo-barra jefe"><div id="barraJefe" class="relleno"></div></div></div>
+  </div>
+  <div id="hudDer">
+    <div id="txtPuntaje">0</div>
+    <div id="txtRacha"></div>
+    <canvas id="radar" width="120" height="120"></canvas>
+    <div id="tablaCarrera"></div>
+  </div>
+  <canvas id="marcadores"></canvas>
+  <button id="btnPausaHud" aria-label="Pausa">❚❚</button>
+  <div id="mira"></div>
+  <div id="fijado" class="oculto"></div>
+  <div id="mensajeCentral"></div>
+  <div id="mensajeRadio"></div>
+  <div id="avisoZona" class="aviso oculto">⚠ REGRESA A LA ZONA DE COMBATE</div>
+  <div id="avisoInvertido" class="aviso oculto">⚠ CONTROLES INVERTIDOS</div>
+  <div id="avisoRaton" class="aviso oculto">Haz clic en la pantalla para apuntar con el ratón</div>
+  <div id="tinteLento"></div>
+  <div id="relampago"></div>
+  <div id="tintePsiquico"></div>
+  <div id="danioFlash"></div>
+</div>
+
+<!-- =====================================================================
+     CONTROLES TÁCTILES (solo celular)
+     ===================================================================== -->
+<div id="tactil" class="oculto">
+  <div id="lookZona"></div>
+  <div id="joyZona"><div id="joyBase"><div id="joyPalanca"></div></div></div>
+  <div class="tbtn" id="btnDisparo">FUEGO</div>
+  <div class="tbtn" id="btnMisil">MISIL</div>
+  <div class="tbtn" id="btnEsquiva">ESQUIVA</div>
+  <div class="tbtn" id="btnTurbo">TURBO</div>
+</div>
+
+<!-- =====================================================================
+     MENÚ PRINCIPAL
+     ===================================================================== -->
+<div id="pMenu" class="pantalla">
+  <div class="titulo">GALAXY WAR</div>
+  <div class="subtitulo">LA BATALLA POR LA GALAXIA</div>
+  <div class="menu">
+    <button class="btn principal" id="btnNueva">▶ Partida nueva</button>
+    <button class="btn" id="btnCarrera">🏁 Carrera multijugador</button>
+    <button class="btn" id="btnSeguir">⟳ Seguir partida</button>
+    <button class="btn" id="btnLogros">★ Logros</button>
+    <button class="btn" id="btnOpciones">⚙ Opciones</button>
+    <button class="btn" id="btnControles">✥ Controles</button>
+    <button class="btn" id="btnCreditos">✦ Créditos</button>
+  </div>
+  <div class="pie">v2.0 · SANTISARM</div>
+</div>
+
+<!-- SELECCIÓN DE BANDO -->
+<div id="pBandos" class="pantalla oscura">
+  <div class="panel">
+    <div class="h2">ELIGE TU BANDO</div>
+    <div class="fila-dif">DIFICULTAD:
+      <button class="chip" data-dif="normal">NORMAL</button>
+      <button class="chip" data-dif="dificil">DIFÍCIL</button>
+      <button class="chip" data-dif="pesadilla">PESADILLA</button>
+    </div>
+    <div class="bandos">
+      <div class="bando tierra">
+        <div class="icono">🛡️</div>
+        <h3>MILITARES DE LA TIERRA</h3>
+        <p>Pilotas el caza <b>Halcón X-7</b>. Cañón láser de alta cadencia y misiles guiados. Defiende el sistema solar de la invasión.</p>
+        <div class="stats">Vida ●●●○ · Escudo ●●●● · Cadencia ●●●●</div>
+        <div class="stats" id="progTierra"></div>
+        <div class="niveles" id="nivTierra"></div>
+        <div class="stats" id="mejTierra"></div>
+        <button class="btn principal" data-bando="tierra">Elegir militares</button>
+      </div>
+      <div class="bando alien">
+        <div class="icono">👾</div>
+        <h3>ALIENÍGENAS INVASORES</h3>
+        <p>Pilotas la nave biomecánica <b>Espectro Vex</b>. Plasma orgánico pesado y enjambres de esporas buscadoras. Conquista la Tierra.</p>
+        <div class="stats">Vida ●●●● · Escudo ●●●○ · Daño ●●●●</div>
+        <div class="stats" id="progAlien"></div>
+        <div class="niveles" id="nivAlien"></div>
+        <div class="stats" id="mejAlien"></div>
+        <button class="btn principal" data-bando="alien">Elegir alienígenas</button>
+      </div>
+    </div>
+    <div class="fila-botones"><button class="btn peq" data-volver>← Volver</button></div>
+  </div>
+</div>
+
+<!-- LOGROS -->
+<div id="pLogros" class="pantalla oscura">
+  <div class="panel">
+    <div class="h2">LOGROS</div>
+    <div class="progreso-logros" id="resumenLogros"></div>
+    <div class="lista-logros" id="listaLogros"></div>
+    <div class="fila-botones"><button class="btn peq" data-volver>← Volver</button></div>
+  </div>
+</div>
+
+<!-- OPCIONES -->
+<div id="pOpciones" class="pantalla oscura">
+  <div class="panel" style="max-width:600px">
+    <div class="h2">OPCIONES</div>
+    <div class="opcion"><span>Música <b id="lblMusica"></b></span><input type="range" id="opMusica" min="0" max="100" step="5"></div>
+    <div class="opcion"><span>Efectos <b id="lblEfectos"></b></span><input type="range" id="opEfectos" min="0" max="100" step="5"></div>
+    <div class="opcion"><span>Calidad gráfica</span>
+      <div class="grupo-calidad">
+        <button class="chip" data-calidad="baja">BAJA</button>
+        <button class="chip" data-calidad="media">MEDIA</button>
+        <button class="chip" data-calidad="alta">ALTA</button>
+      </div>
+    </div>
+    <div class="opcion"><span>Invertir eje Y</span><input type="checkbox" id="opInvertir"></div>
+    <div class="opcion"><span>Sensibilidad <b id="lblSens"></b></span><input type="range" id="opSens" min="40" max="200" step="10"></div>
+    <div class="fila-botones">
+      <button class="btn peq" data-volver>← Volver</button>
+      <button class="btn peq peligro" id="btnBorrar">Borrar progreso</button>
+    </div>
+  </div>
+</div>
+
+<!-- CONTROLES -->
+<div id="pControles" class="pantalla oscura">
+  <div class="panel">
+    <div class="h2">CONTROLES</div>
+    <div class="dos-col">
+      <div>
+        <h3>🖥️ PC</h3>
+        <table class="tabla-controles">
+          <tr><td>Ratón</td><td>Girar y apuntar la nave (haz clic para capturarlo)</td></tr>
+          <tr><td>A / D · ← / →</td><td>Moverse a la izquierda / derecha (sin girar)</td></tr>
+          <tr><td>↑ / ↓</td><td>Subir / bajar</td></tr>
+          <tr><td>W / S</td><td>Acelerar (turbo) / frenar</td></tr>
+          <tr><td>Clic izq. · Espacio</td><td>Disparar arma principal</td></tr>
+          <tr><td>Clic der. · E · Q</td><td>Arma secundaria (misiles)</td></tr>
+          <tr><td>Shift</td><td>Esquiva (giro rápido, invulnerable)</td></tr>
+          <tr><td>ESC · P</td><td>Pausa</td></tr>
+          <tr><td>Cápsulas</td><td>Vuela a través de ellas para ganar un poder</td></tr>
+                  </table>
+      </div>
+      <div>
+        <h3>📱 CELULAR</h3>
+        <table class="tabla-controles">
+          <tr><td>Joystick izq.</td><td>Moverse a los lados y subir / bajar (aparece donde toques)</td></tr>
+          <tr><td>Arrastrar (lado derecho)</td><td>Girar y apuntar la nave</td></tr>
+          <tr><td>FUEGO</td><td>Mantén presionado para disparar</td></tr>
+          <tr><td>MISIL</td><td>Arma secundaria guiada</td></tr>
+          <tr><td>ESQUIVA</td><td>Giro rápido hacia el lado que apuntas</td></tr>
+          <tr><td>TURBO</td><td>Mantén para acelerar</td></tr>
+          <tr><td>❚❚</td><td>Pausa</td></tr>
+        </table>
+        <p style="font-size:12px;opacity:.75;margin-top:8px">Juega con el celular en horizontal. El apuntado asistido ayuda a acertar a los enemigos cercanos a la mira.</p>
+      </div>
+    </div>
+    <div class="fila-botones"><button class="btn peq" data-volver>← Volver</button></div>
+  </div>
+</div>
+
+<!-- CRÉDITOS -->
+<div id="pCreditos" class="pantalla oscura">
+  <div class="panel" style="max-width:620px">
+    <div class="h2">CRÉDITOS</div>
+    <div class="creditos">
+      <b>GALAXY WAR</b><br>
+      Idea, diseño y dirección<br><b>David Santiago Sarmiento Salguero (SantiSarm)</b><br>
+      Programación, modelos 3D procedurales y audio sintetizado<br>desarrollados con ayuda de <b>Claude (Anthropic)</b><br>
+      Motor gráfico: <b>Three.js r128</b> · Sonido: <b>Web Audio API</b><br>
+      ¡Gracias por jugar!
+    </div>
+    <div class="fila-botones"><button class="btn peq" data-volver>← Volver</button></div>
+  </div>
+</div>
+
+<!-- PAUSA -->
+<div id="pPausa" class="pantalla oscura">
+  <div class="h2">PAUSA</div>
+  <div class="menu">
+    <button class="btn principal" id="btnContinuar">▶ Continuar</button>
+    <button class="btn" id="btnReiniciar">⟳ Reiniciar nivel</button>
+    <button class="btn" id="btnOpcionesPausa">⚙ Opciones</button>
+    <button class="btn" id="btnControlesPausa">✥ Controles</button>
+    <button class="btn peligro" id="btnSalir">✕ Salir al menú</button>
+  </div>
+</div>
+
+<!-- VICTORIA DE NIVEL -->
+<div id="pVictoria" class="pantalla oscura">
+  <div class="panel" style="max-width:560px">
+    <div class="h2" style="color:var(--oro)">¡NIVEL SUPERADO!</div>
+    <div class="resumen" id="resumenVictoria"></div>
+    <div id="eligeMejora"></div>
+    <div class="fila-botones">
+      <button class="btn principal" id="btnSiguiente">Siguiente nivel ▶</button>
+      <button class="btn" id="btnMenuV">Menú principal</button>
+    </div>
+  </div>
+</div>
+
+<!-- DERROTA -->
+<div id="pDerrota" class="pantalla oscura">
+  <div class="panel" style="max-width:560px">
+    <div class="h2" style="color:var(--rojo)">NAVE DESTRUIDA</div>
+    <div class="resumen" id="resumenDerrota"></div>
+    <div class="fila-botones">
+      <button class="btn principal" id="btnReintentar">⟳ Reintentar</button>
+      <button class="btn" id="btnMenuD">Menú principal</button>
+    </div>
+  </div>
+</div>
+
+<!-- FIN DE CAMPAÑA -->
+<div id="pFin" class="pantalla oscura">
+  <div class="panel" style="max-width:640px">
+    <div class="h2" style="color:var(--oro)">¡CAMPAÑA COMPLETADA!</div>
+    <div class="resumen" id="textoFin"></div>
+    <div class="fila-botones">
+      <button class="btn principal" id="btnOtroBando">Jugar con el otro bando</button>
+      <button class="btn" id="btnMenuF">Menú principal</button>
+    </div>
+  </div>
+</div>
+
+<!-- CARRERA MULTIJUGADOR: SALA DE ESPERA -->
+<div id="pCarrera" class="pantalla oscura">
+  <div class="lobby">
+    <div class="h2 titulo-lobby">🏁 Carrera galáctica</div>
+
+    <!-- PASO 1: tu piloto + crear o unirse -->
+    <div id="pasoPiloto" class="paso">
+      <section class="tarjeta-l">
+        <h3>🚀 Tu piloto</h3>
+        <input id="inApodo" class="in-l" maxlength="12" autocomplete="off" spellcheck="false" placeholder="Apodo">
+        <div class="selector-bando">
+          <button class="chip" data-cbando="tierra">🛡️ Militares</button>
+          <button class="chip" data-cbando="alien">👾 Alienígenas</button>
+        </div>
+        <button class="btn-grande" id="btnCrearSala">🛸 Crear sala</button>
+        <div class="separador"><span>o únete con un código</span></div>
+        <div class="fila-unirse">
+          <input id="inCodigo" class="in-l in-codigo" maxlength="20" autocomplete="off" spellcheck="false" inputmode="numeric" placeholder="4821" aria-label="Código de la sala">
+          <button class="btn-grad" id="btnUnirme">Unirme</button>
+        </div>
+        <div id="avisoPiloto" class="aviso-l"></div>
+      </section>
+      <div class="fila-botones">
+        <button class="btn-borde" id="btnBots">🤖 Correr contra bots</button>
+        <button class="btn-borde" id="btnVolverCarrera">← Menú</button>
+      </div>
+    </div>
+
+    <!-- PASO 2: la sala creada (código grande + QR) -->
+    <div id="pasoSala" class="paso oculto">
+      <div class="sala-grid">
+        <section class="tarjeta-l">
+          <h3>Código de tu sala</h3>
+          <div id="codigoGrande" class="codigo-grande">GALAXY-0000</div>
+          <button class="btn-borde" id="btnCopiarCodigo">📋 Copiar código</button>
+          <div id="estadoRed" class="estado-red"></div>
+          <div class="pilotos-l">
+            <div class="sub-l">Pilotos en la sala <span id="numPilotos"></span></div>
+            <div id="listaSala" class="lista-sala"></div>
+          </div>
+        </section>
+        <section class="tarjeta-l" id="cajaQR">
+          <h3>📱 Invita a tus amigos</h3>
+          <div id="qrImg" class="qr-img"></div>
+          <p class="txt-l">Que lo escaneen con la cámara: llegan con el código ya puesto.</p>
+          <button class="btn-borde peq-l" id="btnCopiarEnlace">🔗 Copiar enlace</button>
+          <small id="txtEnlace" class="enlace-l"></small>
+        </section>
+      </div>
+      <div class="fila-botones">
+        <button class="btn-grande peq" id="btnEmpezarCarrera">▶ Empezar</button>
+        <button class="btn-borde" id="btnAtrasSala">← Atrás</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CARRERA MULTIJUGADOR: RESULTADOS -->
+<div id="pResCarrera" class="pantalla oscura">
+  <div class="panel" style="max-width:640px">
+    <div class="h2" style="color:var(--oro)" id="tituloRes">RESULTADOS</div>
+    <div id="tablaRes"></div>
+    <div class="resumen" id="notaRes"></div>
+    <div class="fila-botones">
+      <button class="btn principal" id="btnOtraCarrera">⟳ Otra carrera</button>
+      <button class="btn" id="btnMenuCarrera">Menú principal</button>
+    </div>
+  </div>
+</div>
+
+<!-- AVISO PARA GIRAR EL CELULAR -->
+<div id="girar">
+  <div class="cel"></div>
+  <div style="font-size:20px;font-weight:900;letter-spacing:.15em">GIRA TU CELULAR</div>
+  <div style="opacity:.8">GALAXY WAR se juega en horizontal</div>
+</div>
+
+<div id="toasts"></div>
+<div id="errorCarga"><div>⚠ No se pudo cargar Three.js.<br>Revisa tu conexión a internet y vuelve a abrir el juego.</div></div>
+
+<!-- Three.js (versión fija) desde cdnjs -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<!-- Generador de códigos QR para invitar a la sala (qrcode-generator 1.4.4) -->
+<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script>
+<!-- Lógica del juego -->
+<script src="js/script.js"></script>
+</body>
+</html>

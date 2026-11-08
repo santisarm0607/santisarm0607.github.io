@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <title>Galaxy Invasion</title>
+  <meta name="description" content="Galaxy Invasion: shooter en primera persona de invasión alienígena. Una granjera contra la Colmena. Creado por SantiSarm.">
+  <meta name="author" content="David Santiago Sarmiento Salguero (SantiSarm)">
+  <meta name="theme-color" content="#07060f">
+  <link rel="icon" href="../img/icono.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&family=Press+Start+2P&display=swap">
+  <link rel="stylesheet" href="../css/style.css">
+  <!-- Three.js (motor 3D) desde internet: no hay que instalar nada -->
+  <script type="importmap">
+    { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js" } }
+  </script>
+</head>
+<body>
+  <main id="juego" class="juego">
+    <!-- Aquí se dibuja el mundo 3D -->
+    <canvas id="lienzo" class="lienzo" aria-label="Vista del juego en 3D"></canvas>
+
+    <!-- =================== HUD (información en partida) =================== -->
+    <section id="hud" class="hud" aria-label="Información de la partida" hidden>
+      <!-- Va primero para que se dibuje DEBAJO de la vida, el escudo y la munición -->
+      <div id="mira-telescopica" class="mira-telescopica" aria-hidden="true" hidden></div>
+      <header class="hud-objetivo" aria-live="polite">
+        <p id="objetivo-titulo" class="objetivo-titulo">Oleada 1 de 3</p>
+        <p id="objetivo-detalle" class="objetivo-detalle">Prepárate…</p>
+        <!-- Misiones extra descubiertas (v0.8) -->
+        <ul id="lista-extras" class="lista-extras" hidden></ul>
+      </header>
+
+      <div class="hud-estado">
+        <div class="barra barra-escudo">
+          <label class="barra-etiqueta" for="barra-escudo">Escudo</label>
+          <progress id="barra-escudo" max="50" value="50">50</progress>
+          <span id="texto-escudo" class="barra-numero">50</span>
+        </div>
+        <div class="barra barra-vida">
+          <label class="barra-etiqueta" for="barra-vida">Vida</label>
+          <progress id="barra-vida" max="100" value="100">100</progress>
+          <span id="texto-vida" class="barra-numero">100</span>
+        </div>
+      </div>
+
+      <div class="hud-arma">
+        <ol id="ranuras-armas" class="ranuras-armas" aria-label="Armas"></ol>
+        <p class="nombre-arma"><span id="nombre-arma">Escopeta vieja</span> <span id="rareza-arma" class="rareza">Común</span></p>
+        <p class="municion" aria-label="Munición">
+          <span id="municion-cargador" class="municion-cargador">12</span>
+          <span class="municion-separador">/</span>
+          <span id="municion-reserva" class="municion-reserva">16</span>
+          <span id="tipo-municion" class="tipo-municion">cartuchos</span>
+        </p>
+        <p id="aviso-recarga" class="aviso-recarga" hidden>RECARGANDO…</p>
+        <!-- Granadas y botiquines de la mochila (v0.8) -->
+        <p class="hud-mochila"><span title="Granadas (G)">💣 <span id="hud-granadas">2</span></span> <span title="Botiquines en la mochila (H)">✚ <span id="hud-botiquines">0</span></span></p>
+      </div>
+
+      <!-- Velocímetro (solo manejando la camioneta) -->
+      <div id="velocimetro" class="velocimetro" hidden>
+        <p class="velocidad"><span id="numero-velocidad">0</span> <span class="unidad">km/h</span></p>
+        <p class="ayuda-manejo"><kbd>W</kbd><kbd>S</kbd> acelerar y frenar · <kbd>A</kbd><kbd>D</kbd> girar · <kbd>E</kbd> bajarse</p>
+      </div>
+
+      <div id="mira" class="mira" aria-hidden="true">
+        <span class="mira-linea mira-arriba"></span>
+        <span class="mira-linea mira-abajo"></span>
+        <span class="mira-linea mira-izq"></span>
+        <span class="mira-linea mira-der"></span>
+        <span class="mira-punto"></span>
+      </div>
+      <div id="marca-impacto" class="marca-impacto" aria-hidden="true"></div>
+      <div id="indicador-danio" class="indicador-danio" aria-hidden="true"></div>
+      <div id="vineta-danio" class="vineta-danio" aria-hidden="true"></div>
+      <div id="vineta-baba" class="vineta-baba" aria-hidden="true"></div>
+      <div id="marcador" class="marcador" aria-hidden="true" hidden>
+        <span class="marcador-flecha"></span>
+        <span id="marcador-distancia" class="marcador-distancia">0 m</span>
+      </div>
+      <p id="subtitulo" class="subtitulo-dialogo" aria-live="polite"></p>
+      <!-- Barra de vida del jefe -->
+      <!-- Minimapa redondo (gira con Rosa: arriba es hacia donde miras) -->
+      <canvas id="minimapa" class="minimapa" width="150" height="150" aria-label="Minimapa"></canvas>
+      <div id="barra-jefe" class="barra-jefe" hidden>
+        <p id="nombre-jefe" class="nombre-jefe">Jefe</p>
+        <progress id="vida-jefe" max="100" value="100" aria-label="Vida del jefe"></progress>
+        <p id="pista-jefe" class="pista-jefe"></p>
+      </div>
+
+      <p id="aviso-usar" class="aviso-usar" hidden><kbd>E</kbd> <span id="texto-usar">Abrir cofre</span></p>
+      <p id="mensaje-centro" class="mensaje-centro" aria-live="polite"></p>
+      <p id="contador-fps" class="contador-fps" hidden>60 FPS</p>
+      <p class="aviso-clic">Haz clic en el juego para mirar con el mouse</p>
+    </section>
+
+    <!-- Pantalla negra para pasar de una etapa a otra sin cortes -->
+    <div id="fundido" class="fundido" aria-live="polite"><p id="fundido-texto" class="fundido-texto"></p></div>
+
+    <!-- Presentación de un monstruo nuevo (v0.8) -->
+    <div id="presentacion" class="presentacion" hidden>
+      <div class="cine-franja cine-arriba"></div>
+      <div class="cine-franja cine-abajo"></div>
+      <div class="ficha-monstruo" role="status" aria-live="polite">
+        <p id="ficha-clase" class="ficha-clase">NUEVO ALIEN</p>
+        <h2 id="ficha-nombre" class="ficha-nombre"></h2>
+        <p id="ficha-descripcion" class="ficha-descripcion"></p>
+        <p class="ficha-consejo"><span>Cómo vencerlo</span> <span id="ficha-consejo"></span></p>
+      </div>
+      <p class="ficha-saltar">Toca o presiona Enter para seguir ▸</p>
+    </div>
+
+    <!-- Tarjeta de misión nueva (v0.8) -->
+    <div id="tarjeta-mision" class="tarjeta-mision" hidden aria-live="polite">
+      <p id="tarjeta-mision-tipo" class="tarjeta-mision-tipo">MISIÓN</p>
+      <h2 id="tarjeta-mision-titulo" class="tarjeta-mision-titulo"></h2>
+      <p id="tarjeta-mision-detalle" class="tarjeta-mision-detalle"></p>
+    </div>
+
+    <!-- Escena del secuestro (v0.6.4): franjas de cine, textos y botón para saltar -->
+    <div id="cinematica" class="cinematica" hidden>
+      <div class="cine-franja cine-arriba"></div>
+      <div class="cine-franja cine-abajo"></div>
+      <p id="cine-texto" class="cine-texto"></p>
+      <p id="cine-dialogo" class="cine-dialogo" aria-live="polite"></p>
+      <button type="button" id="btn-saltar-cine" class="boton btn-saltar-cine">Saltar ▸</button>
+    </div>
+
+    <!-- =================== CONTROLES TÁCTILES (celular) =================== -->
+    <section id="controles-tactiles" class="controles-tactiles" aria-label="Controles táctiles" hidden>
+      <div id="zona-joystick" class="zona-joystick">
+        <div id="joystick-base" class="joystick-base">
+          <div id="joystick-palanca" class="joystick-palanca"></div>
+        </div>
+      </div>
+      <div id="zona-mirar" class="zona-mirar"></div>
+
+      <button type="button" class="boton-tactil boton-disparar" data-accion="disparar" aria-label="Disparar">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="7"/><path d="M12 2v6M12 16v6M2 12h6M16 12h6"/></svg>
+      </button>
+      <button type="button" class="boton-tactil boton-apuntar" data-accion="apuntar" aria-label="Apuntar">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2"/></svg>
+      </button>
+      <button type="button" class="boton-tactil boton-saltar" data-accion="saltar" aria-label="Saltar">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 15l7-7 7 7"/></svg>
+      </button>
+      <button type="button" class="boton-tactil boton-recargar" data-accion="recargar" aria-label="Recargar">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12a7 7 0 1 1-2.1-5M19 4v4h-4"/></svg>
+      </button>
+      <button type="button" class="boton-tactil boton-linterna" data-accion="linterna" aria-label="Linterna">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3h8v5l-2 3v10h-4V11L8 8z"/></svg>
+      </button>
+      <button type="button" class="boton-tactil boton-cambiar" data-accion="cambiar" aria-label="Cambiar de arma">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h13l-3-3M20 16H7l3 3"/></svg>
+      </button>
+      <button type="button" id="boton-usar" class="boton-tactil boton-usar" data-accion="usar" hidden>Usar</button>
+      <!-- v0.8: granada, golpe y mochila -->
+      <button type="button" class="boton-tactil boton-granada" data-accion="granada" aria-label="Lanzar granada">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="14" r="6"/><path d="M11 8V5h4l2 2"/></svg>
+      </button>
+      <button type="button" class="boton-tactil boton-golpe" data-accion="golpe" aria-label="Golpe">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 11V7a2 2 0 0 1 4 0v3M11 10V6a2 2 0 0 1 4 0v4M15 10V8a2 2 0 0 1 4 0v5a7 7 0 0 1-7 7h-1a6 6 0 0 1-6-6v-2a2 2 0 0 1 4 0"/></svg>
+      </button>
+      <button type="button" class="boton-tactil boton-mochila" data-accion="mochila" aria-label="Mochila">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9a6 6 0 0 1 12 0v11H6zM9 5V3h6v2M9 14h6"/></svg>
+      </button>
+      <button type="button" class="boton-tactil boton-pausa" data-accion="pausa" aria-label="Pausa">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14M16 5v14"/></svg>
+      </button>
+    </section>
+
+    <!-- Se ve mientras carga el motor 3D -->
+    <div class="mensaje-carga" role="status">
+      <p id="texto-carga">Cargando Galaxy Invasion…</p>
+      <p id="error-carga" class="error-carga" hidden></p>
+    </div>
+
+    <!-- Avisos de logros -->
+    <div id="notificaciones" class="notificaciones" aria-live="polite"></div>
+
+    <!-- =================== MENÚ PRINCIPAL =================== -->
+    <section id="pantalla-menu" class="pantalla pantalla-menu" aria-labelledby="titulo-juego" hidden>
+      <div class="menu-contenido">
+        <h1 id="titulo-juego" class="logo">
+          <span class="logo-linea1">GALAXY</span>
+          <span class="logo-linea2">INVASI<img class="logo-platillo" src="../img/platillo.svg" alt="O" width="64" height="40">N</span>
+        </h1>
+        <p id="menu-lema" class="menu-lema">Una granjera contra la Colmena.</p>
+        <nav class="menu-botones" aria-label="Menú principal">
+          <!-- Partida (v0.6.5): seguir donde ibas o empezar de cero -->
+          <button type="button" id="btn-continuar-partida" class="boton boton-principal boton-partida" hidden>
+            <span>Continuar partida</span><span id="continuar-detalle" class="detalle-boton"></span>
+          </button>
+          <button type="button" id="btn-nueva-partida" class="boton">Nueva partida</button>
+          <button type="button" id="btn-historia" class="boton">Elegir etapa</button>
+          <button type="button" id="btn-mundo" class="boton" disabled>Mundo Abierto <span class="etiqueta-pronto">Pronto</span></button>
+          <div class="menu-botones-chicos">
+            <button type="button" id="btn-logros" class="boton">Logros</button>
+            <button type="button" id="btn-opciones" class="boton">Opciones</button>
+            <button type="button" id="btn-controles" class="boton">Controles</button>
+            <button type="button" id="btn-creditos" class="boton">Créditos</button>
+          </div>
+        </nav>
+        <p id="record-menu" class="record-menu" hidden></p>
+      </div>
+      <footer class="menu-pie">
+        <p>v0.8 · Creado por SantiSarm</p>
+      </footer>
+    </section>
+
+    <!-- =================== ¿BORRAR LA PARTIDA? (v0.6.5) =================== -->
+    <section id="pantalla-nueva" class="pantalla pantalla-centrada" aria-labelledby="titulo-nueva" hidden>
+      <article class="tarjeta">
+        <h2 id="titulo-nueva" class="titulo-tarjeta">¿Nueva partida?</h2>
+        <p id="nueva-nota" class="nota">Se borra tu partida guardada. Tus logros y récords se quedan.</p>
+        <div class="fila-botones">
+          <button type="button" id="btn-confirmar-nueva" class="boton boton-principal">Sí, empezar de nuevo</button>
+          <button type="button" class="boton" data-volver>Volver</button>
+        </div>
+      </article>
+    </section>
+
+    <!-- =================== ETAPAS DEL MODO HISTORIA =================== -->
+    <section id="pantalla-capitulos" class="pantalla pantalla-centrada" aria-labelledby="titulo-capitulos" hidden>
+      <article class="tarjeta tarjeta-ancha">
+        <h2 id="titulo-capitulos" class="titulo-tarjeta">Modo Historia</h2>
+        <p id="nota-capitulos" class="nota">Rosa Méndez tiene que llegar desde su granja hasta la nave nodriza.</p>
+        <ol id="lista-capitulos" class="lista-capitulos"></ol>
+        <div class="fila-botones">
+          <button type="button" class="boton" data-volver>Volver</button>
+        </div>
+      </article>
+    </section>
+
+    <!-- =================== INTRODUCCIÓN DE LA ETAPA =================== -->
+    <section id="pantalla-historia" class="pantalla pantalla-centrada" aria-labelledby="titulo-historia" hidden>
+      <article class="tarjeta tarjeta-historia">
+        <p id="historia-eyebrow" class="eyebrow">Etapa 1 · La granja</p>
+        <h2 id="titulo-historia" class="titulo-tarjeta">La noche que cayeron</h2>
+        <div id="historia-texto" class="historia-texto"></div>
+        <!-- Elegir protagonista (v0.6.2) -->
+        <div class="selector-personaje" role="group" aria-label="Elige tu personaje">
+          <span class="selector-titulo">Juegas como</span>
+          <button type="button" class="boton-personaje" data-personaje="granjera" aria-pressed="true">
+            <span class="muestra muestra-granjera" aria-hidden="true"></span>
+            <span><strong>Granjera</strong><small>Rosa Méndez</small></span>
+          </button>
+          <button type="button" class="boton-personaje" data-personaje="granjero" aria-pressed="false">
+            <span class="muestra muestra-granjero" aria-hidden="true"></span>
+            <span><strong>Granjero</strong><small>Tomás Méndez</small></span>
+          </button>
+        </div>
+        <div class="fila-botones">
+          <button type="button" id="btn-comenzar" class="boton boton-principal">Comenzar misión</button>
+          <button type="button" class="boton" data-volver>Volver</button>
+        </div>
+      </article>
+    </section>
+
+    <!-- =================== OPCIONES =================== -->
+    <section id="pantalla-opciones" class="pantalla pantalla-centrada" aria-labelledby="titulo-opciones" hidden>
+      <article class="tarjeta">
+        <h2 id="titulo-opciones" class="titulo-tarjeta">Opciones</h2>
+        <form id="form-opciones" class="form-opciones">
+          <div class="opcion">
+            <label for="op-musica">Volumen de la música</label>
+            <input type="range" id="op-musica" min="0" max="100" step="5">
+            <output id="val-musica" for="op-musica">50</output>
+          </div>
+          <div class="opcion">
+            <label for="op-efectos">Volumen de los efectos</label>
+            <input type="range" id="op-efectos" min="0" max="100" step="5">
+            <output id="val-efectos" for="op-efectos">80</output>
+          </div>
+          <div class="opcion">
+            <label for="op-sensibilidad">Sensibilidad para mirar</label>
+            <input type="range" id="op-sensibilidad" min="0" max="100" step="5">
+            <output id="val-sensibilidad" for="op-sensibilidad">50</output>
+          </div>
+          <div class="opcion">
+            <label for="op-calidad">Calidad gráfica</label>
+            <select id="op-calidad">
+              <option value="baja">Baja (celulares sencillos)</option>
+              <option value="media">Media</option>
+              <option value="alta">Alta</option>
+            </select>
+          </div>
+          <div class="opcion opcion-check">
+            <input type="checkbox" id="op-ayuda">
+            <label for="op-ayuda">Ayuda al apuntar (solo celular)</label>
+          </div>
+          <div class="opcion opcion-check">
+            <input type="checkbox" id="op-fps">
+            <label for="op-fps">Mostrar cuadros por segundo (FPS)</label>
+          </div>
+        </form>
+        <div class="fila-botones">
+          <button type="button" class="boton" data-volver>Volver</button>
+        </div>
+      </article>
+    </section>
+
+    <!-- =================== CONTROLES =================== -->
+    <section id="pantalla-controles" class="pantalla pantalla-centrada" aria-labelledby="titulo-controles" hidden>
+      <article class="tarjeta tarjeta-ancha">
+        <h2 id="titulo-controles" class="titulo-tarjeta">Controles</h2>
+        <div class="columnas-controles">
+          <section aria-labelledby="sub-computador">
+            <h3 id="sub-computador" class="subtitulo">Computador</h3>
+            <dl class="lista-controles">
+              <div><dt><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd></dt><dd>Moverse</dd></div>
+              <div><dt>Mouse</dt><dd>Mirar</dd></div>
+              <div><dt>Clic izquierdo</dt><dd>Disparar</dd></div>
+              <div><dt>Clic derecho</dt><dd>Apuntar (zoom)</dd></div>
+              <div><dt><kbd>Shift</kbd></dt><dd>Correr</dd></div>
+              <div><dt><kbd>Espacio</kbd></dt><dd>Saltar</dd></div>
+              <div><dt><kbd>R</kbd></dt><dd>Recargar</dd></div>
+              <div><dt><kbd>E</kbd></dt><dd>Abrir cofres, recoger armas, rescatar</dd></div>
+              <div><dt><kbd>F</kbd></dt><dd>Linterna</dd></div>
+              <div><dt><kbd>G</kbd></dt><dd>Lanzar granada</dd></div>
+              <div><dt><kbd>V</kbd></dt><dd>Golpe con el arma (de cerca)</dd></div>
+              <div><dt><kbd>H</kbd></dt><dd>Usar un botiquín de la mochila</dd></div>
+              <div><dt><kbd>Tab</kbd> o <kbd>I</kbd></dt><dd>Abrir la mochila</dd></div>
+              <div><dt><kbd>1</kbd><kbd>2</kbd><kbd>3</kbd> o rueda</dt><dd>Cambiar de arma</dd></div>
+              <div><dt><kbd>W</kbd> / <kbd>S</kbd></dt><dd>Camioneta: acelerar / frenar y reversa</dd></div>
+              <div><dt><kbd>A</kbd> / <kbd>D</kbd></dt><dd>Camioneta: girar</dd></div>
+              <div><dt><kbd>E</kbd> (frenado)</dt><dd>Subir o bajar de la camioneta</dd></div>
+              <div><dt><kbd>Esc</kbd> o <kbd>P</kbd></dt><dd>Pausa</dd></div>
+            </dl>
+          </section>
+          <section aria-labelledby="sub-celular">
+            <h3 id="sub-celular" class="subtitulo">Celular (horizontal)</h3>
+            <dl class="lista-controles">
+              <div><dt>Dedo izquierdo</dt><dd>Joystick para moverse</dd></div>
+              <div><dt>Joystick al tope</dt><dd>Correr</dd></div>
+              <div><dt>Dedo derecho</dt><dd>Arrastrar para mirar</dd></div>
+              <div><dt>Botón grande</dt><dd>Disparar (arrástralo para mirar)</dd></div>
+              <div><dt>Mira</dt><dd>Apuntar (toca para activar o quitar)</dd></div>
+              <div><dt>Flecha</dt><dd>Saltar</dd></div>
+              <div><dt>Flecha circular</dt><dd>Recargar</dd></div>
+              <div><dt>Linterna</dt><dd>Encender o apagar</dd></div>
+              <div><dt>Granada</dt><dd>Lanzar granada</dd></div>
+              <div><dt>Puño</dt><dd>Golpe con el arma</dd></div>
+              <div><dt>Mochila (arriba)</dt><dd>Ver granadas, botiquines y objetos; usar un botiquín</dd></div>
+              <div><dt>Flechas</dt><dd>Cambiar de arma</dd></div>
+              <div><dt>Usar</dt><dd>Aparece cerca de un cofre o de algo que se puede usar</dd></div>
+              <div><dt>Joystick (manejando)</dt><dd>Arriba acelera, abajo frena, a los lados gira</dd></div>
+              <div><dt>Bajar / Subir</dt><dd>Botón que aparece junto a la camioneta</dd></div>
+            </dl>
+          </section>
+        </div>
+        <p class="nota">Próximamente: <kbd>G</kbd> granada y <kbd>Q</kbd> llamar aliados.</p>
+        <div class="fila-botones">
+          <button type="button" class="boton" data-volver>Volver</button>
+        </div>
+      </article>
+    </section>
+
+    <!-- =================== LOGROS =================== -->
+    <section id="pantalla-logros" class="pantalla pantalla-centrada" aria-labelledby="titulo-logros" hidden>
+      <article class="tarjeta tarjeta-ancha">
+        <h2 id="titulo-logros" class="titulo-tarjeta">Logros</h2>
+        <p id="resumen-logros" class="eyebrow">0 de 17 conseguidos</p>
+        <ul id="lista-logros" class="lista-logros"></ul>
+        <div class="fila-botones">
+          <button type="button" class="boton" data-volver>Volver</button>
+        </div>
+      </article>
+    </section>
+
+    <!-- =================== CRÉDITOS =================== -->
+    <section id="pantalla-creditos" class="pantalla pantalla-centrada" aria-labelledby="titulo-creditos" hidden>
+      <article class="tarjeta tarjeta-creditos">
+        <h2 id="titulo-creditos" class="titulo-creditos">Créditos</h2>
+        <p class="logo logo-pequeno" role="img" aria-label="Galaxy Invasion">
+          <span class="logo-linea1">GALAXY</span>
+          <span class="logo-linea2">INVASI<img class="logo-platillo" src="../img/platillo.svg" alt="" width="64" height="40">N</span>
+        </p>
+        <dl class="lista-creditos">
+          <div class="fila-credito"><dt>Juego</dt><dd>Galaxy Invasion</dd></div>
+          <div class="fila-credito"><dt>Creado por</dt><dd>David Santiago Sarmiento Salguero <span class="apodo">(SantiSarm)</span></dd></div>
+          <div class="fila-credito"><dt>Curso</dt><dd>Ingeniería Web</dd></div>
+          <div class="fila-credito"><dt>Programa</dt><dd>Ingeniería Multimedia</dd></div>
+          <div class="fila-credito"><dt>Universidad</dt><dd>Universidad Simón Bolívar</dd></div>
+          <div class="fila-credito"><dt>Hecho con</dt><dd>HTML5, CSS3, JavaScript y Three.js. Sonidos y música creados con Web Audio API.</dd></div>
+          <div class="fila-credito"><dt>Versión</dt><dd>v0.8</dd></div>
+        </dl>
+        <button type="button" class="boton" data-volver>Volver</button>
+      </article>
+    </section>
+
+    <!-- =================== PAUSA =================== -->
+    <section id="pantalla-pausa" class="pantalla pantalla-centrada" aria-labelledby="titulo-pausa" hidden>
+      <article class="tarjeta tarjeta-angosta">
+        <h2 id="titulo-pausa" class="titulo-tarjeta">Pausa</h2>
+        <nav class="menu-botones" aria-label="Menú de pausa">
+          <button type="button" id="btn-continuar" class="boton boton-principal">Continuar</button>
+          <button type="button" id="btn-pausa-opciones" class="boton">Opciones</button>
+          <button type="button" id="btn-pausa-controles" class="boton">Controles</button>
+          <button type="button" id="btn-pausa-salir" class="boton">Salir al menú</button>
+        </nav>
+      </article>
+    </section>
+
+    <!-- =================== MOCHILA (v0.8) =================== -->
+    <section id="pantalla-mochila" class="pantalla pantalla-centrada" aria-labelledby="titulo-mochila" hidden>
+      <article class="tarjeta">
+        <h2 id="titulo-mochila" class="titulo-tarjeta">Mochila</h2>
+        <div id="contenido-mochila" class="contenido-mochila"></div>
+        <div class="fila-botones">
+          <button type="button" id="btn-usar-botiquin" class="boton">Usar botiquín</button>
+          <button type="button" id="btn-cerrar-mochila" class="boton boton-principal">Cerrar</button>
+        </div>
+      </article>
+    </section>
+
+    <!-- =================== DERROTA =================== -->
+    <section id="pantalla-derrota" class="pantalla pantalla-centrada pantalla-derrota" aria-labelledby="titulo-derrota" hidden>
+      <article class="tarjeta tarjeta-angosta">
+        <h2 id="titulo-derrota" class="titulo-tarjeta titulo-rojo">Has caído</h2>
+        <p>La Colmena gana esta ronda. Vuelves al último punto de control con la vida y el escudo llenos.</p>
+        <nav class="menu-botones" aria-label="Opciones al perder">
+          <button type="button" id="btn-reintentar" class="boton boton-principal">Reintentar</button>
+          <button type="button" id="btn-derrota-menu" class="boton">Salir al menú</button>
+        </nav>
+      </article>
+    </section>
+
+    <!-- =================== VICTORIA =================== -->
+    <section id="pantalla-victoria" class="pantalla pantalla-centrada" aria-labelledby="titulo-victoria" hidden>
+      <article class="tarjeta">
+        <p id="victoria-eyebrow" class="eyebrow">Etapa completada</p>
+        <h2 id="titulo-victoria" class="titulo-tarjeta">¡Granja defendida!</h2>
+        <dl class="resultados">
+          <div><dt>Tiempo</dt><dd id="res-tiempo">0:00</dd></div>
+          <div><dt>Aliens eliminados</dt><dd id="res-eliminados">0</dd></div>
+          <div><dt>Puntería</dt><dd id="res-punteria">0 %</dd></div>
+          <div><dt>Mejor tiempo</dt><dd id="res-record">—</dd></div>
+        </dl>
+        <p id="victoria-nota" class="nota"></p>
+        <nav class="menu-botones menu-botones-fila" aria-label="Opciones al ganar">
+          <button type="button" id="btn-siguiente" class="boton boton-principal" hidden>Continuar</button>
+          <button type="button" id="btn-jugar-otra" class="boton">Elegir etapa</button>
+          <button type="button" id="btn-victoria-creditos" class="boton">Créditos</button>
+          <button type="button" id="btn-victoria-menu" class="boton">Menú</button>
+        </nav>
+      </article>
+    </section>
+
+    <!-- Aviso para girar el celular -->
+    <div id="aviso-girar" class="aviso-girar" role="alert" hidden>
+      <svg viewBox="0 0 64 64" aria-hidden="true"><rect x="20" y="8" width="24" height="44" rx="4"/><path d="M50 40a18 18 0 0 1-18 16M48 50l2-10 8 4"/></svg>
+      <p>Gira tu celular para jugar en horizontal</p>
+    </div>
+
+    <noscript><p class="sin-js">Galaxy Invasion necesita JavaScript activado.</p></noscript>
+  </main>
+
+  <!-- Si el juego no arranca, la pantalla de carga explica por qué (v0.6.7) -->
+  <script>
+    (function () {
+      var porDobleClic = location.protocol === 'file:';
+      var avisar = function (html, prioridad) {
+        var p = document.getElementById('error-carga');
+        if (!p || document.body.classList.contains('listo')) return;
+        if (porDobleClic && !prioridad) return;   // el aviso del doble clic es la verdadera causa
+        p.innerHTML = html;
+        p.hidden = false;
+      };
+      // 1) Abierto con doble clic: el navegador no deja cargar el JavaScript desde "file://"
+      if (porDobleClic) {
+        avisar('No se puede abrir con doble clic.<br>En VS Code abre la carpeta <b>galaxy-invasion</b> y dale a <b>Go Live</b><br>(o clic derecho en index.html → Open with Live Server).', true);
+      }
+      // 2) Un archivo no cargó o hubo un error en el código
+      window.addEventListener('error', function (e) {
+        if (e.target && e.target.tagName === 'SCRIPT') {
+          avisar('No se pudo cargar: <b>' + (e.target.src || 'un archivo') + '</b><br>Revisa que estén las carpetas html, css y javascript juntas.');
+        } else if (e.message) {
+          avisar('Error: <b>' + e.message + '</b><br>' + String(e.filename || '').split('/').pop() + ' (línea ' + e.lineno + ')');
+        }
+      }, true);
+      // 3) Pasan 10 segundos y nada: casi siempre es el internet (Three.js viene de internet)
+      setTimeout(function () {
+        avisar('Está tardando mucho. Revisa tu <b>conexión a internet</b>: el motor 3D (Three.js) se descarga de cdn.jsdelivr.net.<br>Si sigue igual, presiona F12 → Console y mándame el error en rojo.');
+      }, 10000);
+    })();
+  </script>
+  <script type="module" src="../javascript/main.js"></script>
+</body>
+</html>

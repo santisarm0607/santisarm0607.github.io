@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Ícono de la pestaña del navegador -->
+  <rect width="64" height="64" rx="12" fill="#07060f"/>
+  <path d="M20 30 Q20 16 32 16 Q44 16 44 30 Z" fill="#4de1ff"/>
+  <ellipse cx="32" cy="34" rx="26" ry="8" fill="#b36bff"/>
+  <rect x="12" y="33" width="5" height="3" fill="#5dff9b"/>
+  <rect x="29.5" y="36" width="5" height="3" fill="#5dff9b"/>
+  <rect x="47" y="33" width="5" height="3" fill="#5dff9b"/>
+  <path d="M24 42 L18 58 L46 58 L40 42 Z" fill="#5dff9b" opacity="0.4"/>
+</svg>
