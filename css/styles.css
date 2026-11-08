@@ -5525,7 +5525,7 @@ html[data-tema="claro"] .sobre--linterna .sobre__luz::before { background: radia
    Las 5 rayitas de progreso, y la ficha más compacta para que
    la escena y la descripción quepan juntas en la pantalla.
    =========================================================== */
-.arcade__progreso { grid-template-columns: repeat(5, 1fr); }
+.arcade__progreso { grid-template-columns: repeat(8, 1fr); }
 
 @media (min-width: 901px) {
   .ficha-juego { padding: 16px 20px; gap: 6px; }
@@ -6068,3 +6068,23 @@ html[data-tema="claro"] .hero--nombre .hero__titulo {
   margin-bottom: calc(100lvh - 100svh + env(safe-area-inset-bottom, 0px));
 }
 .footer { padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px)); }
+
+
+/* ===========================================================
+   14zx. Planetas 6, 7 y 8 del Arcade (Nebula Party, Galaxy Strike AR y FingerGol AR)
+   =========================================================== */
+.planeta--nebula .planeta__esfera,
+.planeta--strike .planeta__esfera,
+.planeta--finger .planeta__esfera {
+  background: center / cover no-repeat;
+  box-shadow: 0 0 34px var(--halo);
+}
+.planeta--nebula { --halo: rgba(224, 84, 214, 0.4); }
+.planeta--strike { --halo: rgba(47, 191, 106, 0.4); }
+.planeta--finger { --halo: rgba(46, 197, 255, 0.4); }
+.planeta--nebula .planeta__esfera { background-image: url("../img/planeta-nebula.webp"); }
+.planeta--strike .planeta__esfera { background-image: url("../img/planeta-strike.webp"); }
+.planeta--finger .planeta__esfera { background-image: url("../img/planeta-finger.webp"); }
+.arcade--js .planeta--nebula,
+.arcade--js .planeta--strike,
+.arcade--js .planeta--finger { --tam: 112px; }

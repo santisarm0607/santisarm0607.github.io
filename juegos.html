@@ -74,7 +74,7 @@
                         mira cómo se juega y despega.
                     </p>
                     <ul class="portada__cifras">
-                        <li><span class="portada__num" data-contar="5">5</span><span>juegos listos</span></li>
+                        <li><span class="portada__num" data-contar="8">8</span><span>juegos listos</span></li>
                         <li><span class="portada__num">1 · 2 · <span aria-hidden="true">🌐</span></span><span>solo, con un amigo o en línea</span></li>
                     </ul>
                     <a href="#escena" class="portada__bajar">Elegir un planeta <span aria-hidden="true">↓</span></a>
@@ -92,6 +92,9 @@
 
                     <!-- Barrita de progreso: una raya por planeta (la prende el JS) -->
                     <ol class="arcade__progreso" aria-hidden="true" hidden>
+                        <li class="arcade__segmento"></li>
+                        <li class="arcade__segmento"></li>
+                        <li class="arcade__segmento"></li>
                         <li class="arcade__segmento"></li>
                         <li class="arcade__segmento"></li>
                         <li class="arcade__segmento"></li>
@@ -196,6 +199,54 @@
                             </a>
                         </li>
 
+                        <!-- PLANETA 6: Nebula Party -->
+                        <li class="planetas__item">
+                            <a href="nebula.html" class="planeta planeta--nebula" data-color="#E054D6"
+                               data-mini="nebula" data-corta="Party game galáctico para 2 a 8 jugadores."
+                               data-hecho="Yo puse la idea, los mundos, los minijuegos y las pruebas. Claude (la IA de Anthropic) me ayudó a escribir el código y la conexión por QR, mejorándolo versión por versión."
+                               data-qr="img/qr-nebula.svg"
+                               data-descripcion="Party game en pixel art para 2 a 8 jugadores: tablero con dado 3D, cuatro mundos, una estrella fugaz que atrapar y 12 minijuegos. Los celulares son los controles: agitas para lanzar el dado e inclinas para manejar. Juegas contra bots, todos en una pantalla con un QR, o a distancia con un enlace."
+                               data-genero="Party game 2D y 3D"
+                               data-jugadores="1 a 8 · bots, una pantalla o a distancia"
+                               data-controles="Celular como control (agitar e inclinar) o teclado en el computador">
+                                <span class="planeta__esfera" aria-hidden="true"></span>
+                                <span class="planeta__nombre">Nebula Party</span>
+                                <span class="planeta__info">Party game · 12 minijuegos, hasta 8</span>
+                            </a>
+                        </li>
+
+                        <!-- PLANETA 7: Galaxy Strike AR -->
+                        <li class="planetas__item">
+                            <a href="strike.html" class="planeta planeta--strike" data-color="#2FBF6A"
+                               data-mini="strike" data-corta="Aliens en 3D: dispara en AR con el celular o esquiva en PC."
+                               data-hecho="Yo puse la idea, el diseño y las pruebas. Claude (la IA de Anthropic) me ayudó a escribir el código, los jefes y el modo de realidad aumentada, mejorándolo versión por versión."
+                               data-qr="img/qr-strike.svg"
+                               data-descripcion="Juego de aliens en 3D con dos modos. En el celular, disparos en realidad aumentada: ves tu cuarto por la cámara y el celular es tu arma. En PC, pilotas una nave y esquivas marcianos. Cada modo tiene campaña de 4 sectores con jefe, modo infinito, reto del día, poderes y logros."
+                               data-genero="Shooter 3D en realidad aumentada"
+                               data-jugadores="1 jugador · también competitivo o cooperativo"
+                               data-controles="Celular: apuntas moviéndolo, tocas para disparar · PC: mouse y teclado">
+                                <span class="planeta__esfera" aria-hidden="true"></span>
+                                <span class="planeta__nombre">Galaxy Strike AR</span>
+                                <span class="planeta__info">Aliens 3D · AR en celular, esquiva en PC</span>
+                            </a>
+                        </li>
+
+                        <!-- PLANETA 8: FingerGol AR -->
+                        <li class="planetas__item">
+                            <a href="fingergol.html" class="planeta planeta--finger" data-color="#2EC5FF"
+                               data-mini="finger" data-corta="Air hockey con tu dedo, en realidad aumentada."
+                               data-hecho="Yo puse la idea, el diseño y las pruebas. Claude (la IA de Anthropic) me ayudó a escribir el código, el seguimiento de la mano y la mesa 3D, mejorándolo versión por versión."
+                               data-qr="img/qr-finger.svg"
+                               data-descripcion="Air hockey en realidad aumentada: la cámara ve tu mano y tu dedo índice mueve el mazo para empujar el disco hasta el arco rival. Puedes jugar contra la máquina o 2 jugadores en la misma cámara, con gestos para pausar y una mesa 3D sobre tu mesa real. Funciona sin instalar nada."
+                               data-genero="Air hockey AR"
+                               data-jugadores="1 contra la máquina · 2 en la misma cámara"
+                               data-controles="Tu dedo índice frente a la cámara (o el dedo en la pantalla)">
+                                <span class="planeta__esfera" aria-hidden="true"></span>
+                                <span class="planeta__nombre">FingerGol AR</span>
+                                <span class="planeta__info">Air hockey AR · juega con tu dedo</span>
+                            </a>
+                        </li>
+
                     </ul>
 
                     <!-- La nave espacial (dibujo SVG). Es decorativa: los lectores de pantalla la saltan. -->
@@ -245,7 +296,7 @@
                             <button type="button" class="arcade__flecha" data-paso="1" aria-label="Planeta siguiente">&#9654;</button>
                             <span class="arcade__ayuda">elegir · <kbd class="arcade__tecla">Enter</kbd> despegar</span>
                         </div>
-                        <p class="arcade__contador" aria-hidden="true"><span class="arcade__contador-actual">01</span> / 05</p>
+                        <p class="arcade__contador" aria-hidden="true"><span class="arcade__contador-actual">01</span> / 08</p>
                     </div>
 
                 </div>
@@ -257,7 +308,7 @@
                         <img class="ficha-juego__planeta" src="img/planeta-gol.webp" alt="" width="192" height="192">
                         <span class="ficha-juego__estado">Disponible</span>
                     </div>
-                    <p class="ficha-juego__etiqueta">Planeta <span class="ficha-juego__numero">01</span> / 05</p>
+                    <p class="ficha-juego__etiqueta">Planeta <span class="ficha-juego__numero">01</span> / 08</p>
                     <p class="ficha-juego__titulo">Galaxy Gol</p>
                     <p class="ficha-juego__texto"></p>
                     <dl class="ficha-juego__datos">

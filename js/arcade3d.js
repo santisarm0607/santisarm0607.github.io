@@ -388,6 +388,102 @@ export const PLANETAS = {
     }
   },
 
+  // Nebula Party: nebulosa rosa y violeta en pixeles, con un dado que le da vueltas
+  nebula: {
+    radio: 2.5,
+    crear: function (grupo, brillo) {
+      const textura = texturaDibujada(1024, 512, function (c, w, h) {
+        const g = c.createLinearGradient(0, 0, w, h);
+        g.addColorStop(0, '#3b1a7a'); g.addColorStop(0.5, '#a33bd1'); g.addColorStop(1, '#ff6fb5');
+        c.fillStyle = g; c.fillRect(0, 0, w, h);
+        for (let i = 0; i < 26; i++) { // nubes de gas
+          const x = Math.random() * w, y = Math.random() * h, r = 50 + Math.random() * 110;
+          const n = c.createRadialGradient(x, y, 0, x, y, r);
+          n.addColorStop(0, Math.random() < 0.5 ? 'rgba(120,220,255,0.35)' : 'rgba(255,200,90,0.28)');
+          n.addColorStop(1, 'rgba(255,255,255,0)');
+          c.fillStyle = n; c.fillRect(x - r, y - r, r * 2, r * 2);
+        }
+        for (let i = 0; i < 160; i++) { // estrellitas cuadradas (pixel art)
+          c.fillStyle = 'rgba(255,255,255,' + (0.5 + Math.random() * 0.5) + ')';
+          const t = Math.random() < 0.2 ? 8 : 4;
+          c.fillRect(Math.floor(Math.random() * w / 4) * 4, Math.floor(Math.random() * h / 4) * 4, t, t);
+        }
+      });
+      const esfera = new THREE.Mesh(new THREE.SphereGeometry(1, 64, 40), new THREE.MeshStandardMaterial({ map: textura, roughness: 0.6, metalness: 0.1 }));
+      grupo.add(esfera);
+      const aro = new THREE.Mesh(new THREE.TorusGeometry(1.55, 0.03, 12, 140), new THREE.MeshBasicMaterial({ color: 0xffe066, transparent: true, opacity: 0.9 }));
+      aro.rotation.set(1.2, 0.2, 0);
+      grupo.add(aro);
+      const dado = new THREE.Mesh(new THREE.IcosahedronGeometry(0.19, 0), new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.35, flatShading: true }));
+      grupo.add(dado);
+      return { girar: esfera, luna: dado, lunaRadio: 1.55, lunaVel: 1.6 };
+    }
+  },
+
+  // Galaxy Strike AR: planeta alien verde con una mira y un ovni
+  strike: {
+    radio: 2.5,
+    crear: function (grupo, brillo) {
+      const textura = texturaDibujada(1024, 512, function (c, w, h) {
+        const g = c.createLinearGradient(0, 0, 0, h);
+        g.addColorStop(0, '#2fbf6a'); g.addColorStop(0.5, '#1e8f58'); g.addColorStop(1, '#0f5a3a');
+        c.fillStyle = g; c.fillRect(0, 0, w, h);
+        for (let i = 0; i < 38; i++) { // cráteres
+          const x = Math.random() * w, y = Math.random() * h, r = 12 + Math.random() * 38;
+          c.fillStyle = 'rgba(5,40,25,0.45)'; c.beginPath(); c.ellipse(x, y, r, r * 0.8, 0, 0, Math.PI * 2); c.fill();
+          c.strokeStyle = 'rgba(160,255,200,0.3)'; c.lineWidth = 3; c.stroke();
+        }
+      });
+      const esfera = new THREE.Mesh(new THREE.SphereGeometry(1, 64, 40), new THREE.MeshStandardMaterial({ map: textura, roughness: 0.75, metalness: 0.05 }));
+      grupo.add(esfera);
+      // la mira: un aro rosa con cuatro marcas
+      const mira = new THREE.Group();
+      mira.add(new THREE.Mesh(new THREE.TorusGeometry(1.45, 0.028, 12, 120), new THREE.MeshBasicMaterial({ color: 0xff4fa3, transparent: true, opacity: 0.95 })));
+      for (let k = 0; k < 4; k++) {
+        const marca = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.34, 0.03), new THREE.MeshBasicMaterial({ color: 0xff4fa3 }));
+        const a = k * Math.PI / 2;
+        marca.position.set(Math.cos(a) * 1.45, Math.sin(a) * 1.45, 0);
+        marca.rotation.z = a + Math.PI / 2;
+        mira.add(marca);
+      }
+      mira.rotation.set(0.35, -0.5, 0);
+      grupo.add(mira);
+      const ovni = new THREE.Group();
+      const plato = new THREE.Mesh(new THREE.SphereGeometry(0.2, 20, 12), new THREE.MeshStandardMaterial({ color: 0xb9c6d8, metalness: 0.6, roughness: 0.3 }));
+      plato.scale.y = 0.28; ovni.add(plato);
+      const cupula = new THREE.Mesh(new THREE.SphereGeometry(0.1, 16, 10, 0, Math.PI * 2, 0, Math.PI / 2), new THREE.MeshBasicMaterial({ color: 0x9ff6ff }));
+      cupula.position.y = 0.03; ovni.add(cupula);
+      grupo.add(ovni);
+      return { girar: esfera, luna: ovni, lunaRadio: 1.65, lunaVel: 1.4 };
+    }
+  },
+
+  // FingerGol AR: planeta oscuro con la rejilla neón de la mesa y un disco amarillo
+  finger: {
+    radio: 2.5,
+    crear: function (grupo, brillo) {
+      const textura = texturaDibujada(1024, 512, function (c, w, h) {
+        const g = c.createLinearGradient(0, 0, 0, h);
+        g.addColorStop(0, '#1b1f5e'); g.addColorStop(1, '#0b0f35');
+        c.fillStyle = g; c.fillRect(0, 0, w, h);
+        c.strokeStyle = 'rgba(46,197,255,0.75)'; c.lineWidth = 3;
+        for (let x = 0; x <= w; x += w / 16) { c.beginPath(); c.moveTo(x, 0); c.lineTo(x, h); c.stroke(); }
+        for (let y = 0; y <= h; y += h / 8) { c.beginPath(); c.moveTo(0, y); c.lineTo(w, y); c.stroke(); }
+        c.strokeStyle = 'rgba(255,79,163,0.9)'; c.lineWidth = 7;                                   // línea y círculo central
+        c.beginPath(); c.moveTo(w / 2, 0); c.lineTo(w / 2, h); c.stroke();
+        c.beginPath(); c.arc(w / 2, h / 2, 70, 0, Math.PI * 2); c.stroke();
+      });
+      const esfera = new THREE.Mesh(new THREE.SphereGeometry(1, 64, 40), new THREE.MeshStandardMaterial({ map: textura, roughness: 0.5, metalness: 0.3, emissive: 0x0a1550, emissiveIntensity: 0.6 }));
+      grupo.add(esfera);
+      const aro = new THREE.Mesh(new THREE.TorusGeometry(1.5, 0.026, 12, 140), new THREE.MeshBasicMaterial({ color: 0x5ff0ff, transparent: true, opacity: 0.95 }));
+      aro.rotation.set(1.0, -0.4, 0);
+      grupo.add(aro);
+      const disco = new THREE.Mesh(new THREE.CylinderGeometry(0.17, 0.17, 0.07, 28), new THREE.MeshStandardMaterial({ color: 0xd8ff3a, emissive: 0x7a9a00, emissiveIntensity: 0.6, roughness: 0.4 }));
+      grupo.add(disco);
+      return { girar: esfera, luna: disco, lunaRadio: 1.5, lunaVel: 1.8 };
+    }
+  },
+
   // Próximamente: una luna gris con candado
   bloqueado: {
     radio: 2.3,
@@ -489,14 +585,18 @@ export function crearEscena(opciones) {
   const mirada = new THREE.Object3D(); // ayudante para calcular hacia dónde debe mirar la nave
   mirada.position.copy(miNave.nave.position);
 
-  // los 5 planetas, en arco (en V): los de las orillas más cerca, el del centro más lejos
-  const POSICIONES = [
+  // los planetas, en arco (en V): los de las orillas más cerca, el del centro más lejos
+  // con 5 o menos: posiciones fijas; con más, se reparten en un arco más ancho
+  const POSICIONES = infos.length <= 5 ? [
     new THREE.Vector3(-16, 0.6, -19),
     new THREE.Vector3(-8, 1.6, -23),
     new THREE.Vector3(0, 2.4, -27),
     new THREE.Vector3(8, 1.6, -23),
     new THREE.Vector3(16, 0.6, -19)
-  ];
+  ] : infos.map(function (_, i) {
+    const t = (i - (infos.length - 1) / 2) / ((infos.length - 1) / 2); // de -1 a 1
+    return new THREE.Vector3(t * 23, 2.4 - 1.8 * t * t, -27 + 4 * t * t);
+  });
   const textoBrillo = texturaBrillo();
   const mundos = infos.map(function (info, i) {
     const def = PLANETAS[info.id];
@@ -598,8 +698,10 @@ export function crearEscena(opciones) {
     // el ancho que se ve se mantiene igual aunque el recuadro sea más alto o más angosto (si no, los planetas se cortarían)
     // en pantallas anchas (PC, pantalla completa) caben los 5 planetas a la vez: la cámara no se desplaza
     const ancha = ancho >= 560;
-    const mitadAncho = ancha ? 0.86 : 0.62;
-    PANEO = ancha ? 0 : 1; // en celular la cámara se centra justo en el planeta elegido
+    // con 8 planetas solo caben todos a la vez en un recuadro muy ancho; si no, la cámara se centra en el elegido
+    const caben = ancha && (ancho >= 900 || infos.length <= 5);
+    const mitadAncho = caben ? 0.86 : 0.62;
+    PANEO = caben ? 0 : 1; // en celular (o recuadro angosto) la cámara se centra justo en el planeta elegido
     camara.fov = limitar(2 * Math.atan(mitadAncho / camara.aspect) * 180 / Math.PI, 40, 78);
     camara.updateProjectionMatrix();
   }
