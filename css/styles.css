@@ -2798,7 +2798,6 @@ html[data-tema="claro"] .habilidad:hover {
 
 .ficha-juego__despegar {
   align-self: flex-start;
-  margin-top: auto; /* el botón se queda abajo del panel */
 }
 
 .ficha-juego__despegar[aria-disabled="true"] {
@@ -3062,7 +3061,7 @@ html[data-tema="claro"] .habilidad:hover {
   display: flex;
   align-items: center;
   gap: 16px;
-  margin: 6px 0 4px;
+  margin: auto 0 4px; /* el QR y el botón se quedan abajo del panel */
 }
 
 .ficha-juego__qr[hidden] {
@@ -5536,7 +5535,7 @@ html[data-tema="claro"] .sobre--linterna .sobre__luz::before { background: radia
   .ficha-juego__texto { font-size: 0.9rem; line-height: 1.45; }
   .ficha-juego__datos { gap: 4px 12px; margin-top: 2px; font-size: 0.82rem; }
   .ficha-juego__datos dd { line-height: 1.35; }
-  .ficha-juego__qr { gap: 12px; margin: 2px 0; }
+  .ficha-juego__qr { gap: 12px; margin: auto 0 2px; }
   .ficha-juego__qr-img { width: 68px; height: 68px; }
   .ficha-juego__qr-texto { font-size: 0.8rem; }
   .ficha-juego__despegar { padding: 9px 22px; }

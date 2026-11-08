@@ -1072,10 +1072,41 @@ function iniciarArcade() {
     void panel.offsetWidth;
     panel.classList.add('ficha-juego--cambia');
 
+    igualarFicha(); // el panel siempre mide lo mismo, sea cual sea el juego
     mirarAlElegido();
     setTimeout(mirarAlElegido, 700); // y otra vez cuando el carrusel termina de girar
     if (escena3d) escena3d.elegir(activo); // en 3D, la nave gira hacia el planeta
   }
+
+  // El panel de la ficha mide siempre lo mismo: se mide en una copia oculta con la descripción de cada juego
+  // y se toma la más alta, así el panel y el botón «Despegar» no saltan al cambiar de planeta.
+  let anchoFicha = 0;
+  function igualarFicha() {
+    const ancho = panel.offsetWidth;
+    if (!ancho || ancho === anchoFicha) return;
+    anchoFicha = ancho;
+    const copia = panel.cloneNode(true);
+    copia.removeAttribute('hidden');
+    copia.removeAttribute('aria-live');
+    copia.classList.remove('ficha-juego--cambia');
+    copia.style.cssText = 'position:absolute;visibility:hidden;pointer-events:none;left:-9999px;top:0;min-height:0;width:' + ancho + 'px;';
+    copia.querySelectorAll('*').forEach(function (e) { e.style.animation = 'none'; });
+    panel.parentNode.appendChild(copia);
+    let mayor = 0;
+    planetas.forEach(function (p) {
+      copia.querySelector('.ficha-juego__titulo').textContent = p.querySelector('.planeta__nombre').textContent;
+      copia.querySelector('.ficha-juego__texto').textContent = p.dataset.descripcion;
+      copia.querySelector('.ficha-juego__genero').textContent = p.dataset.genero;
+      copia.querySelector('.ficha-juego__jugadores').textContent = p.dataset.jugadores;
+      copia.querySelector('.ficha-juego__controles').textContent = p.dataset.controles;
+      copia.querySelector('.ficha-juego__hecho').textContent = p.dataset.hecho || 'Todavía por hacer.';
+      copia.querySelector('.ficha-juego__qr').hidden = !p.dataset.qr;
+      mayor = Math.max(mayor, copia.offsetHeight);
+    });
+    copia.remove();
+    panel.style.minHeight = mayor + 'px';
+  }
+  window.addEventListener('resize', function () { anchoFicha = 0; igualarFicha(); });
 
   function esperar(ms) {
     return new Promise(function (listo) { setTimeout(listo, ms); });

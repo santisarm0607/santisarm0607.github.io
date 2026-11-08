@@ -585,18 +585,19 @@ export function crearEscena(opciones) {
   const mirada = new THREE.Object3D(); // ayudante para calcular hacia dónde debe mirar la nave
   mirada.position.copy(miNave.nave.position);
 
-  // los planetas, en arco (en V): los de las orillas más cerca, el del centro más lejos
-  // con 5 o menos: posiciones fijas; con más, se reparten en un arco más ancho
-  const POSICIONES = infos.length <= 5 ? [
-    new THREE.Vector3(-16, 0.6, -19),
-    new THREE.Vector3(-8, 1.6, -23),
-    new THREE.Vector3(0, 2.4, -27),
-    new THREE.Vector3(8, 1.6, -23),
-    new THREE.Vector3(16, 0.6, -19)
-  ] : infos.map(function (_, i) {
-    const t = (i - (infos.length - 1) / 2) / ((infos.length - 1) / 2); // de -1 a 1
-    return new THREE.Vector3(t * 23, 2.4 - 1.8 * t * t, -27 + 4 * t * t);
+  // ---- sistema solar: una estrella al centro y cada juego en su órbita ----
+  const TAM = 0.7;                 // los planetas se ven más chicos para que quepan todas las órbitas
+  const CENTRO = new THREE.Vector3(0, 8, -28);
+  const POSICIONES = infos.map(function () { return new THREE.Vector3(); });
+  const estrella = new THREE.Group();
+  estrella.position.copy(CENTRO);
+  estrella.add(new THREE.Mesh(new THREE.SphereGeometry(1.9, 32, 24), new THREE.MeshBasicMaterial({ color: 0xffd36b })));
+  [[7.5, 0xff9a3c, 0.32], [14, 0xff6a3c, 0.14]].forEach(function (c) {
+    const halo = new THREE.Sprite(new THREE.SpriteMaterial({ map: texturaBrillo(), color: c[1], transparent: true, opacity: c[2], blending: THREE.AdditiveBlending, depthWrite: false }));
+    halo.scale.setScalar(c[0]);
+    estrella.add(halo);
   });
+  escena.add(estrella);
   const textoBrillo = texturaBrillo();
   const mundos = infos.map(function (info, i) {
     const def = PLANETAS[info.id];
@@ -611,16 +612,49 @@ export function crearEscena(opciones) {
     const brillo = new THREE.Sprite(new THREE.SpriteMaterial({
       map: textoBrillo, color: new THREE.Color(info.color), transparent: true, opacity: 0.2, blending: THREE.AdditiveBlending, depthWrite: false
     }));
-    brillo.scale.setScalar(def.radio * 5.2);
-    brillo.position.z = -def.radio;
+    brillo.scale.setScalar(2.5 * TAM * 5.2);
+    brillo.position.z = -2.5 * TAM;
     grupo.add(brillo);
 
     escena.add(grupo);
     return {
-      grupo: grupo, cuerpo: cuerpo, brillo: brillo, piezas: piezas, radio: def.radio,
+      grupo: grupo, cuerpo: cuerpo, brillo: brillo, piezas: piezas, radio: 2.5 * TAM, // todos del mismo tamaño
+     
       color: new THREE.Color(info.color), escala: 1, escalaMeta: 1, opacidad: 1, fase: i * 1.7
     };
   });
+
+  // las órbitas: 3 anillos (elipses vistas en perspectiva) con 2, 3 y 3 planetas. Cada anillo gira entero, así los planetas
+  // nunca se acercan entre sí: están bien separados y ninguno queda encima de otro (probado girando una vuelta completa).
+  const ORBITA_Y = 0.5, ORBITA_Z = 0.5;
+  const ANILLOS = [
+    { R: 7.5, vel: 0.2, n: 2, fase: 0 },
+    { R: 17, vel: 0.13, n: 3, fase: 0.5 },
+    { R: 26.5, vel: 0.09, n: 3, fase: 1.0 }
+  ];
+  const lugares = []; // a qué anillo y a qué puesto del anillo le toca cada planeta
+  ANILLOS.forEach(function (an, r) {
+    an.ang = an.fase;
+    const puntos = [];
+    for (let k = 0; k < 160; k++) {
+      const a = k / 160 * Math.PI * 2;
+      puntos.push(new THREE.Vector3(Math.cos(a) * an.R, -Math.sin(a) * an.R * ORBITA_Y, Math.sin(a) * an.R * ORBITA_Z));
+    }
+    an.linea = new THREE.LineLoop(new THREE.BufferGeometry().setFromPoints(puntos), new THREE.LineBasicMaterial({ color: 0x6f8bff, transparent: true, opacity: 0.22 }));
+    an.linea.position.copy(CENTRO);
+    escena.add(an.linea);
+    for (let k = 0; k < an.n; k++) lugares.push({ anillo: r, desfase: k * Math.PI * 2 / an.n });
+  });
+  function colocarPlanetas() {
+    mundos.forEach(function (m, i) {
+      const L = lugares[i % lugares.length];
+      const an = ANILLOS[L.anillo];
+      const a = an.ang + L.desfase;
+      POSICIONES[i].set(CENTRO.x + Math.cos(a) * an.R, CENTRO.y - Math.sin(a) * an.R * ORBITA_Y, CENTRO.z + Math.sin(a) * an.R * ORBITA_Z);
+      m.grupo.position.copy(POSICIONES[i]);
+    });
+  }
+  colocarPlanetas();
 
   // etiquetas con el nombre (HTML encima del canvas)
   const capaEtiquetas = document.createElement('div');
@@ -698,11 +732,14 @@ export function crearEscena(opciones) {
     // el ancho que se ve se mantiene igual aunque el recuadro sea más alto o más angosto (si no, los planetas se cortarían)
     // en pantallas anchas (PC, pantalla completa) caben los 5 planetas a la vez: la cámara no se desplaza
     const ancha = ancho >= 560;
-    // con 8 planetas solo caben todos a la vez en un recuadro muy ancho; si no, la cámara se centra en el elegido
-    const caben = ancha && (ancho >= 900 || infos.length <= 5);
-    const mitadAncho = caben ? 0.86 : 0.62;
-    PANEO = caben ? 0 : 1; // en celular (o recuadro angosto) la cámara se centra justo en el planeta elegido
-    camara.fov = limitar(2 * Math.atan(mitadAncho / camara.aspect) * 180 / Math.PI, 40, 78);
+    // recuadro ancho: se ve todo el sistema y la cámara no se mueve
+    // recuadro angosto (celular): la cámara sigue de lado al planeta elegido
+    const caben = ancha; // si el recuadro es más alto que ancho, no cabe todo: la cámara sigue al planeta
+    const mitadAncho = caben ? 1.0 : 0.5;
+    PANEO = caben ? 0 : 1;
+    // la vista siempre abarca todo el sistema: si el recuadro es muy ancho y bajito, se abre lo necesario para que no se corte arriba ni abajo
+    const abierto = 2 * Math.atan(mitadAncho / camara.aspect) * 180 / Math.PI;
+    camara.fov = limitar(caben ? Math.max(abierto, 60) : abierto, 40, caben ? 100 : 78);
     camara.updateProjectionMatrix();
   }
   ajustarTamano();
@@ -732,7 +769,7 @@ export function crearEscena(opciones) {
     apuntaCompleto = !!completo;
     panMeta = mundos[i].grupo.position.x * PANEO;
     mundos.forEach(function (m, n) {
-      m.escalaMeta = n === i ? 1.22 : 1;
+      m.escalaMeta = n === i ? 1.25 : 1; // el elegido se agranda ligeramente
       etiquetas[n].classList.toggle('arcade__etiqueta--activa', n === i);
     });
     if (instante) {
@@ -793,11 +830,18 @@ export function crearEscena(opciones) {
     ultimo = ahora;
     tiempo += dt;
 
+    // cada anillo gira entero; el del planeta elegido se ilumina
+    ANILLOS.forEach(function (an, r) {
+      if (!salto) an.ang += dt * an.vel;
+      const brilla = lugares[elegido % lugares.length].anillo === r;
+      an.linea.material.opacity += ((brilla ? 0.6 : 0.22) - an.linea.material.opacity) * Math.min(1, dt * 5);
+    });
+    if (!salto) colocarPlanetas();
+
     // planetas: giran, se agrandan si están elegidos y su luna orbita
     mundos.forEach(function (m, n) {
       m.escala += (m.escalaMeta - m.escala) * Math.min(1, dt * 6);
       m.cuerpo.scale.setScalar(m.radio * m.escala);
-      m.grupo.position.y = POSICIONES[n % POSICIONES.length].y + Math.sin(tiempo * 0.8 + m.fase) * 0.25;
       const p = m.piezas;
       if (p.girar) {
         if (p.girarEje === 'z') p.girar.rotation.z += dt * 0.35;
