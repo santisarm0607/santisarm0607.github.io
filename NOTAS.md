@@ -490,3 +490,4 @@ Accesibilidad:
 - El planeta 5 dejó de ser «Próximamente»: ahora es jugable. Se copió el repositorio `orbix-overdrive` (v1.4) a `juegos/orbix-overdrive/`, se creó `orbix.html` (igual que `cosmoball.html`) y `img/qr-orbix.svg` (apunta a `orbix.html`).
 - `juegos.html`: planeta 5 con enlace, descripción real, «Cómo se hizo» y QR; la portada dice «3 juegos listos / 2 por llegar» y suma «baloncesto 3D» a las palabras que cambian.
 - **Galaxy Invasion y Galaxy War (7 de noviembre de 2026):** los planetas 3 y 4 también son jugables: copias de sus repositorios en `juegos/`, páginas `invasion.html` y `war.html`, y `img/qr-invasion.svg` / `img/qr-war.svg`. La portada del Arcade dice «5 juegos listos» (se quitó «por llegar»). En Galaxy War el modo en línea con sala y QR solo funciona en la versión de Claude; aquí la carrera es contra 3 bots.
+- **Galaxy War (copia actualizada):** favicon propio con la nave del juego (commit `afee14f` del repositorio).
