@@ -1145,6 +1145,16 @@ function iniciarArcade() {
 
     // con la escena 3D: despegue y salto a hiperespacio, y luego se abre el juego
     if (escena3d) {
+      // la animación del salto ocupa toda la pantalla: el recuadro del canvas se expande desde donde está
+      const caja = lienzo.getBoundingClientRect();
+      const hueco = document.createElement('div'); // guarda el espacio para que el resto de la página no se mueva
+      hueco.style.cssText = 'flex:1 1 auto;min-height:' + caja.height + 'px;align-self:stretch';
+      lienzo.parentNode.insertBefore(hueco, lienzo);
+      lienzo.classList.add('arcade__lienzo--pantalla');
+      lienzo.animate([
+        { clipPath: 'inset(' + caja.top + 'px ' + (window.innerWidth - caja.right) + 'px ' + (window.innerHeight - caja.bottom) + 'px ' + caja.left + 'px round 18px)' },
+        { clipPath: 'inset(0px 0px 0px 0px round 0px)' }
+      ], { duration: 500, easing: 'cubic-bezier(0.4, 0, 0.2, 1)', fill: 'forwards' });
       await escena3d.hiperespacio(planetas.indexOf(planeta));
       const velo = document.createElement('div');
       velo.className = 'warp warp--hiper';

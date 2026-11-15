@@ -2999,6 +2999,15 @@ html[data-tema="claro"] .habilidad:hover {
   display: none;
 }
 
+/* al despegar, el canvas se expande a toda la pantalla para el salto a hiperespacio */
+.arcade__lienzo--pantalla {
+  position: fixed;
+  inset: 0;
+  z-index: 2500;
+  min-height: 0;
+  background: var(--espacio-fondo, #0b1030);
+}
+
 .arcade__canvas {
   position: absolute;
   inset: 0;
