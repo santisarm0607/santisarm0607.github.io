@@ -64,6 +64,37 @@
                     </div>
                 </div>
             </div>
+            <!-- ondas de luz en las esquinas (solo decoración) -->
+            <div class="hero__curvas" aria-hidden="true">
+                <svg class="hero__curva hero__curva--arriba" viewBox="0 0 460 340" preserveAspectRatio="xMinYMin meet">
+                    <defs>
+                        <linearGradient id="curvaA" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#52c4ff" stop-opacity="0.9"/><stop offset="0.55" stop-color="#1f6fe0" stop-opacity="0.35"/><stop offset="1" stop-color="#0a3a9e" stop-opacity="0"/></linearGradient>
+                        <filter id="suaveA" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="2.5"/></filter>
+                    </defs>
+                    <g filter="url(#suaveA)">
+                        <path d="M0 0 H300 C232 78 122 132 0 218 Z" fill="url(#curvaA)" opacity="0.55"/>
+                        <path d="M0 0 H232 C172 68 84 112 0 172 Z" fill="url(#curvaA)" opacity="0.75"/>
+                        <path d="M0 0 H160 C112 50 52 82 0 118 Z" fill="url(#curvaA)"/>
+                    </g>
+                    <path class="hero__curva-linea" d="M300 0 C232 78 122 132 0 218"/>
+                    <path class="hero__curva-linea hero__curva-linea--fina" d="M232 0 C172 68 84 112 0 172"/>
+                    <path class="hero__curva-linea hero__curva-linea--tenue" d="M345 0 C268 92 140 160 0 262"/>
+                </svg>
+                <svg class="hero__curva hero__curva--abajo" viewBox="0 0 700 400" preserveAspectRatio="xMaxYMax meet">
+                    <defs>
+                        <linearGradient id="curvaB" x1="1" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#3aa0ff" stop-opacity="0.95"/><stop offset="0.5" stop-color="#1f6fe0" stop-opacity="0.4"/><stop offset="1" stop-color="#0a3a9e" stop-opacity="0"/></linearGradient>
+                        <filter id="suaveB" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="2.5"/></filter>
+                    </defs>
+                    <g filter="url(#suaveB)">
+                        <path d="M700 20 C682 205 505 342 180 400 H700 Z" fill="url(#curvaB)" opacity="0.5"/>
+                        <path d="M700 112 C652 242 505 352 330 400 H700 Z" fill="url(#curvaB)" opacity="0.7"/>
+                        <path d="M700 205 C662 292 562 362 470 400 H700 Z" fill="url(#curvaB)"/>
+                    </g>
+                    <path class="hero__curva-linea" d="M700 20 C682 205 505 342 180 400"/>
+                    <path class="hero__curva-linea hero__curva-linea--fina" d="M700 112 C652 242 505 352 330 400"/>
+                    <path class="hero__curva-linea hero__curva-linea--tenue" d="M700 -35 C700 170 530 325 70 400"/>
+                </svg>
+            </div>
         </section>
 
         <section class="sobre" aria-labelledby="titulo-sobre">

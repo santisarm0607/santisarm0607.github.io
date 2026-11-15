@@ -6096,3 +6096,30 @@ html[data-tema="claro"] .hero--nombre .hero__titulo {
 .arcade--js .planeta--nebula,
 .arcade--js .planeta--strike,
 .arcade--js .planeta--finger { --tam: 112px; }
+
+
+/* ===========================================================
+   14m. ONDAS DE LUZ EN LAS ESQUINAS DEL INICIO
+   Dos curvas azules brillantes (arriba a la izquierda y abajo a la derecha)
+   que se mecen muy despacio detrás del texto.
+   =========================================================== */
+.hero__curvas { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+.hero__curva { position: absolute; height: auto; filter: drop-shadow(0 0 10px rgba(61, 169, 255, 0.55)); }
+.hero__curva--arriba { top: 0; left: 0; width: min(38vw, 540px); }
+.hero__curva--abajo { bottom: 0; right: 0; width: min(54vw, 780px); }
+.hero__curva-linea { fill: none; stroke: #8fd3ff; stroke-width: 2.2; stroke-linecap: round; }
+.hero__curva-linea--fina { stroke-width: 1.4; opacity: 0.7; }
+.hero__curva-linea--tenue { stroke-width: 1; opacity: 0.35; }
+html[data-tema="claro"] .hero__curva { opacity: 0.55; }
+@media (max-width: 700px) {
+  .hero__curva--arriba { width: 52vw; }
+  .hero__curva--abajo { width: 70vw; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .hero__curva--arriba { animation: curva-mece 11s ease-in-out infinite; transform-origin: 0 0; }
+  .hero__curva--abajo { animation: curva-mece 14s ease-in-out infinite reverse; transform-origin: 100% 100%; }
+}
+@keyframes curva-mece {
+  0%, 100% { transform: scale(1) translate(0, 0); }
+  50% { transform: scale(1.05) translate(6px, -4px); }
+}
