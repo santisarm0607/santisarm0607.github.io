@@ -823,7 +823,7 @@ function iniciarFormulario() {
   formulario.addEventListener('input', function () { if (!caja.hidden) limpiarErrores(); });
   formulario.addEventListener('change', function () { if (!caja.hidden) limpiarErrores(); });
 
-  formulario.addEventListener('submit', function (e) {
+  formulario.addEventListener('submit', async function (e) {
     e.preventDefault(); // que no recargue la página ni ponga los datos en la URL
 
     // reviso todos los pasos; si alguno falla, me lleva a él
@@ -858,6 +858,21 @@ function iniciarFormulario() {
         (presupuesto ? '\nPresupuesto: ' + presupuesto + ' COP' : '') +
         (imagenes.length ? '\nImágenes de referencia (las adjunto a este correo): ' + imagenes.map(function (it) { return it.archivo.name; }).join(', ') : ''));
 
+    // si hay una trampa para robots llena (campo oculto), no envío nada
+    if (formulario.querySelector('[name="sitio_web"]') && formulario.querySelector('[name="sitio_web"]').value) return;
+
+    // envío el mensaje: se guarda en la base de datos (Supabase) y me avisa por correo (Web3Forms)
+    const textoBoton = btnEnviar.textContent;
+    btnEnviar.disabled = true;
+    btnEnviar.textContent = 'Enviando…';
+    const enviado = await enviarMensaje({
+      nombre: nombre, correo: correo, organizacion: organizacion, asunto: asunto,
+      areas: areas.join(', '), modalidad: modalidad, plazo: plazo,
+      presupuesto: presupuesto ? presupuesto + ' COP' : '', mensaje: texto
+    });
+    btnEnviar.disabled = false;
+    btnEnviar.textContent = textoBoton;
+
     // armo la tarjeta de gracias (uso textContent para que nadie pueda meter código raro)
     const gracias = document.createElement('div');
     gracias.className = 'form-tarjeta form-gracias';
@@ -878,6 +893,13 @@ function iniciarFormulario() {
     gracias.querySelector('.form-gracias__texto').textContent =
       (tipoOtro ? 'Tu mensaje' : 'Tu mensaje sobre ' + asunto.toLowerCase()) + ' quedó listo. Dale al botón para enviármelo desde tu correo y te respondo pronto.';
     gracias.querySelector('a').href = enlaceCorreo;
+    if (enviado) {
+      // ya llegó: no hace falta abrir el correo
+      gracias.querySelector('.form-gracias__texto').textContent =
+        (tipoOtro ? 'Tu mensaje' : 'Tu mensaje sobre ' + asunto.toLowerCase()) + ' ya me llegó. Te respondo pronto al correo que dejaste.';
+      gracias.querySelector('a').hidden = true;
+      gracias.querySelector('.form-aviso').hidden = true;
+    }
 
     // si elegiste imágenes: las muestro y te recuerdo adjuntarlas (un enlace de correo no puede llevar archivos)
     if (imagenes.length) {
@@ -911,6 +933,45 @@ function iniciarFormulario() {
   });
 
   ir(0, false);
+}
+
+
+/* Envía el mensaje del formulario: lo guarda en Supabase y me avisa con Web3Forms.
+   Las llaves están en js/config-contacto.js. Devuelve true si al menos uno funcionó. */
+async function enviarMensaje(d) {
+  const cfg = window.CONFIG_CONTACTO || {};
+  const trabajos = [];
+
+  if (cfg.supabaseUrl && cfg.supabaseKey) {
+    const cab = { 'Content-Type': 'application/json', apikey: cfg.supabaseKey, Prefer: 'return=minimal' };
+    if (/^eyJ/.test(cfg.supabaseKey)) cab.Authorization = 'Bearer ' + cfg.supabaseKey; // llaves anon viejas (JWT)
+    trabajos.push(
+      fetch(cfg.supabaseUrl.replace(/\/$/, '') + '/rest/v1/mensajes', {
+        method: 'POST', headers: cab, body: JSON.stringify(d)
+      }).then(function (r) { return r.ok; })
+    );
+  }
+
+  if (cfg.web3formsKey) {
+    trabajos.push(
+      fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({
+          access_key: cfg.web3formsKey,
+          subject: d.asunto + ' — ' + d.nombre,
+          from_name: 'Portafolio Santisarm',
+          name: d.nombre, email: d.correo, organizacion: d.organizacion,
+          areas: d.areas, modalidad: d.modalidad, plazo: d.plazo, presupuesto: d.presupuesto,
+          message: d.mensaje
+        })
+      }).then(function (r) { return r.ok; })
+    );
+  }
+
+  if (!trabajos.length) return false; // sin llaves: se usa el botón del correo
+  const resultados = await Promise.all(trabajos.map(function (p) { return p.catch(function () { return false; }); }));
+  return resultados.some(Boolean);
 }
 
 

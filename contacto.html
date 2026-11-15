@@ -26,6 +26,7 @@
     <link rel="apple-touch-icon" href="img/apple-touch-icon.png?v=2"> <!-- ícono si guardan la página en el celular -->
     <link rel="stylesheet" href="css/styles.css">
     <script src="js/tema.js"></script> <!-- modo claro/oscuro guardado (va antes de dibujar) -->
+    <script src="js/config-contacto.js" defer></script>
     <script src="js/main.js" defer></script> <!-- efectos con JavaScript (ver js/main.js) -->
     <script src="js/efectos.js" defer></script> <!-- la capa divertida: sonidos, estrellas, logros (ver js/efectos.js) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -197,6 +198,7 @@
                             <div class="paso__nav">
                                 <button type="button" class="boton boton--secundario" data-atras>← Atrás</button>
                                 <button type="button" class="boton boton--primario" data-sig>Siguiente →</button>
+                                <input type="text" name="sitio_web" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0"> <!-- trampa para robots -->
                                 <button type="submit" class="boton boton--primario" data-enviar>Enviar mensaje</button>
                             </div>
                             <p id="aviso-formulario" class="form-aviso">
