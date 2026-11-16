@@ -5093,8 +5093,11 @@ html[data-tema="claro"] .portada__letra { color: color-mix(in srgb, #0b1b5b calc
 .contacto-hero .portada__bajar { margin-top: 8px; }
 
 .contacto-form-seccion { padding: 26px 0 80px; }
-.contacto-rejilla > aside { align-self: flex-start; }
-@media (min-width: 992px) { .contacto-rejilla > aside { position: sticky; top: 96px; } }
+@media (min-width: 992px) {
+  /* las dos tarjetas (formulario y Línea directa) miden lo mismo de alto */
+  .contacto-rejilla { align-items: stretch; }
+  .contacto-rejilla__form > .form-tarjeta, .contacto-rejilla__lado > .directa { height: 100%; }
+}
 
 /* --- formulario --- */
 .form-tarjeta.form-pasos { max-width: none; margin: 0; padding: 30px 34px 28px; position: relative; overflow: hidden; }
@@ -6125,7 +6128,7 @@ html[data-tema="claro"] .hero__curva { opacity: 1; }
 }
 
 /* --- Rejilla de Contacto con mi propio CSS (antes usaba Bootstrap) --- */
-.contacto-rejilla { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 24px; align-items: start; }
+.contacto-rejilla { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 24px; }
 .contacto-rejilla__form, .contacto-rejilla__lado { min-width: 0; }
 .form-fila { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; } /* los 3 campos del paso 1 miden lo mismo: uno debajo del otro */
 .form-col { min-width: 0; }
