@@ -20,7 +20,6 @@
     <meta property="og:image:alt" content="Santiago Sarmiento, Ingeniero Multimedia">
     <meta name="twitter:card" content="summary_large_image">
     <!-- Bootstrap 5 - rejilla responsiva de 12 columnas (requisito del examen) -->
-    <link href="css/vendor/bootstrap.min.css" rel="stylesheet">
     <link rel="icon" href="favicon.ico?v=2" sizes="48x48">
     <link rel="icon" href="img/favicon.png?v=2" type="image/png"> <!-- tu muñequito en la pestaña -->
     <link rel="apple-touch-icon" href="img/apple-touch-icon.png?v=2"> <!-- ícono si guardan la página en el celular -->
@@ -83,10 +82,10 @@
 
         <section class="contacto-form-seccion" id="escribir">
             <div class="contenedor">
-                <div class="row g-4 contacto-rejilla">
+                <div class="contacto-rejilla">
 
-                    <!-- Formulario en 3 pasos (la rejilla de Bootstrap sigue organizando columnas y campos) -->
-                    <div class="col-12 col-lg-7">
+                    <!-- Formulario en 3 pasos (la rejilla es mi propio CSS: .contacto-rejilla y .form-fila) -->
+                    <div class="contacto-rejilla__form">
                         <form class="form-tarjeta form-pasos" aria-describedby="aviso-formulario">
 
                             <ol class="pasos-ruta" aria-label="Pasos del formulario">
@@ -98,16 +97,16 @@
 
                             <fieldset class="paso">
                                 <legend class="paso__titulo"><span class="paso__num">Paso 1 de 4</span>¿Con quién hablo?</legend>
-                                <div class="row g-3">
-                                    <div class="col-12 col-md-6">
+                                <div class="form-fila">
+                                    <div class="form-col">
                                         <label for="nombre" class="form-etiqueta">Nombre completo</label>
                                         <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Escribe tu nombre" autocomplete="name" required>
                                     </div>
-                                    <div class="col-12 col-md-6">
+                                    <div class="form-col">
                                         <label for="email" class="form-etiqueta">Correo electrónico</label>
                                         <input type="email" class="form-control" id="email" name="email" placeholder="tucorreo@ejemplo.com" autocomplete="email" required>
                                     </div>
-                                    <div class="col-12">
+                                    <div class="form-col form-col--ancha">
                                         <label for="organizacion" class="form-etiqueta">Empresa o institución <span class="form-opcional">(opcional)</span></label>
                                         <input type="text" class="form-control" id="organizacion" name="organizacion" placeholder="¿Desde dónde me escribes?" autocomplete="organization">
                                     </div>
@@ -208,7 +207,7 @@
                     </div>
 
                     <!-- Línea directa: otras formas de encontrarme -->
-                    <aside class="col-12 col-lg-5" aria-label="Otras formas de contactarme">
+                    <aside class="contacto-rejilla__lado" aria-label="Otras formas de contactarme">
                         <div class="directa">
                             <div class="directa__estado">
                                 <span class="punto-vivo" aria-hidden="true"></span>

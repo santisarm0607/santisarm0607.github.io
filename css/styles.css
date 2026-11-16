@@ -6123,3 +6123,15 @@ html[data-tema="claro"] .hero__curva { opacity: 1; }
   0%, 100% { transform: scale(1) translate(0, 0); }
   50% { transform: scale(1.05) translate(6px, -4px); }
 }
+
+/* --- Rejilla de Contacto con mi propio CSS (antes usaba Bootstrap) --- */
+.contacto-rejilla { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 24px; align-items: start; }
+.contacto-rejilla__form, .contacto-rejilla__lado { min-width: 0; }
+.form-fila { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.form-col { min-width: 0; }
+.form-col--ancha { grid-column: 1 / -1; }
+.form-control { display: block; width: 100%; }
+@media (max-width: 991px) { .contacto-rejilla { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 767px) { .form-fila { grid-template-columns: minmax(0, 1fr); } }
+:where(.contacto-rejilla) :where(button, input, select, textarea) { font-family: inherit; font-size: inherit; line-height: inherit; }
+.contacto-rejilla .form-control:focus { border-color: #00b8ff; box-shadow: 0 0 0 3px rgba(0, 184, 255, 0.35); outline: none; }
