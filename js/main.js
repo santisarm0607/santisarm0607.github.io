@@ -34,7 +34,7 @@ const MIS_ROLES = [
 ];
 
 // Colores del confeti de estrellas (blanco, celeste, lavanda y amarillo, para que brillen en lo oscuro)
-const COLORES_CONFETI = ['#FFFFFF', '#29B6F6', '#9DB8FF', '#FFD54F'];
+const COLORES_CONFETI = ['#FFFFFF', '#00B8FF', '#00B8FF', '#7DDEFF'];
 
 
 /* ---------------------------------------------------------
@@ -1015,7 +1015,7 @@ function iniciarEstrellasFugaces() {
    - Los planetas son enlaces normales: sin JavaScript igual funcionan.
    --------------------------------------------------------- */
 // color de la transición al entrar a un juego: siempre el celeste de la página (no el color de cada planeta)
-const COLOR_TRANSICION = '#29B6F6';
+const COLOR_TRANSICION = '#00B8FF';
 
 function iniciarArcade() {
   const escena = document.querySelector('.arcade__escena');
@@ -1102,7 +1102,7 @@ function iniciarArcade() {
     // el planeta de la ficha es una imagen sacada de la escena 3D, y el panel toma el color del planeta
     const imagenPlaneta = panel.querySelector('.ficha-juego__planeta');
     imagenPlaneta.src = 'img/planeta-' + planeta.dataset.mini + '.webp';
-    panel.style.setProperty('--color', planeta.dataset.color || '#29B6F6');
+    panel.style.setProperty('--color', planeta.dataset.color || '#00B8FF');
     const proximo = planeta.dataset.proximo === 'true';
     panel.classList.toggle('ficha-juego--proximo', proximo);
     panel.querySelector('.ficha-juego__estado').textContent = proximo ? 'Próximamente' : 'Disponible';
@@ -1338,7 +1338,7 @@ function iniciarArcade() {
             return {
               id: p.dataset.mini,
               nombre: p.querySelector('.planeta__nombre').textContent,
-              color: p.dataset.color || '#9DB8FF',
+              color: p.dataset.color || '#00B8FF',
               corta: p.dataset.corta || '',
               proximo: p.dataset.proximo === 'true'
             };
