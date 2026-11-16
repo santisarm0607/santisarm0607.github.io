@@ -6138,3 +6138,7 @@ html[data-tema="claro"] .hero__curva { opacity: 1; }
 @media (max-width: 767px) { .form-fila { grid-template-columns: minmax(0, 1fr); } }
 :where(.contacto-rejilla) :where(button, input, select, textarea) { font-family: inherit; font-size: inherit; line-height: inherit; }
 .contacto-rejilla .form-control:focus { border-color: #00b8ff; box-shadow: 0 0 0 3px rgba(0, 184, 255, 0.35); outline: none; }
+
+/* el logo de Behance es un dibujo relleno (los demás iconos son de línea) */
+.canal__icono--relleno svg { fill: #7ddeff; stroke: none; }
+html[data-tema="claro"] .canal__icono--relleno svg { fill: #0b1b5b; stroke: none; }
