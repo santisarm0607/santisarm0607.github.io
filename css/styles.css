@@ -1204,7 +1204,7 @@ body::after {
   height: 100px;
   right: -290px; /* centrado con el planeta */
   top: 160px;
-  border: 2px solid rgba(157, 184, 255, 0.35);
+  border: 2px solid rgba(125, 222, 255, 0.35);
   border-radius: 50%;
   transform: rotate(-18deg);
   pointer-events: none;
@@ -1240,7 +1240,7 @@ body::after {
 .habilidad {
   background-color: rgba(11, 27, 91, 0.28);
   color: var(--espacio-texto);
-  border-color: rgba(157, 184, 255, 0.4);
+  border-color: rgba(125, 222, 255, 0.4);
   transition: background-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
 }
 
@@ -1278,7 +1278,7 @@ body::after {
 .filtro {
   background-color: var(--espacio-panel);
   color: var(--espacio-texto);
-  border-color: rgba(157, 184, 255, 0.4);
+  border-color: rgba(125, 222, 255, 0.4);
 }
 
 .filtro[aria-pressed="true"] {
@@ -1289,7 +1289,7 @@ body::after {
 }
 
 .filtro__numero {
-  background-color: rgba(157, 184, 255, 0.15);
+  background-color: rgba(125, 222, 255, 0.15);
   color: var(--espacio-texto);
 }
 
@@ -1355,7 +1355,7 @@ body::after {
 .visor__flecha {
   background-color: var(--espacio-panel);
   color: var(--espacio-texto);
-  border: 1px solid rgba(157, 184, 255, 0.35);
+  border: 1px solid rgba(125, 222, 255, 0.35);
 }
 
 /* --- CONTACTO --- */
@@ -1388,7 +1388,7 @@ body::after {
 
 .form-control,
 .form-select {
-  border-color: rgba(157, 184, 255, 0.25);
+  border-color: rgba(125, 222, 255, 0.25);
 }
 
 .form-control:focus,
@@ -3443,9 +3443,7 @@ button.habilidad:focus-visible {
   pointer-events: none;
 }
 
-.boton--primario:hover::after {
-  animation: destello-boton 0.7s ease;
-}
+.boton--primario::after { display: none; }
 
 @keyframes destello-boton {
   to { left: 130%; }
@@ -4897,12 +4895,12 @@ html[data-tema="claro"] .arcade-pantalla { box-shadow: 0 0 0 5px rgba(27, 47, 11
 .contacto-rapido__rota { display: block; margin-top: 4px; font-size: 0.55em; font-weight: 500; color: #bfeaff; }
 .contacto-rapido__palabra { display: inline-block; font-weight: 700; color: #fff; border-bottom: 3px solid #00b8ff; }
 .contacto-rapido .boton { position: relative; overflow: hidden; }
-.contacto-rapido .boton--primario::after { content: ""; position: absolute; top: 0; bottom: 0; left: -60%; width: 40%; background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.65), transparent); transform: skewX(-20deg); }
+.contacto-rapido .boton--primario::after { display: none; content: ""; position: absolute; top: 0; bottom: 0; left: -60%; width: 40%; background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.65), transparent); transform: skewX(-20deg); }
 @media (prefers-reduced-motion: no-preference) {
   .contacto-rapido__orbe--a { animation: orbe-a 14s ease-in-out infinite alternate; }
   .contacto-rapido__orbe--b { animation: orbe-b 17s ease-in-out infinite alternate; }
   .contacto-rapido__estrellas { animation: titila 3.6s ease-in-out infinite; }
-  .contacto-rapido .boton--primario::after { animation: brillo-boton 3.8s ease-in-out 1.2s infinite; }
+  .contacto-rapido .boton--primario::after { display: none; animation: brillo-boton 3.8s ease-in-out 1.2s infinite; }
   .contacto-rapido--lista .contenedor > * { opacity: 0; translate: 0 22px; }
   .contacto-rapido--viva .contenedor > * { opacity: 1; translate: 0 0; transition: opacity 0.7s ease, translate 0.7s cubic-bezier(0.2, 0.8, 0.2, 1); }
   .contacto-rapido--viva .contenedor > :nth-child(2) { transition-delay: 0.12s; }
@@ -5046,7 +5044,7 @@ html[data-tema="claro"] .portada__etiqueta, html[data-tema="claro"] .portada__ti
 @media (max-width: 760px) { .portada__icono--3, .portada__icono--6, .portada__icono--4 { display: none; } .portada__icono { --tam: 30px; opacity: 0.35; } }
 
 .portada__bajar { position: relative; overflow: hidden; }
-.portada__bajar::after { content: ""; position: absolute; top: 0; bottom: 0; left: -60%; width: 40%; background: linear-gradient(100deg, transparent, rgba(255,255,255,.65), transparent); transform: skewX(-20deg); }
+.portada__bajar::after { display: none; content: ""; position: absolute; top: 0; bottom: 0; left: -60%; width: 40%; background: linear-gradient(100deg, transparent, rgba(255,255,255,.65), transparent); transform: skewX(-20deg); }
 .filtro--eco { box-shadow: 0 0 0 3px rgba(0, 184, 255, 0.35), 0 0 22px rgba(0, 184, 255, 0.55); border-color: #00b8ff; }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -5059,7 +5057,7 @@ html[data-tema="claro"] .portada__etiqueta, html[data-tema="claro"] .portada__ti
   .portada__icono--4 { animation-duration: 9s, 1s; animation-delay: -4s, 0.4s; }
   .portada__icono--5 { animation-duration: 7.5s, 1s; animation-delay: -3s, 0.5s; }
   .portada__icono--6 { animation-duration: 6.5s, 1s; animation-delay: -5s, 0.6s; }
-  .portada__bajar::after { animation: brillo-boton 3.8s ease-in-out 1.4s infinite; }
+  .portada__bajar::after { display: none; animation: brillo-boton 3.8s ease-in-out 1.4s infinite; }
   .portada__cifras li { animation: portada-sube 0.7s ease backwards; }
   .portada__cifras li:nth-child(2) { animation-delay: 0.55s; } .portada__cifras li:nth-child(3) { animation-delay: 0.68s; } .portada__cifras li:nth-child(1) { animation-delay: 0.42s; }
   .portada__cifras li:nth-child(3) .portada__num span { display: inline-block; animation: trofeo 2.6s ease-in-out 1.4s infinite; }
@@ -5489,7 +5487,7 @@ html[data-tema="claro"] .arcade__etiqueta--activa .arcade__etiqueta-nombre { bac
   line-height: 1.38;
   text-wrap: balance;
 }
-.sobre { --apagado: rgba(157, 184, 255, 0.2); --prendido: #ffffff; --aro: rgba(0, 184, 255, 0.9); }
+.sobre { --apagado: rgba(125, 222, 255, 0.2); --prendido: #ffffff; --aro: rgba(0, 184, 255, 0.9); }
 html[data-tema="claro"] .sobre { --apagado: rgba(27, 47, 115, 0.16); --prendido: #0b1b5b; --aro: rgba(0, 184, 255, 0.95); }
 
 .sobre--linterna .sobre__texto {
@@ -6045,7 +6043,7 @@ html[data-reducir] *::after {
 
 /* 14zs. Botones de icono (girar, ampliar, cerrar) */
 .ficha__icono { display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; padding: 0 !important; }
-.ficha__icono[aria-pressed="true"] { border-color: var(--espacio-lavanda); background: rgba(157, 184, 255, 0.12); }
+.ficha__icono[aria-pressed="true"] { border-color: var(--espacio-lavanda); background: rgba(125, 222, 255, 0.12); }
 
 /* 14zt. Modo claro: el nombre ya no usa degradado recortado en el título.
    En algunos celulares ese recorte dejaba "fantasmas" de las letras mientras se animaban. */
